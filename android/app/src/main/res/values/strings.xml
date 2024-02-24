@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">simple-nutrition</string>
+    <string name="title_activity_main">simple-nutrition</string>
+    <string name="package_name">lexacus.simplenutrition.app</string>
+    <string name="custom_url_scheme">lexacus.simplenutrition.app</string>
+</resources>
