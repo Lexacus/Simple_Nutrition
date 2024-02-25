@@ -6,6 +6,13 @@ export type Food = {
   fats: number;
 };
 
+export type Meals =
+  | "breakfast"
+  | "morningSnacks"
+  | "lunch"
+  | "eveningSnacks"
+  | "dinner";
+
 export type DietDay = {
   date: string;
   food: {

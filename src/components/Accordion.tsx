@@ -6,6 +6,7 @@ interface AccordionProps {
   onTabClick: () => void;
   open: boolean;
   foodItems?: Food[];
+  onAddClick?: () => void;
 }
 
 export const Accordion: FC<AccordionProps> = ({
@@ -13,13 +14,14 @@ export const Accordion: FC<AccordionProps> = ({
   open,
   tabName,
   foodItems,
+  onAddClick,
 }) => {
   return (
     <div className="flex flex-col border border-red-500">
       <span onClick={onTabClick}>{tabName}</span>
-      <span>
-        {open &&
-          foodItems?.map((foodItem) => {
+      {open && (
+        <div className="flex flex-col">
+          {foodItems?.map((foodItem) => {
             return (
               <span key={`${tabName}_${foodItem.name}`}>
                 {" "}
@@ -28,7 +30,15 @@ export const Accordion: FC<AccordionProps> = ({
               </span>
             );
           })}
-      </span>
+          <button
+            onClick={() => {
+              onAddClick?.();
+            }}
+          >
+            Aggiungi
+          </button>
+        </div>
+      )}
     </div>
   );
 };
