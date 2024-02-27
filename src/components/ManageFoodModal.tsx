@@ -5,6 +5,7 @@ import { Input } from "./common/Input";
 import { AiOutlineClose } from "react-icons/ai";
 import { Button } from "./common/Button";
 import { useFoodStore } from "../store/FoodStore";
+import ReactSelect from "react-select";
 
 type ManageFoodModalProps = {
   onClose: () => void;
@@ -45,7 +46,6 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
       return;
     }
     if (!value) {
-      setValue("food", baseFoodValues);
       return;
     }
     const newCalories =
@@ -100,21 +100,15 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
         <div className="flex justify-end pr-[20px]">
           <AiOutlineClose style={{ fontSize: "25px" }} onClick={onClose} />
         </div>
-        <select
-          onChange={(e) => {
-            const selectedFoodItem = foods[Number(e.target.value)];
+        <ReactSelect
+          className="px-[5px] h-[30px] m-[15px]"
+          options={foods.map((food, i) => ({ label: food.name, value: i }))}
+          onChange={(selectedOption) => {
+            const selectedFoodItem = foods[Number(selectedOption?.value)];
             setBaseFoodValues(selectedFoodItem);
             setValue("food", selectedFoodItem);
           }}
-          className="px-[15px] h-[30px] m-[15px]"
-        >
-          <option disabled selected>
-            Select a food
-          </option>
-          {foods.map((food, i) => (
-            <option value={i}>{food.name}</option>
-          ))}
-        </select>
+        />
         <form
           className="flex flex-col px-[20px] gap-y-[10px]"
           onSubmit={handleSubmit(onSubmit)}

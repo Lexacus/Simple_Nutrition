@@ -16,7 +16,7 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
         {label && <span>{label}</span>}
         <input
           className={cn(
-            "rounded-[8px] px-[15px] py-[2px] border",
+            "rounded-[8px] px-[10px] py-[2px] border",
             error ? "border-red-600" : " border-black"
           )}
           ref={ref}
