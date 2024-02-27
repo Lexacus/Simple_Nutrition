@@ -16,6 +16,6 @@ export type Food = {
 };
 
 export type DietDay = {
-  date: string;
+  /*  date: string; */
   foods: Food[];
 };
