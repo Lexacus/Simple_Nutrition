@@ -7,23 +7,33 @@ import { Button } from "./common/Button";
 
 type ManageFoodModalProps = {
   onClose: () => void;
-  selectedMeal: Meals;
+  selectedFood: { foodItem?: Food; type: "add" | "edit"; index: number };
   onSave?: ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => void;
+  onEdit?: ({ foodItem, index }: { foodItem: Food; index: number }) => void;
 };
 
 export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   onClose,
-  selectedMeal,
+  selectedFood,
   onSave,
+  onEdit,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Food>();
+  } = useForm<Food>({ defaultValues: { ...selectedFood.foodItem } });
 
   const onSubmit: SubmitHandler<Food> = (data) => {
-    onSave?.({ meal: selectedMeal, foodItem: data });
+    if (selectedFood.type === "add") {
+      onSave?.({
+        meal: selectedFood.foodItem?.meal ?? "breakfast",
+        foodItem: data,
+      });
+    }
+    if (selectedFood.type === "edit") {
+      onEdit?.({ foodItem: data, index: selectedFood.index });
+    }
     onClose();
   };
 
@@ -45,40 +55,44 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             {...register("name", { required: true })}
             label="Name"
             error={errors.name}
+            placeholder="Insert food name"
           />
           <Input
             {...register("calories", { required: true })}
             label="Calories"
             type="number"
             error={errors.calories}
+            placeholder="Insert food calories"
           />
           <Input
             {...register("carbohydrates", { required: true })}
             label="Carbs"
             type="number"
             error={errors.carbohydrates}
+            placeholder="Insert food carbohydrates"
           />
           <Input
             {...register("proteins", { required: true })}
             label="Proteins"
             type="number"
             error={errors.proteins}
+            placeholder="Insert food proteins"
           />
           <Input
             {...register("fats", { required: true })}
             label="Fats"
             type="number"
             error={errors.fats}
+            placeholder="Insert food fats"
           />
           <Input
             {...register("grams", { required: true })}
             label="Grams"
             type="number"
             error={errors.grams}
+            placeholder="Insert quantity in grams"
           />
-          <div className="flex w-full justify-center">
-            <Button>Salva</Button>
-          </div>
+          <Button>Salva</Button>
         </form>
       </div>
     </div>

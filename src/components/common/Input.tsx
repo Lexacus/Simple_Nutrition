@@ -6,6 +6,7 @@ type InputProps = HTMLAttributes<HTMLInputElement> & {
   label?: string;
   type?: "number" | "text";
   error?: FieldError;
+  placeholder?: string;
 };
 
 export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(

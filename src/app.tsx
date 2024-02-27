@@ -8,7 +8,7 @@ import { useTrackerStore } from "./store/TrackerStore";
 import { DateSelector } from "./components/DateSelector";
 
 const initializeTabs = () => {
-  return [true, false, false, false, false];
+  return [false, false, false, false, false];
 };
 
 const today = dayjs().format("YYYY-MM-DD");
@@ -26,9 +26,13 @@ function App() {
     );
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
-  const [selectedMeal, setSelectedMeal] = useState<Meals>();
+  const [selectedFood, setSelectedFood] = useState<{
+    foodItem?: Food;
+    type: "add" | "edit";
+    index: number;
+  }>();
 
-  const handleTabPress = (tab: number) => () => {
+  const onTabClick = (tab: number) => () => {
     setOpenTabs((prev) => {
       const newTabs = [...prev];
       newTabs[tab] = !prev[tab];
@@ -36,13 +40,47 @@ function App() {
     });
   };
 
-  const onAddClick = (meal: Meals) => () => {
-    setSelectedMeal(meal);
+  const onAddClick = () => {
+    setSelectedFood({
+      type: "add",
+      index: 0,
+    });
   };
 
-  const onSave = ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => {
+  const onEditClick = (index: number) => {
+    setSelectedFood({
+      foodItem: {
+        ...days[selectedDate].foods[index],
+      },
+      type: "edit",
+      index,
+    });
+  };
+
+  const onDeleteClick = (index: number) => {
+    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
+    editDay(selectedDate, {
+      foods: [...newFoods],
+    });
+  };
+
+  const onFoodSave = ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => {
     editDay(selectedDate, {
       foods: [...days[selectedDate].foods, { ...foodItem, meal }],
+    });
+  };
+
+  const onFoodEdit = ({
+    foodItem,
+    index,
+  }: {
+    foodItem: Food;
+    index: number;
+  }) => {
+    const newFoods = days[selectedDate].foods;
+    newFoods.splice(index, 1, foodItem);
+    editDay(selectedDate, {
+      foods: newFoods,
     });
   };
 
@@ -60,30 +98,30 @@ function App() {
     if (!days[selectedDate]) {
       addDay(selectedDate);
     }
-    const breakfastFoods: Food[] = [];
-    const morningSnacksFoods: Food[] = [];
-    const lunchFoods: Food[] = [];
-    const eveningSnacksFoods: Food[] = [];
-    const dinnerFoods: Food[] = [];
+    const breakfastFoods: { foodItem: Food; index: number }[] = [];
+    const morningSnacksFoods: { foodItem: Food; index: number }[] = [];
+    const lunchFoods: { foodItem: Food; index: number }[] = [];
+    const eveningSnacksFoods: { foodItem: Food; index: number }[] = [];
+    const dinnerFoods: { foodItem: Food; index: number }[] = [];
     const [totalCalories, totalCarbohydrates, totalProteins, totalFats] = (
       days[selectedDate].foods ?? []
     ).reduce(
-      (acc, next) => {
+      (acc, next, i) => {
         switch (next.meal) {
           case "breakfast":
-            breakfastFoods.push(next);
+            breakfastFoods.push({ foodItem: next, index: i });
             break;
           case "morningSnacks":
-            morningSnacksFoods.push(next);
+            morningSnacksFoods.push({ foodItem: next, index: i });
             break;
           case "lunch":
-            lunchFoods.push(next);
+            lunchFoods.push({ foodItem: next, index: i });
             break;
           case "eveningSnacks":
-            eveningSnacksFoods.push(next);
+            eveningSnacksFoods.push({ foodItem: next, index: i });
             break;
           case "dinner":
-            dinnerFoods.push(next);
+            dinnerFoods.push({ foodItem: next, index: i });
             break;
 
           default:
@@ -92,8 +130,8 @@ function App() {
 
         return [
           acc[0] + Number(next.calories),
-          acc[2] + Number(next.carbohydrates),
-          acc[1] + Number(next.proteins),
+          acc[1] + Number(next.carbohydrates),
+          acc[2] + Number(next.proteins),
           acc[3] + Number(next.fats),
         ];
       },
@@ -119,13 +157,14 @@ function App() {
 
   return (
     <>
-      {selectedMeal && (
+      {selectedFood && (
         <ManageFoodModal
-          selectedMeal={selectedMeal}
+          selectedFood={selectedFood}
           onClose={() => {
-            setSelectedMeal(undefined);
+            setSelectedFood(undefined);
           }}
-          onSave={onSave}
+          onSave={onFoodSave}
+          onEdit={onFoodEdit}
         />
       )}
       <div className="flex flex-col w-full h-full border border-red-700">
@@ -141,38 +180,48 @@ function App() {
         </div>
         <Accordion
           foodItems={breakfastFoods}
-          onTabClick={handleTabPress(0)}
+          onTabClick={onTabClick(0)}
           open={openTabs[0]}
           tabName="Breakfast"
-          onAddClick={onAddClick("breakfast")}
+          onAddClick={onAddClick}
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
         <Accordion
           foodItems={morningSnacksFoods}
-          onTabClick={handleTabPress(1)}
+          onTabClick={onTabClick(1)}
           open={openTabs[1]}
           tabName="Morning Snacks"
-          onAddClick={onAddClick("morningSnacks")}
+          onAddClick={onAddClick}
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
         <Accordion
           foodItems={lunchFoods}
-          onTabClick={handleTabPress(2)}
+          onTabClick={onTabClick(2)}
           open={openTabs[2]}
           tabName="Lunch"
-          onAddClick={onAddClick("lunch")}
+          onAddClick={onAddClick}
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
         <Accordion
           foodItems={eveningSnacksFoods}
-          onTabClick={handleTabPress(3)}
+          onTabClick={onTabClick(3)}
           open={openTabs[3]}
           tabName="Evening Snacks"
-          onAddClick={onAddClick("eveningSnacks")}
+          onAddClick={onAddClick}
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
         <Accordion
           foodItems={dinnerFoods}
-          onTabClick={handleTabPress(4)}
+          onTabClick={onTabClick(4)}
           open={openTabs[4]}
           tabName="Dinner"
-          onAddClick={onAddClick("dinner")}
+          onAddClick={onAddClick}
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
       </div>
     </>
