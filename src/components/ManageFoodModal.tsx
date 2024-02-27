@@ -32,10 +32,41 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     handleSubmit,
     formState: { errors },
     setValue,
-    getValues,
   } = useForm<{ food: Food }>({
     defaultValues: { food: { ...selectedFood.foodItem } },
   });
+
+  const handleValuesCalculation = (value: number) => {
+    // TODO: can this be better?
+    if (!baseFoodValues) {
+      return;
+    }
+    if (!value) {
+      setValue("food", baseFoodValues);
+      return;
+    }
+    const newCalories =
+      ((baseFoodValues?.calories ?? 0) * Number(value)) /
+      (baseFoodValues?.grams ?? 1);
+    const newCarbohydrates =
+      ((baseFoodValues?.carbohydrates ?? 0) * Number(value)) /
+      (baseFoodValues?.grams ?? 1);
+    const newProteins =
+      ((baseFoodValues?.proteins ?? 0) * Number(value)) /
+      (baseFoodValues?.grams ?? 1);
+    const newFats =
+      ((baseFoodValues?.fats ?? 0) * Number(value)) /
+      (baseFoodValues?.grams ?? 1);
+    setValue("food.calories", newCalories);
+    setValue("food.carbohydrates", newCarbohydrates);
+    setValue("food.proteins", newProteins);
+    setValue("food.fats", newFats);
+  };
+
+  const { onChange: onGramsChange, ...remainingGramsProps } = register(
+    "food.grams",
+    { required: true }
+  );
 
   const onSubmit: SubmitHandler<{ food: Food }> = (data) => {
     if (selectedFood.type === "addToDay") {
@@ -68,14 +99,9 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
         </div>
         <select
           onChange={(e) => {
-            const { grams, ...selectedItem } = foods[Number(e.target.value)];
-            setBaseFoodValues({ ...selectedItem, grams });
-            setValue(
-              "food",
-              selectedFood.type === "addToDay"
-                ? { ...selectedItem, grams: 0 }
-                : { ...selectedItem, grams }
-            );
+            const selectedFoodItem = foods[Number(e.target.value)];
+            setBaseFoodValues(selectedFoodItem);
+            setValue("food", selectedFoodItem);
           }}
           className="px-[15px] h-[30px] m-[15px]"
         >
@@ -125,26 +151,13 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             placeholder="Insert food fats"
           />
           <Input
-            {...register("food.grams", { required: true })}
+            {...remainingGramsProps}
             onChange={(e) => {
-              if (
-                !e.currentTarget.value ||
-                Number(e.currentTarget.value) === 0
-              ) {
-                if (!baseFoodValues) {
-                  return;
-                }
-                setValue("food", baseFoodValues);
+              if (selectedFood.type === "addToDay") {
+                handleValuesCalculation(Number(e.currentTarget.value));
                 return;
               }
-              if (selectedFood.type === "addToDay") {
-                setValue(
-                  "food.calories",
-                  ((baseFoodValues?.calories ?? 0) *
-                    Number(e.currentTarget.value)) /
-                    (baseFoodValues?.grams ?? 1)
-                );
-              }
+              onGramsChange(e);
             }}
             label="Grams"
             type="number"
