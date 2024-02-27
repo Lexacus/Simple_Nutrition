@@ -19,6 +19,7 @@ function App() {
         carbohydrates: 10,
         fats: 10,
         proteins: 10,
+        grams: 100,
         meal: "breakfast",
       },
       {
@@ -27,6 +28,7 @@ function App() {
         carbohydrates: 10,
         fats: 10,
         proteins: 10,
+        grams: 100,
         meal: "morningSnacks",
       },
     ],
@@ -160,18 +162,21 @@ function App() {
           onTabClick={handleTabPress(2)}
           open={openTabs[2]}
           tabName="Lunch"
+          onAddClick={onAddClick("lunch")}
         />
         <Accordion
           foodItems={eveningSnacksFoods}
           onTabClick={handleTabPress(3)}
           open={openTabs[3]}
           tabName="Evening Snacks"
+          onAddClick={onAddClick("eveningSnacks")}
         />
         <Accordion
           foodItems={dinnerFoods}
           onTabClick={handleTabPress(4)}
           open={openTabs[4]}
           tabName="Dinner"
+          onAddClick={onAddClick("dinner")}
         />
       </div>
     </>
