@@ -1,23 +1,20 @@
+export type Meals =
+  | "breakfast"
+  | "morningSnacks"
+  | "lunch"
+  | "eveningSnacks"
+  | "dinner";
+
 export type Food = {
   calories: number;
   name: string;
   proteins: number;
   carbohydrates: number;
   fats: number;
+  meal?: Meals;
 };
-
-export type Meals =
-  | 'breakfast'
-  | 'morningSnacks'
-  | 'lunch'
-  | 'eveningSnacks'
-  | 'dinner';
 
 export type DietDay = {
   date: string;
-  breakfast?: Food[];
-  morningSnacks?: Food[];
-  lunch?: Food[];
-  eveningSnacks?: Food[];
-  dinner?: Food[];
+  foods: Food[];
 };
