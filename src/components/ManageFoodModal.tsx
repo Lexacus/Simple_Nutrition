@@ -19,6 +19,15 @@ type ManageFoodModalProps = {
   onSaveToStore?: ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => void;
 };
 
+const baseFoodItem: Food = {
+  calories: 0,
+  carbohydrates: 0,
+  fats: 0,
+  grams: 0,
+  name: "",
+  proteins: 0,
+};
+
 export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   onClose,
   selectedFood,
@@ -30,7 +39,11 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     foods,
     removeFood,
   }));
-  const [baseFoodValues, setBaseFoodValues] = useState<Food>();
+  const [baseFoodValues, setBaseFoodValues] = useState<Food | undefined>(
+    selectedFood.type === "edit"
+      ? { ...baseFoodItem, ...selectedFood.foodItem }
+      : undefined
+  );
   const {
     register,
     handleSubmit,
@@ -150,7 +163,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
           <Input
             {...remainingGramsProps}
             onChange={(e) => {
-              if (selectedFood.type === "addToDay") {
+              if (["addToDay", "edit"].includes(selectedFood.type)) {
                 handleValuesCalculation(Number(e.currentTarget.value));
                 return;
               }
