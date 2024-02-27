@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Food, Meals } from "../types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./common/Input";
@@ -26,11 +26,13 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   onEdit,
 }) => {
   const { foods } = useFoodStore(({ foods }) => ({ foods }));
+  const [baseFoodValues, setBaseFoodValues] = useState<Food>();
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm<{ food: Food }>({
     defaultValues: { food: { ...selectedFood.foodItem } },
   });
@@ -66,7 +68,14 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
         </div>
         <select
           onChange={(e) => {
-            setValue("food", foods[Number(e.target.value)]);
+            const { grams, ...selectedItem } = foods[Number(e.target.value)];
+            setBaseFoodValues({ ...selectedItem, grams });
+            setValue(
+              "food",
+              selectedFood.type === "addToDay"
+                ? { ...selectedItem, grams: 0 }
+                : { ...selectedItem, grams }
+            );
           }}
           className="px-[15px] h-[30px] m-[15px]"
         >
@@ -117,12 +126,32 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
           />
           <Input
             {...register("food.grams", { required: true })}
+            onChange={(e) => {
+              if (
+                !e.currentTarget.value ||
+                Number(e.currentTarget.value) === 0
+              ) {
+                if (!baseFoodValues) {
+                  return;
+                }
+                setValue("food", baseFoodValues);
+                return;
+              }
+              if (selectedFood.type === "addToDay") {
+                setValue(
+                  "food.calories",
+                  ((baseFoodValues?.calories ?? 0) *
+                    Number(e.currentTarget.value)) /
+                    (baseFoodValues?.grams ?? 1)
+                );
+              }
+            }}
             label="Grams"
             type="number"
             error={errors.food?.grams}
             placeholder="Insert quantity in grams"
           />
-          <Button>Salva</Button>
+          <Button>Save</Button>
         </form>
       </div>
     </div>
