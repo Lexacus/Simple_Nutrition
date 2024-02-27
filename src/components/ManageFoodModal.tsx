@@ -25,7 +25,10 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   onSaveToStore,
   onEdit,
 }) => {
-  const { foods } = useFoodStore(({ foods }) => ({ foods }));
+  const { foods, removeFood } = useFoodStore(({ foods, removeFood }) => ({
+    foods,
+    removeFood,
+  }));
   const [baseFoodValues, setBaseFoodValues] = useState<Food>();
   const {
     register,
@@ -164,7 +167,23 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             error={errors.food?.grams}
             placeholder="Insert quantity in grams"
           />
-          <Button>Save</Button>
+          <div className="flex ">
+            <Button>Save</Button>
+            {selectedFood.type === "addToStore" && (
+              <Button
+                type="button"
+                className="bg-red-600"
+                onClick={() => {
+                  if (!baseFoodValues) {
+                    return;
+                  }
+                  removeFood(baseFoodValues.name);
+                }}
+              >
+                Delete
+              </Button>
+            )}
+          </div>
         </form>
       </div>
     </div>

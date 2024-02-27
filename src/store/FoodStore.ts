@@ -5,14 +5,35 @@ import { Food } from "../types";
 
 type FoodStore = {
   foods: Food[];
-  addFood: (food: Food) => void;
+  upsertFood: (food: Food) => void;
+  removeFood: (name: string) => void;
 };
 
 export const useFoodStore = createWithEqualityFn<FoodStore>()(
   persist(
     (set, get) => ({
       foods: [],
-      addFood: (food) => set({ foods: [...get().foods, food] }),
+      upsertFood: (food) => {
+        const currentFoods = get().foods;
+        const alreadyExistingFoodIndex = currentFoods.findIndex(
+          ({ name }) => name === food.name
+        );
+        if (alreadyExistingFoodIndex === -1) {
+          return set({ foods: [...currentFoods, food] });
+        }
+        currentFoods.splice(alreadyExistingFoodIndex, 1, food);
+        return set({ foods: [...currentFoods] });
+      },
+      removeFood: (name) => {
+        const currentFoods = get().foods;
+        const foodToDeleteIndex = currentFoods.findIndex(
+          ({ name: foodName }) => name === foodName
+        );
+        if (foodToDeleteIndex !== -1) {
+          currentFoods.splice(foodToDeleteIndex, 1);
+        }
+        return set({ foods: [...currentFoods] });
+      },
     }),
     {
       name: "food-store",

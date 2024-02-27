@@ -29,8 +29,8 @@ function App() {
       })
     );
 
-  const { addFood } = useFoodStore(({ addFood }) => ({
-    addFood,
+  const { upsertFood } = useFoodStore(({ upsertFood }) => ({
+    upsertFood,
   }));
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
@@ -112,7 +112,7 @@ function App() {
     meal: Meals;
     foodItem: Food;
   }) => {
-    addFood({
+    upsertFood({
       ...foodItem,
       meal,
     });
