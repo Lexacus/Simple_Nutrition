@@ -6,6 +6,10 @@ import { Accordion } from "./components/Accordion";
 import { ManageFoodModal } from "./components/ManageFoodModal";
 import { useTrackerStore } from "./store/TrackerStore";
 import { DateSelector } from "./components/DateSelector";
+import { LineDivider } from "./components/ui/LineDivider";
+import { Button } from "./components/common/Button";
+import { AiOutlinePlus } from "react-icons/ai";
+import { useFoodStore } from "./store/FoodStore";
 
 const initializeTabs = () => {
   return [false, false, false, false, false];
@@ -25,10 +29,14 @@ function App() {
       })
     );
 
+  const { addFood } = useFoodStore(({ addFood }) => ({
+    addFood,
+  }));
+
   const [openTabs, setOpenTabs] = useState(initializeTabs);
   const [selectedFood, setSelectedFood] = useState<{
     foodItem?: Food;
-    type: "add" | "edit";
+    type: "addToDay" | "edit" | "addToStore";
     index: number;
   }>();
 
@@ -40,9 +48,16 @@ function App() {
     });
   };
 
-  const onAddClick = () => {
+  const onAddToDayClick = () => {
     setSelectedFood({
-      type: "add",
+      type: "addToDay",
+      index: 0,
+    });
+  };
+
+  const onAddToStoreClick = () => {
+    setSelectedFood({
+      type: "addToStore",
       index: 0,
     });
   };
@@ -64,7 +79,13 @@ function App() {
     });
   };
 
-  const onFoodSave = ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => {
+  const onFoodSaveToDay = ({
+    meal,
+    foodItem,
+  }: {
+    meal: Meals;
+    foodItem: Food;
+  }) => {
     editDay(selectedDate, {
       foods: [...days[selectedDate].foods, { ...foodItem, meal }],
     });
@@ -81,6 +102,19 @@ function App() {
     newFoods.splice(index, 1, foodItem);
     editDay(selectedDate, {
       foods: newFoods,
+    });
+  };
+
+  const onFoodSaveToStore = ({
+    meal,
+    foodItem,
+  }: {
+    meal: Meals;
+    foodItem: Food;
+  }) => {
+    addFood({
+      ...foodItem,
+      meal,
     });
   };
 
@@ -163,8 +197,9 @@ function App() {
           onClose={() => {
             setSelectedFood(undefined);
           }}
-          onSave={onFoodSave}
+          onSaveToDay={onFoodSaveToDay}
           onEdit={onFoodEdit}
+          onSaveToStore={onFoodSaveToStore}
         />
       )}
       <div className="flex flex-col w-full h-full border border-red-700">
@@ -178,51 +213,63 @@ function App() {
             <span>Fats: {totalFats}</span>
           </div>
         </div>
-        <Accordion
-          foodItems={breakfastFoods}
-          onTabClick={onTabClick(0)}
-          open={openTabs[0]}
-          tabName="Breakfast"
-          onAddClick={onAddClick}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        />
-        <Accordion
-          foodItems={morningSnacksFoods}
-          onTabClick={onTabClick(1)}
-          open={openTabs[1]}
-          tabName="Morning Snacks"
-          onAddClick={onAddClick}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        />
-        <Accordion
-          foodItems={lunchFoods}
-          onTabClick={onTabClick(2)}
-          open={openTabs[2]}
-          tabName="Lunch"
-          onAddClick={onAddClick}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        />
-        <Accordion
-          foodItems={eveningSnacksFoods}
-          onTabClick={onTabClick(3)}
-          open={openTabs[3]}
-          tabName="Evening Snacks"
-          onAddClick={onAddClick}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        />
-        <Accordion
-          foodItems={dinnerFoods}
-          onTabClick={onTabClick(4)}
-          open={openTabs[4]}
-          tabName="Dinner"
-          onAddClick={onAddClick}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        />
+        <div className="border border-black flex flex-col mx-[15px] rounded-[16px] my-[15px]">
+          <Accordion
+            foodItems={breakfastFoods}
+            onTabClick={onTabClick(0)}
+            open={openTabs[0]}
+            tabName="Breakfast"
+            onAddClick={onAddToDayClick}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+          />
+          <LineDivider />
+          <Accordion
+            foodItems={morningSnacksFoods}
+            onTabClick={onTabClick(1)}
+            open={openTabs[1]}
+            tabName="Morning Snacks"
+            onAddClick={onAddToDayClick}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+          />
+          <LineDivider />
+          <Accordion
+            foodItems={lunchFoods}
+            onTabClick={onTabClick(2)}
+            open={openTabs[2]}
+            tabName="Lunch"
+            onAddClick={onAddToDayClick}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+          />
+          <LineDivider />
+          <Accordion
+            foodItems={eveningSnacksFoods}
+            onTabClick={onTabClick(3)}
+            open={openTabs[3]}
+            tabName="Evening Snacks"
+            onAddClick={onAddToDayClick}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+          />
+          <LineDivider />
+          <Accordion
+            foodItems={dinnerFoods}
+            onTabClick={onTabClick(4)}
+            open={openTabs[4]}
+            tabName="Dinner"
+            onAddClick={onAddToDayClick}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+          />
+        </div>
+        <Button
+          className="rounded-full w-[50px] h-[50px]"
+          onClick={onAddToStoreClick}
+        >
+          <AiOutlinePlus style={{ fontSize: "50px" }} />
+        </Button>
       </div>
     </>
   );

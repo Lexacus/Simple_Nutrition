@@ -1,7 +1,13 @@
 import { FC } from "react";
 import { Food } from "../types";
 import { Button } from "./common/Button";
-import { AiFillEdit, AiOutlineClose } from "react-icons/ai";
+import {
+  AiFillCaretDown,
+  AiFillCaretUp,
+  AiFillEdit,
+  AiOutlineClose,
+  AiOutlinePlus,
+} from "react-icons/ai";
 
 interface AccordionProps {
   tabName: string;
@@ -23,8 +29,12 @@ export const Accordion: FC<AccordionProps> = ({
   onDeleteClick,
 }) => {
   return (
-    <div className="flex flex-col border border-red-500 px-[10px]">
-      <span onClick={onTabClick}>{tabName}</span>
+    <div className="flex flex-col px-[10px] gap-y-[10px] py-[10px]">
+      <div onClick={onTabClick} className="flex justify-between items-center">
+        <span>{tabName}</span>
+        {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
+      </div>
+
       {open && (
         <div className="flex flex-col">
           {foodItems?.map(({ foodItem: { name, grams }, index }) => {
@@ -51,7 +61,12 @@ export const Accordion: FC<AccordionProps> = ({
               </div>
             );
           })}
-          <Button onClick={onAddClick}>Aggiungi</Button>
+          <Button
+            className="rounded-full w-[40px] h-[40px]"
+            onClick={onAddClick}
+          >
+            <AiOutlinePlus style={{ fontSize: "50px" }} />
+          </Button>
         </div>
       )}
     </div>

@@ -4,35 +4,52 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./common/Input";
 import { AiOutlineClose } from "react-icons/ai";
 import { Button } from "./common/Button";
+import { useFoodStore } from "../store/FoodStore";
 
 type ManageFoodModalProps = {
   onClose: () => void;
-  selectedFood: { foodItem?: Food; type: "add" | "edit"; index: number };
-  onSave?: ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => void;
+  selectedFood: {
+    foodItem?: Food;
+    type: "addToDay" | "edit" | "addToStore";
+    index: number;
+  };
+  onSaveToDay?: ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => void;
   onEdit?: ({ foodItem, index }: { foodItem: Food; index: number }) => void;
+  onSaveToStore?: ({ meal, foodItem }: { meal: Meals; foodItem: Food }) => void;
 };
 
 export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   onClose,
   selectedFood,
-  onSave,
+  onSaveToDay,
+  onSaveToStore,
   onEdit,
 }) => {
+  const { foods } = useFoodStore(({ foods }) => ({ foods }));
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Food>({ defaultValues: { ...selectedFood.foodItem } });
+    setValue,
+  } = useForm<{ food: Food }>({
+    defaultValues: { food: { ...selectedFood.foodItem } },
+  });
 
-  const onSubmit: SubmitHandler<Food> = (data) => {
-    if (selectedFood.type === "add") {
-      onSave?.({
+  const onSubmit: SubmitHandler<{ food: Food }> = (data) => {
+    if (selectedFood.type === "addToDay") {
+      onSaveToDay?.({
         meal: selectedFood.foodItem?.meal ?? "breakfast",
-        foodItem: data,
+        foodItem: data.food,
+      });
+    }
+    if (selectedFood.type === "addToStore") {
+      onSaveToStore?.({
+        meal: selectedFood.foodItem?.meal ?? "breakfast",
+        foodItem: data.food,
       });
     }
     if (selectedFood.type === "edit") {
-      onEdit?.({ foodItem: data, index: selectedFood.index });
+      onEdit?.({ foodItem: data.food, index: selectedFood.index });
     }
     onClose();
   };
@@ -47,49 +64,62 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
         <div className="flex justify-end pr-[20px]">
           <AiOutlineClose style={{ fontSize: "25px" }} onClick={onClose} />
         </div>
+        <select
+          onChange={(e) => {
+            setValue("food", foods[Number(e.target.value)]);
+          }}
+          className="px-[15px] h-[30px] m-[15px]"
+        >
+          <option disabled selected>
+            Select a food
+          </option>
+          {foods.map((food, i) => (
+            <option value={i}>{food.name}</option>
+          ))}
+        </select>
         <form
           className="flex flex-col px-[20px] gap-y-[10px]"
           onSubmit={handleSubmit(onSubmit)}
         >
           <Input
-            {...register("name", { required: true })}
+            {...register("food.name", { required: true })}
             label="Name"
-            error={errors.name}
+            error={errors.food?.name}
             placeholder="Insert food name"
           />
           <Input
-            {...register("calories", { required: true })}
+            {...register("food.calories", { required: true })}
             label="Calories"
             type="number"
-            error={errors.calories}
+            error={errors.food?.calories}
             placeholder="Insert food calories"
           />
           <Input
-            {...register("carbohydrates", { required: true })}
+            {...register("food.carbohydrates", { required: true })}
             label="Carbs"
             type="number"
-            error={errors.carbohydrates}
+            error={errors.food?.carbohydrates}
             placeholder="Insert food carbohydrates"
           />
           <Input
-            {...register("proteins", { required: true })}
+            {...register("food.proteins", { required: true })}
             label="Proteins"
             type="number"
-            error={errors.proteins}
+            error={errors.food?.proteins}
             placeholder="Insert food proteins"
           />
           <Input
-            {...register("fats", { required: true })}
+            {...register("food.fats", { required: true })}
             label="Fats"
             type="number"
-            error={errors.fats}
+            error={errors.food?.fats}
             placeholder="Insert food fats"
           />
           <Input
-            {...register("grams", { required: true })}
+            {...register("food.grams", { required: true })}
             label="Grams"
             type="number"
-            error={errors.grams}
+            error={errors.food?.grams}
             placeholder="Insert quantity in grams"
           />
           <Button>Salva</Button>
