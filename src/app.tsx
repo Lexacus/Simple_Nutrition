@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import './app.css';
 import dayjs from 'dayjs';
 import { DietDay, Food, Meals } from './types';
@@ -12,26 +12,24 @@ const initializeTabs = () => {
 function App() {
   const [day, setDay] = useState<DietDay>({
     date: dayjs().format(),
-    food: {
-      breakfast: [
-        {
-          calories: 100,
-          name: 'Pollo',
-          carbohydrates: 10,
-          fats: 10,
-          proteins: 10,
-        },
-      ],
-      morningSnacks: [
-        {
-          calories: 100,
-          name: 'Pollo',
-          carbohydrates: 10,
-          fats: 10,
-          proteins: 10,
-        },
-      ],
-    },
+    breakfast: [
+      {
+        calories: 100,
+        name: 'Pollo',
+        carbohydrates: 10,
+        fats: 10,
+        proteins: 10,
+      },
+    ],
+    morningSnacks: [
+      {
+        calories: 100,
+        name: 'Pollo',
+        carbohydrates: 10,
+        fats: 10,
+        proteins: 10,
+      },
+    ],
   });
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
@@ -53,9 +51,9 @@ function App() {
     setDay((prev) => ({
       ...prev,
       food: {
-        ...prev.food,
+        ...prev,
         [meal]: [
-          ...(prev.food[meal] ?? []),
+          ...(prev[meal] ?? []),
           {
             ...foodItem,
           },
@@ -63,6 +61,23 @@ function App() {
       },
     }));
   };
+
+  const { totalCalories } = useMemo(() => {
+    const totalCalories =
+      (day?.breakfast?.reduce((acc, next) => acc + Number(next.calories), 0) ??
+        0) +
+      (day?.morningSnacks?.reduce(
+        (acc, next) => acc + Number(next.calories),
+        0
+      ) ?? 0) +
+      (day?.lunch?.reduce((acc, next) => acc + Number(next.calories), 0) ?? 0) +
+      (day?.eveningSnacks?.reduce(
+        (acc, next) => acc + Number(next.calories),
+        0
+      ) ?? 0) +
+      (day?.dinner?.reduce((acc, next) => acc + Number(next.calories), 0) ?? 0);
+    return { totalCalories };
+  }, [day]);
 
   return (
     <>
@@ -81,59 +96,56 @@ function App() {
         </span>
         <div className='flex flex-col w-full items-center'>
           <span>Today's summary</span>
-          <span>
-            Calories:{' '}
-            {day?.food.breakfast?.reduce((acc, next) => acc + next.calories, 0)}
-          </span>
+          <span>Calories: {totalCalories}</span>
           <div className='flex w-full justify-center gap-x-[10px]'>
             <span>
               Proteins:{' '}
-              {day?.food.breakfast?.reduce((acc, next) => {
+              {day?.breakfast?.reduce((acc, next) => {
                 return acc + next.proteins;
               }, 0)}
             </span>
             <span>
               Carbohydrates:{' '}
-              {day?.food.breakfast?.reduce((acc, next) => {
+              {day?.breakfast?.reduce((acc, next) => {
                 return acc + next.carbohydrates;
               }, 0)}
             </span>
             <span>
               Fats:{' '}
-              {day?.food.breakfast?.reduce((acc, next) => {
+              {day?.breakfast?.reduce((acc, next) => {
                 return acc + next.fats;
               }, 0)}
             </span>
           </div>
         </div>
         <Accordion
-          foodItems={day?.food.breakfast}
+          foodItems={day?.breakfast}
           onTabClick={handleTabPress(0)}
           open={openTabs[0]}
           tabName='Breakfast'
           onAddClick={onAddClick('breakfast')}
         />
         <Accordion
-          foodItems={day?.food.morningSnacks}
+          foodItems={day?.morningSnacks}
           onTabClick={handleTabPress(1)}
           open={openTabs[1]}
           tabName='Morning Snacks'
           onAddClick={onAddClick('morningSnacks')}
         />
         <Accordion
-          foodItems={day?.food.lunch}
+          foodItems={day?.lunch}
           onTabClick={handleTabPress(2)}
           open={openTabs[2]}
           tabName='Lunch'
         />
         <Accordion
-          foodItems={day?.food.breakfast}
+          foodItems={day?.breakfast}
           onTabClick={handleTabPress(3)}
           open={openTabs[3]}
           tabName='Evening Snacks'
         />
         <Accordion
-          foodItems={day?.food.breakfast}
+          foodItems={day?.breakfast}
           onTabClick={handleTabPress(4)}
           open={openTabs[4]}
           tabName='Dinner'

@@ -7,19 +7,17 @@ export type Food = {
 };
 
 export type Meals =
-  | "breakfast"
-  | "morningSnacks"
-  | "lunch"
-  | "eveningSnacks"
-  | "dinner";
+  | 'breakfast'
+  | 'morningSnacks'
+  | 'lunch'
+  | 'eveningSnacks'
+  | 'dinner';
 
 export type DietDay = {
   date: string;
-  food: {
-    breakfast?: Food[];
-    morningSnacks?: Food[];
-    lunch?: Food[];
-    eveningSnacks?: Food[];
-    dinner?: Food[];
-  };
+  breakfast?: Food[];
+  morningSnacks?: Food[];
+  lunch?: Food[];
+  eveningSnacks?: Food[];
+  dinner?: Food[];
 };
