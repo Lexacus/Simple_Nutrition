@@ -5,16 +5,13 @@ import { Food, Meals } from "./types";
 import { Accordion } from "./components/Accordion";
 import { ManageFoodModal } from "./components/ManageFoodModal";
 import { useTrackerStore } from "./store/TrackerStore";
+import { DateSelector } from "./components/DateSelector";
 
 const initializeTabs = () => {
   return [true, false, false, false, false];
 };
 
 const today = dayjs().format("YYYY-MM-DD");
-
-/* const initializeDate = () => {
-  return today;
-}; */
 
 function App() {
   const { selectedDate, setSelectedDate, days, editDay, addDay } =
@@ -133,6 +130,7 @@ function App() {
       )}
       <div className="flex flex-col w-full h-full border border-red-700">
         <div className="flex flex-col w-full items-center">
+          <DateSelector />
           <span>Summary</span>
           <span>Calories: {totalCalories}</span>
           <div className="flex w-full justify-center gap-x-[10px]">

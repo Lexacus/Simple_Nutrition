@@ -30,7 +30,7 @@ export const useTrackerStore = createWithEqualityFn<TrackerStore>()(
       },
     }),
     {
-      name: "tracker-store", // name of the item in the storage (must be unique)
+      name: "tracker-store",
     }
   ),
   shallow

@@ -12,7 +12,7 @@ export const DateSelector = () => {
     })
   );
   return (
-    <div className="flex justify-between items-center py-[20px]">
+    <div className="flex w-full justify-between items-center p-[20px]">
       <AiOutlineCaretLeft
         style={{ fontSize: "30px" }}
         onClick={() => {
