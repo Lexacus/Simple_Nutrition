@@ -21,13 +21,9 @@ export const Accordion: FC<AccordionProps> = ({
       <span onClick={onTabClick}>{tabName}</span>
       {open && (
         <div className="flex flex-col">
-          {foodItems?.map((foodItem) => {
+          {foodItems?.map(({ name, grams }) => {
             return (
-              <span key={`${tabName}_${foodItem.name}`}>
-                {" "}
-                {" - "}
-                {foodItem.name}
-              </span>
+              <span key={`${tabName}_${name}`}>{` - ${name} (${grams}g)`}</span>
             );
           })}
           <button
