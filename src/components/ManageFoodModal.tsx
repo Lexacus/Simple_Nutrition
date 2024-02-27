@@ -9,7 +9,7 @@ import { useFoodStore } from "../store/FoodStore";
 type ManageFoodModalProps = {
   onClose: () => void;
   selectedFood: {
-    foodItem?: Food;
+    foodItem?: Partial<Food>;
     type: "addToDay" | "edit" | "addToStore";
     index: number;
   };
@@ -60,10 +60,10 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     const newFats =
       ((baseFoodValues?.fats ?? 0) * Number(value)) /
       (baseFoodValues?.grams ?? 1);
-    setValue("food.calories", newCalories);
-    setValue("food.carbohydrates", newCarbohydrates);
-    setValue("food.proteins", newProteins);
-    setValue("food.fats", newFats);
+    setValue("food.calories", parseFloat(newCalories.toFixed(2)));
+    setValue("food.carbohydrates", parseFloat(newCarbohydrates.toFixed(2)));
+    setValue("food.proteins", parseFloat(newProteins.toFixed(2)));
+    setValue("food.fats", parseFloat(newFats.toFixed(2)));
   };
 
   const { onChange: onGramsChange, ...remainingGramsProps } = register(

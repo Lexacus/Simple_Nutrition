@@ -21,6 +21,7 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
           )}
           ref={ref}
           type={type}
+          step={0.01}
           {...props}
         />
         {error && (

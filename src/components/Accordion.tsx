@@ -61,11 +61,12 @@ export const Accordion: FC<AccordionProps> = ({
               </div>
             );
           })}
+          {!foodItems?.length && <span>No foods in this meal yet</span>}
           <Button
-            className="rounded-full w-[40px] h-[40px]"
+            className="text-blue-600 bg-transparent border-none"
             onClick={onAddClick}
           >
-            <AiOutlinePlus style={{ fontSize: "50px" }} />
+            Add
           </Button>
         </div>
       )}

@@ -35,7 +35,7 @@ function App() {
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
   const [selectedFood, setSelectedFood] = useState<{
-    foodItem?: Food;
+    foodItem?: Partial<Food>;
     type: "addToDay" | "edit" | "addToStore";
     index: number;
   }>();
@@ -48,8 +48,9 @@ function App() {
     });
   };
 
-  const onAddToDayClick = () => {
+  const onAddToDayClick = (meal: Meals) => () => {
     setSelectedFood({
+      foodItem: { meal },
       type: "addToDay",
       index: 0,
     });
@@ -219,7 +220,7 @@ function App() {
             onTabClick={onTabClick(0)}
             open={openTabs[0]}
             tabName="Breakfast"
-            onAddClick={onAddToDayClick}
+            onAddClick={onAddToDayClick("breakfast")}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
           />
@@ -229,7 +230,7 @@ function App() {
             onTabClick={onTabClick(1)}
             open={openTabs[1]}
             tabName="Morning Snacks"
-            onAddClick={onAddToDayClick}
+            onAddClick={onAddToDayClick("morningSnacks")}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
           />
@@ -239,7 +240,7 @@ function App() {
             onTabClick={onTabClick(2)}
             open={openTabs[2]}
             tabName="Lunch"
-            onAddClick={onAddToDayClick}
+            onAddClick={onAddToDayClick("lunch")}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
           />
@@ -249,7 +250,7 @@ function App() {
             onTabClick={onTabClick(3)}
             open={openTabs[3]}
             tabName="Evening Snacks"
-            onAddClick={onAddToDayClick}
+            onAddClick={onAddToDayClick("eveningSnacks")}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
           />
@@ -259,7 +260,7 @@ function App() {
             onTabClick={onTabClick(4)}
             open={openTabs[4]}
             tabName="Dinner"
-            onAddClick={onAddToDayClick}
+            onAddClick={onAddToDayClick("dinner")}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
           />
