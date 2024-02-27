@@ -1,13 +1,12 @@
 import { FC } from "react";
-import { Food } from "../types";
-import { Button } from "./common/Button";
 import {
   AiFillCaretDown,
   AiFillCaretUp,
   AiFillEdit,
   AiOutlineClose,
-  AiOutlinePlus,
 } from "react-icons/ai";
+import { Food } from "../types";
+import { Button } from "./common/Button";
 
 interface AccordionProps {
   tabName: string;
