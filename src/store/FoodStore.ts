@@ -5,6 +5,7 @@ import { Food } from "../types";
 
 type FoodStore = {
   foods: Food[];
+  setFoods: (foods: Food[]) => void;
   upsertFood: (food: Food) => void;
   removeFood: (name: string) => void;
 };
@@ -13,6 +14,7 @@ export const useFoodStore = createWithEqualityFn<FoodStore>()(
   persist(
     (set, get) => ({
       foods: [],
+      setFoods: (foods) => set({ foods }),
       upsertFood: (food) => {
         const currentFoods = get().foods;
         const alreadyExistingFoodIndex = currentFoods.findIndex(

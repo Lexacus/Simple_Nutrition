@@ -10,6 +10,9 @@ import { LineDivider } from "./components/ui/LineDivider";
 import { Button } from "./components/common/Button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useFoodStore } from "./store/FoodStore";
+import { Clipboard } from "@capacitor/clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const initializeTabs = () => {
   return [false, false, false, false, false];
@@ -18,20 +21,25 @@ const initializeTabs = () => {
 const today = dayjs().format("YYYY-MM-DD");
 
 function App() {
-  const { selectedDate, setSelectedDate, days, editDay, addDay } =
+  const { selectedDate, setSelectedDate, days, setDays, editDay, addDay } =
     useTrackerStore(
-      ({ selectedDate, setSelectedDate, days, editDay, addDay }) => ({
+      ({ selectedDate, setSelectedDate, days, setDays, editDay, addDay }) => ({
         selectedDate,
         setSelectedDate,
         days,
+        setDays,
         editDay,
         addDay,
       })
     );
 
-  const { upsertFood } = useFoodStore(({ upsertFood }) => ({
-    upsertFood,
-  }));
+  const { foods, setFoods, upsertFood } = useFoodStore(
+    ({ foods, setFoods, upsertFood }) => ({
+      foods,
+      setFoods,
+      upsertFood,
+    })
+  );
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
   const [selectedFood, setSelectedFood] = useState<{
@@ -271,6 +279,57 @@ function App() {
         >
           <AiOutlinePlus style={{ fontSize: "50px" }} />
         </Button>
+        <div className="flex flex-col gap-y-10 mt-10">
+          <Button
+            onClick={async () => {
+              await Clipboard.write({ string: JSON.stringify(foods) });
+              toast("Successfully copied to clipboard", {
+                hideProgressBar: true,
+                type: "success",
+              });
+            }}
+          >
+            Copy food store in clipboard
+          </Button>
+          <Button
+            onClick={async () => {
+              const jsonFoods = await Clipboard.read();
+              setFoods(JSON.parse(jsonFoods.value));
+              toast("Successfully loaded from clipboard", {
+                hideProgressBar: true,
+                type: "success",
+              });
+            }}
+          >
+            Load food store from clipboard
+          </Button>
+        </div>
+        <div className="flex flex-col gap-y-10 mt-10">
+          <Button
+            onClick={async () => {
+              await Clipboard.write({ string: JSON.stringify(days) });
+              toast("Successfully copied to clipboard", {
+                hideProgressBar: true,
+                type: "success",
+              });
+            }}
+          >
+            Copy tracked days in clipboard
+          </Button>
+          <Button
+            onClick={async () => {
+              const jsonDays = await Clipboard.read();
+              setDays(JSON.parse(jsonDays.value));
+              toast("Successfully loaded from clipboard", {
+                hideProgressBar: true,
+                type: "success",
+              });
+            }}
+          >
+            Load tracked days from clipboard
+          </Button>
+        </div>
+        <ToastContainer />
       </div>
     </>
   );

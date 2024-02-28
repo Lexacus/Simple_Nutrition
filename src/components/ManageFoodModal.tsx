@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Food, Meals } from "../types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./common/Input";
@@ -6,6 +6,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { Button } from "./common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import ReactSelect from "react-select";
+import { toast } from "react-toastify";
 
 type ManageFoodModalProps = {
   onClose: () => void;
@@ -39,16 +40,20 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     foods,
     removeFood,
   }));
+
   const [baseFoodValues, setBaseFoodValues] = useState<Food | undefined>(
     selectedFood.type === "edit"
       ? { ...baseFoodItem, ...selectedFood.foodItem }
       : undefined
   );
+  const selectRef = useRef();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm<{ food: Food }>({
     defaultValues: { food: { ...selectedFood.foodItem } },
   });
@@ -114,6 +119,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
           <AiOutlineClose style={{ fontSize: "25px" }} onClick={onClose} />
         </div>
         <ReactSelect
+          key={JSON.stringify(foods)} // TODO: there might be a better way to do this
           className="px-[5px] h-[30px] m-[15px]"
           options={foods.map((food, i) => ({ label: food.name, value: i }))}
           onChange={(selectedOption) => {
@@ -185,6 +191,18 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
                     return;
                   }
                   removeFood(baseFoodValues.name);
+
+                  reset();
+                  toast("Food deleted. Press to undo.", {
+                    type: "success",
+                    onClick: (e) => {
+                      onSaveToStore?.({
+                        foodItem: baseFoodValues,
+                        meal: selectedFood.foodItem?.meal ?? "breakfast",
+                      });
+                    },
+                    pauseOnHover: false,
+                  });
                 }}
               >
                 Delete
