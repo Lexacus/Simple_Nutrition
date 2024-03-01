@@ -1,7 +1,6 @@
+import { Clipboard } from "@capacitor/clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import { Button } from "../components/common/Button";
-import { Footer } from "../components/layout/Footer";
-import { Clipboard } from "@capacitor/clipboard";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
 
@@ -68,7 +67,6 @@ const SettingsPage = () => {
           Load tracked days from clipboard
         </Button>
       </div>
-      <Footer />
       <ToastContainer />
     </>
   );

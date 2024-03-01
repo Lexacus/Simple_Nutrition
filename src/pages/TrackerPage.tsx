@@ -2,12 +2,10 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
-import { Footer } from "../components/layout/Footer";
 import { LineDivider } from "../components/ui/LineDivider";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
@@ -102,7 +100,7 @@ function TrackerPage() {
     foodItem: Food;
     index: number;
   }) => {
-    const newFoods = days[selectedDate].foods;
+    const newFoods = [...days[selectedDate].foods];
     newFoods.splice(index, 1, foodItem);
     editDay(selectedDate, {
       foods: newFoods,
@@ -177,10 +175,10 @@ function TrackerPage() {
     );
 
     return {
-      totalCalories,
-      totalCarbohydrates,
-      totalProteins,
-      totalFats,
+      totalCalories: parseFloat(totalCalories.toFixed(2)),
+      totalCarbohydrates: parseFloat(totalCarbohydrates.toFixed(2)),
+      totalProteins: parseFloat(totalProteins.toFixed(2)),
+      totalFats: parseFloat(totalFats.toFixed(2)),
       breakfastFoods,
       morningSnacksFoods,
       lunchFoods,
@@ -206,7 +204,7 @@ function TrackerPage() {
           onSaveToStore={onFoodSaveToStore}
         />
       )}
-      <div className="flex flex-col w-full h-full border border-red-700">
+      <div className="flex flex-col w-full h-full">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
           <span>Summary</span>
@@ -274,8 +272,6 @@ function TrackerPage() {
         >
           <AiOutlinePlus style={{ fontSize: "50px" }} />
         </Button>
-
-        <Footer />
       </div>
       <ToastContainer />
     </>
