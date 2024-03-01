@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { ToastContainer } from "react-toastify";
+
 import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
+import { Footer } from "../components/layout/Footer";
 import { LineDivider } from "../components/ui/LineDivider";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
@@ -273,7 +274,6 @@ function TrackerPage() {
           <AiOutlinePlus style={{ fontSize: "50px" }} />
         </Button>
       </div>
-      <ToastContainer />
     </>
   );
 }

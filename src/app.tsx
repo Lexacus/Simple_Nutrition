@@ -3,6 +3,8 @@ import "./app.css";
 import TrackerPage from "./pages/TrackerPage";
 import SettingsPage from "./pages/SettingsPage";
 import { Footer } from "./components/layout/Footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter([
   {
@@ -10,6 +12,7 @@ const router = createBrowserRouter([
       <>
         <Outlet />
         <Footer />
+        <ToastContainer />
       </>
     ),
     children: [

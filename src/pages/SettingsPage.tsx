@@ -67,7 +67,6 @@ const SettingsPage = () => {
           Load tracked days from clipboard
         </Button>
       </div>
-      <ToastContainer />
     </>
   );
 };
