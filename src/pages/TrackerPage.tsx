@@ -205,7 +205,7 @@ function TrackerPage() {
           onSaveToStore={onFoodSaveToStore}
         />
       )}
-      <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col w-full h-full max-h-screen border border-green-600">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
           <span>Summary</span>
@@ -216,56 +216,58 @@ function TrackerPage() {
             <span>Fats: {totalFats}</span>
           </div>
         </div>
-        <div className="border border-black flex flex-col mx-[15px] rounded-[16px] my-[15px]">
-          <Accordion
-            foodItems={breakfastFoods}
-            onTabClick={onTabClick(0)}
-            open={openTabs[0]}
-            tabName="Breakfast"
-            onAddClick={onAddToDayClick("breakfast")}
-            onEditClick={onEditClick}
-            onDeleteClick={onDeleteClick}
-          />
-          <LineDivider />
-          <Accordion
-            foodItems={morningSnacksFoods}
-            onTabClick={onTabClick(1)}
-            open={openTabs[1]}
-            tabName="Morning Snacks"
-            onAddClick={onAddToDayClick("morningSnacks")}
-            onEditClick={onEditClick}
-            onDeleteClick={onDeleteClick}
-          />
-          <LineDivider />
-          <Accordion
-            foodItems={lunchFoods}
-            onTabClick={onTabClick(2)}
-            open={openTabs[2]}
-            tabName="Lunch"
-            onAddClick={onAddToDayClick("lunch")}
-            onEditClick={onEditClick}
-            onDeleteClick={onDeleteClick}
-          />
-          <LineDivider />
-          <Accordion
-            foodItems={eveningSnacksFoods}
-            onTabClick={onTabClick(3)}
-            open={openTabs[3]}
-            tabName="Evening Snacks"
-            onAddClick={onAddToDayClick("eveningSnacks")}
-            onEditClick={onEditClick}
-            onDeleteClick={onDeleteClick}
-          />
-          <LineDivider />
-          <Accordion
-            foodItems={dinnerFoods}
-            onTabClick={onTabClick(4)}
-            open={openTabs[4]}
-            tabName="Dinner"
-            onAddClick={onAddToDayClick("dinner")}
-            onEditClick={onEditClick}
-            onDeleteClick={onDeleteClick}
-          />
+        <div className="overflow-auto border-t border-black">
+          <div className="border border-black h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
+            <Accordion
+              foodItems={breakfastFoods}
+              onTabClick={onTabClick(0)}
+              open={openTabs[0]}
+              tabName="Breakfast"
+              onAddClick={onAddToDayClick("breakfast")}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+            <LineDivider />
+            <Accordion
+              foodItems={morningSnacksFoods}
+              onTabClick={onTabClick(1)}
+              open={openTabs[1]}
+              tabName="Morning Snacks"
+              onAddClick={onAddToDayClick("morningSnacks")}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+            <LineDivider />
+            <Accordion
+              foodItems={lunchFoods}
+              onTabClick={onTabClick(2)}
+              open={openTabs[2]}
+              tabName="Lunch"
+              onAddClick={onAddToDayClick("lunch")}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+            <LineDivider />
+            <Accordion
+              foodItems={eveningSnacksFoods}
+              onTabClick={onTabClick(3)}
+              open={openTabs[3]}
+              tabName="Evening Snacks"
+              onAddClick={onAddToDayClick("eveningSnacks")}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+            <LineDivider />
+            <Accordion
+              foodItems={dinnerFoods}
+              onTabClick={onTabClick(4)}
+              open={openTabs[4]}
+              tabName="Dinner"
+              onAddClick={onAddToDayClick("dinner")}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+          </div>
         </div>
         <Button
           className="rounded-full w-[50px] h-[50px]"
