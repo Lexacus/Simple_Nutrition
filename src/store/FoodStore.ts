@@ -7,7 +7,7 @@ type FoodStore = {
   foods: Food[];
   setFoods: (foods: Food[]) => void;
   upsertFood: (food: Food) => void;
-  removeFood: (name: string) => void;
+  deleteFood: (name: string) => void;
 };
 
 export const useFoodStore = createWithEqualityFn<FoodStore>()(
@@ -26,7 +26,7 @@ export const useFoodStore = createWithEqualityFn<FoodStore>()(
         currentFoods.splice(alreadyExistingFoodIndex, 1, food);
         return set({ foods: [...currentFoods] });
       },
-      removeFood: (name) => {
+      deleteFood: (name) => {
         const currentFoods = get().foods;
         const foodToDeleteIndex = currentFoods.findIndex(
           ({ name: foodName }) => name === foodName

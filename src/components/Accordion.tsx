@@ -5,17 +5,15 @@ import {
   AiFillEdit,
   AiOutlineClose,
 } from "react-icons/ai";
-import { Food } from "../types";
+import { Food, Meals } from "../types";
 import { Button } from "./common/Button";
+import { useTrackerStore } from "../store/TrackerStore";
 
 interface AccordionProps {
-  tabName: string;
+  tabName: Meals;
   onTabClick: () => void;
   open: boolean;
   foodItems?: { foodItem: Food; index: number }[];
-  onAddClick?: () => void;
-  onEditClick?: (index: number) => void;
-  onDeleteClick?: (index: number) => void;
 }
 
 export const Accordion: FC<AccordionProps> = ({
@@ -23,14 +21,47 @@ export const Accordion: FC<AccordionProps> = ({
   open,
   tabName,
   foodItems,
-  onAddClick,
-  onEditClick,
-  onDeleteClick,
 }) => {
+  const { days, editDay, selectedDate, setSelectedFood } = useTrackerStore(
+    ({ days, editDay, selectedDate, setSelectedFood }) => ({
+      days,
+      editDay,
+      selectedDate,
+      setSelectedFood,
+    })
+  );
+
+  const onAddClick = () => {
+    setSelectedFood({
+      foodItem: {
+        meal: tabName,
+      },
+      type: "addToDay",
+      index: 0,
+    });
+  };
+
+  const onEditClick = (index: number) => {
+    setSelectedFood({
+      foodItem: {
+        ...days[selectedDate].foods[index],
+      },
+      type: "edit",
+      index,
+    });
+  };
+
+  const onDeleteClick = (index: number) => {
+    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
+    editDay(selectedDate, {
+      foods: [...newFoods],
+    });
+  };
+
   return (
     <div className="flex flex-col px-[10px] gap-y-[10px] py-[10px]">
       <div onClick={onTabClick} className="flex justify-between items-center">
-        <span>{tabName}</span>
+        <span className="capitalize">{tabName}</span>
         {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
       </div>
 
@@ -47,13 +78,13 @@ export const Accordion: FC<AccordionProps> = ({
                   <AiFillEdit
                     style={{ fontSize: "25px" }}
                     onClick={() => {
-                      onEditClick?.(index);
+                      onEditClick(index);
                     }}
                   />
                   <AiOutlineClose
                     style={{ fontSize: "25px" }}
                     onClick={() => {
-                      onDeleteClick?.(index);
+                      onDeleteClick(index);
                     }}
                   />
                 </div>
