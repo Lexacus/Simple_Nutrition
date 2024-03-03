@@ -1,8 +1,9 @@
 import { Clipboard } from "@capacitor/clipboard";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Button } from "../components/common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
+import { FavoriteMeal, Food } from "../types";
 
 const SettingsPage = () => {
   const { days, setDays } = useTrackerStore(({ days, setDays }) => ({
@@ -10,17 +11,26 @@ const SettingsPage = () => {
     setDays,
   }));
 
-  const { foods, setFoods } = useFoodStore(({ foods, setFoods }) => ({
-    foods,
-    setFoods,
-  }));
+  const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
+    ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
+      foods,
+      favoriteMeals,
+      setFavoriteMeals,
+      setFoods,
+    })
+  );
 
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
         <Button
           onClick={async () => {
-            await Clipboard.write({ string: JSON.stringify(foods) });
+            await Clipboard.write({
+              string: JSON.stringify({
+                foods: foods,
+                favoriteMeals: favoriteMeals,
+              }),
+            });
             toast("Successfully copied to clipboard", {
               hideProgressBar: true,
               type: "success",
@@ -31,8 +41,12 @@ const SettingsPage = () => {
         </Button>
         <Button
           onClick={async () => {
-            const jsonFoods = await Clipboard.read();
-            setFoods(JSON.parse(jsonFoods.value));
+            const jsonFoodStore: {
+              foods: Food[];
+              favoriteMeals: FavoriteMeal[];
+            } = JSON.parse((await Clipboard.read()).value);
+            setFoods(jsonFoodStore.foods);
+            setFavoriteMeals(jsonFoodStore.favoriteMeals);
             toast("Successfully loaded from clipboard", {
               hideProgressBar: true,
               type: "success",
