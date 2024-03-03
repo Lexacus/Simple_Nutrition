@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { DietDay } from "../types";
+import { DietDay, Food } from "../types";
 import { persist } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
@@ -7,6 +7,16 @@ import { createWithEqualityFn } from "zustand/traditional";
 type TrackerStore = {
   selectedDate: string;
   setSelectedDate: (selectedDate: string) => void;
+  selectedFood?: {
+    foodItem?: Partial<Food>;
+    type: "addToDay" | "edit" | "addToStore";
+    index: number;
+  };
+  setSelectedFood: (selectedFood?: {
+    foodItem?: Partial<Food>;
+    type: "addToDay" | "edit" | "addToStore";
+    index: number;
+  }) => void;
   days: Record<string, DietDay>;
   setDays: (days: Record<string, DietDay>) => void;
   addDay: (date: string) => void;
@@ -20,6 +30,8 @@ export const useTrackerStore = createWithEqualityFn<TrackerStore>()(
     (set, get) => ({
       selectedDate: today,
       setSelectedDate: (selectedDate) => set({ selectedDate }),
+      selectedFood: undefined,
+      setSelectedFood: (selectedFood) => set({ selectedFood }),
       days: {},
       setDays: (days) => set({ days }),
       addDay: (date) => set({ days: { ...get().days, [date]: { foods: [] } } }),

@@ -1,14 +1,11 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-
 import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
-import { Footer } from "../components/layout/Footer";
 import { LineDivider } from "../components/ui/LineDivider";
-import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food, Meals } from "../types";
 
@@ -19,42 +16,41 @@ const initializeTabs = () => {
 const today = dayjs().format("YYYY-MM-DD");
 
 function TrackerPage() {
-  const { selectedDate, setSelectedDate, days, editDay, addDay } =
-    useTrackerStore(
-      ({ selectedDate, setSelectedDate, days, editDay, addDay }) => ({
-        selectedDate,
-        setSelectedDate,
-        days,
-
-        editDay,
-        addDay,
-      })
-    );
-
-  const { upsertFood } = useFoodStore(({ upsertFood }) => ({
-    upsertFood,
-  }));
+  const {
+    selectedFood,
+    selectedDate,
+    setSelectedDate,
+    days,
+    editDay,
+    addDay,
+    setSelectedFood,
+  } = useTrackerStore(
+    ({
+      selectedFood,
+      selectedDate,
+      setSelectedDate,
+      days,
+      editDay,
+      addDay,
+      setSelectedFood,
+    }) => ({
+      selectedFood,
+      selectedDate,
+      setSelectedDate,
+      days,
+      editDay,
+      addDay,
+      setSelectedFood,
+    })
+  );
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
-  const [selectedFood, setSelectedFood] = useState<{
-    foodItem?: Partial<Food>;
-    type: "addToDay" | "edit" | "addToStore";
-    index: number;
-  }>();
 
   const onTabClick = (tab: number) => () => {
     setOpenTabs((prev) => {
       const newTabs = [...prev];
       newTabs[tab] = !prev[tab];
       return newTabs;
-    });
-  };
-
-  const onAddToDayClick = (meal: Meals) => () => {
-    setSelectedFood({
-      foodItem: { meal },
-      type: "addToDay",
-      index: 0,
     });
   };
 
@@ -65,32 +61,9 @@ function TrackerPage() {
     });
   };
 
-  const onEditClick = (index: number) => {
-    setSelectedFood({
-      foodItem: {
-        ...days[selectedDate].foods[index],
-      },
-      type: "edit",
-      index,
-    });
-  };
-
-  const onDeleteClick = (index: number) => {
-    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
+  const onFoodSaveToDay = (foodItem: Food) => {
     editDay(selectedDate, {
-      foods: [...newFoods],
-    });
-  };
-
-  const onFoodSaveToDay = ({
-    meal,
-    foodItem,
-  }: {
-    meal: Meals;
-    foodItem: Food;
-  }) => {
-    editDay(selectedDate, {
-      foods: [...days[selectedDate].foods, { ...foodItem, meal }],
+      foods: [...days[selectedDate].foods, { ...foodItem }],
     });
   };
 
@@ -108,19 +81,8 @@ function TrackerPage() {
     });
   };
 
-  const onFoodSaveToStore = ({
-    meal,
-    foodItem,
-  }: {
-    meal: Meals;
-    foodItem: Food;
-  }) => {
-    upsertFood({
-      ...foodItem,
-      meal,
-    });
-  };
-
+  // this memo calculates total nutritional values from the days and creates the day's meals
+  // if the day does not exist yet, it simply creates a new empty day in the tracker store
   const {
     totalCalories,
     totalCarbohydrates,
@@ -202,7 +164,6 @@ function TrackerPage() {
           }}
           onSaveToDay={onFoodSaveToDay}
           onEdit={onFoodEdit}
-          onSaveToStore={onFoodSaveToStore}
         />
       )}
       <div className="flex flex-col w-full h-full max-h-screen border border-green-600">
@@ -222,55 +183,40 @@ function TrackerPage() {
               foodItems={breakfastFoods}
               onTabClick={onTabClick(0)}
               open={openTabs[0]}
-              tabName="Breakfast"
-              onAddClick={onAddToDayClick("breakfast")}
-              onEditClick={onEditClick}
-              onDeleteClick={onDeleteClick}
+              tabName="breakfast"
             />
             <LineDivider />
             <Accordion
               foodItems={morningSnacksFoods}
               onTabClick={onTabClick(1)}
               open={openTabs[1]}
-              tabName="Morning Snacks"
-              onAddClick={onAddToDayClick("morningSnacks")}
-              onEditClick={onEditClick}
-              onDeleteClick={onDeleteClick}
+              tabName="morningSnacks"
             />
             <LineDivider />
             <Accordion
               foodItems={lunchFoods}
               onTabClick={onTabClick(2)}
               open={openTabs[2]}
-              tabName="Lunch"
-              onAddClick={onAddToDayClick("lunch")}
-              onEditClick={onEditClick}
-              onDeleteClick={onDeleteClick}
+              tabName="lunch"
             />
             <LineDivider />
             <Accordion
               foodItems={eveningSnacksFoods}
               onTabClick={onTabClick(3)}
               open={openTabs[3]}
-              tabName="Evening Snacks"
-              onAddClick={onAddToDayClick("eveningSnacks")}
-              onEditClick={onEditClick}
-              onDeleteClick={onDeleteClick}
+              tabName="eveningSnacks"
             />
             <LineDivider />
             <Accordion
               foodItems={dinnerFoods}
               onTabClick={onTabClick(4)}
               open={openTabs[4]}
-              tabName="Dinner"
-              onAddClick={onAddToDayClick("dinner")}
-              onEditClick={onEditClick}
-              onDeleteClick={onDeleteClick}
+              tabName="dinner"
             />
           </div>
         </div>
         <Button
-          className="rounded-full w-[50px] h-[50px]"
+          className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
           onClick={onAddToStoreClick}
         >
           <AiOutlinePlus style={{ fontSize: "50px" }} />
