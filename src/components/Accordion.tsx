@@ -89,59 +89,61 @@ export const Accordion: FC<AccordionProps> = ({
   return (
     <>
       {/*TODO: Temporary code duplication, remember to fix it later */}
-      <Modal
-        onClose={() => {
-          setFavoriteMealModalOpen(undefined);
-        }}
-      >
-        {favoriteMealModalOpen === "save" && (
-          <>
-            <Input
-              label="Name"
-              value={favoriteMealName}
-              onChange={({ currentTarget: { value } }) => {
-                setFavoriteMealName(value);
-              }}
-            />
-            <Button
-              onClick={() => {
-                onSaveAsFavoriteMeal(favoriteMealName);
-                setFavoriteMealModalOpen(undefined);
-              }}
-            >
-              Save as favorite meal
-            </Button>
-          </>
-        )}
-        {favoriteMealModalOpen === "load" && (
-          <>
-            <ReactSelect
-              /* key={JSON.stringify(baseFoodValues)}  */ // TODO: there might be a better way to do this
-              className="px-[5px] h-[30px] m-[15px]"
-              options={favoriteMeals.map(({ name }, i) => ({
-                label: name,
-                value: i,
-              }))}
-              onChange={(selectedOption) => {
-                setSelectedFavoriteMeal(
-                  favoriteMeals[Number(selectedOption?.value)]
-                );
-              }}
-              placeholder="Select favorite meal..."
-            />
-            <Button
-              onClick={() => {
-                editDay(selectedDate, {
-                  foods: [...(selectedFavoriteMeal?.mealFoods ?? [])],
-                });
-                setFavoriteMealModalOpen(undefined);
-              }}
-            >
-              Load favorite meal
-            </Button>
-          </>
-        )}
-      </Modal>
+      {favoriteMealModalOpen && (
+        <Modal
+          onClose={() => {
+            setFavoriteMealModalOpen(undefined);
+          }}
+        >
+          {favoriteMealModalOpen === "save" && (
+            <>
+              <Input
+                label="Name"
+                value={favoriteMealName}
+                onChange={({ currentTarget: { value } }) => {
+                  setFavoriteMealName(value);
+                }}
+              />
+              <Button
+                onClick={() => {
+                  onSaveAsFavoriteMeal(favoriteMealName);
+                  setFavoriteMealModalOpen(undefined);
+                }}
+              >
+                Save as favorite meal
+              </Button>
+            </>
+          )}
+          {favoriteMealModalOpen === "load" && (
+            <>
+              <ReactSelect
+                /* key={JSON.stringify(baseFoodValues)}  */ // TODO: there might be a better way to do this
+                className="px-[5px] h-[30px] m-[15px]"
+                options={favoriteMeals.map(({ name }, i) => ({
+                  label: name,
+                  value: i,
+                }))}
+                onChange={(selectedOption) => {
+                  setSelectedFavoriteMeal(
+                    favoriteMeals[Number(selectedOption?.value)]
+                  );
+                }}
+                placeholder="Select favorite meal..."
+              />
+              <Button
+                onClick={() => {
+                  editDay(selectedDate, {
+                    foods: [...(selectedFavoriteMeal?.mealFoods ?? [])],
+                  });
+                  setFavoriteMealModalOpen(undefined);
+                }}
+              >
+                Load favorite meal
+              </Button>
+            </>
+          )}
+        </Modal>
+      )}
       <div className="flex flex-col px-[10px] gap-y-[10px] py-[10px]">
         <div onClick={onTabClick} className="flex justify-between items-center">
           <span className="capitalize">{`${tabName} ${
@@ -153,56 +155,60 @@ export const Accordion: FC<AccordionProps> = ({
         </div>
 
         {open && (
-          <div className="flex flex-col">
-            {foodItems?.map(({ foodItem: { name, grams }, index }) => {
-              return (
-                <div
-                  key={`${tabName}_${name}`}
-                  className="flex justify-between items-center"
-                >
-                  <span>{` - ${name} (${grams}g)`}</span>
-                  <div className="flex justify-center items-center gap-x-[10px]">
-                    <AiFillEdit
-                      style={{ fontSize: "25px" }}
-                      onClick={() => {
-                        onEditClick(index);
-                      }}
-                    />
-                    <AiOutlineClose
-                      style={{ fontSize: "25px" }}
-                      onClick={() => {
-                        onDeleteClick(index);
-                      }}
-                    />
+          <div>
+            <div className="flex flex-col gap-y-[5px]">
+              {foodItems?.map(({ foodItem: { name, grams }, index }) => {
+                return (
+                  <div
+                    key={`${tabName}_${name}`}
+                    className="flex justify-between items-center"
+                  >
+                    <span className="text-[14px]">{` - ${name} (${grams}g)`}</span>
+                    <div className="flex justify-center items-center gap-x-[10px]">
+                      <AiFillEdit
+                        style={{ fontSize: "25px" }}
+                        onClick={() => {
+                          onEditClick(index);
+                        }}
+                      />
+                      <AiOutlineClose
+                        style={{ fontSize: "25px" }}
+                        onClick={() => {
+                          onDeleteClick(index);
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-            {!foodItems?.length && <span>No foods in this meal yet</span>}
-            <Button
-              className="text-blue-600 bg-transparent border-none"
-              onClick={onAddClick}
-            >
-              Add
-            </Button>
-            {foodItems?.length ? (
+                );
+              })}
+              {!foodItems?.length && <span>No foods in this meal yet</span>}
+            </div>
+            <div className="flex flex-col">
+              <Button
+                className="text-blue-600 bg-transparent border-none"
+                onClick={onAddClick}
+              >
+                Add
+              </Button>
+              {foodItems?.length ? (
+                <Button
+                  className="text-blue-600 bg-transparent border-none"
+                  onClick={() => {
+                    setFavoriteMealModalOpen("save");
+                  }}
+                >
+                  Save as favorite meal
+                </Button>
+              ) : null}
               <Button
                 className="text-blue-600 bg-transparent border-none"
                 onClick={() => {
-                  setFavoriteMealModalOpen("save");
+                  setFavoriteMealModalOpen("load");
                 }}
               >
-                Save as favorite meal
+                Load from favorite meals
               </Button>
-            ) : null}
-            <Button
-              className="text-blue-600 bg-transparent border-none"
-              onClick={() => {
-                setFavoriteMealModalOpen("load");
-              }}
-            >
-              Load from favorite meals
-            </Button>
+            </div>
           </div>
         )}
       </div>

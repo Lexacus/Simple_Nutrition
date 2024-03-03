@@ -9,6 +9,7 @@ import { Button } from "./common/Button";
 import { Input } from "./common/Input";
 import { Checkbox } from "./common/Checkbox";
 import { ModalOverlay } from "./ui/ModalOverlay";
+import { Modal } from "./ui/Modal";
 
 type ManageFoodModalProps = {
   onClose: () => void;
@@ -156,132 +157,123 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   return (
     <>
       {saveConfirmModal && (
-        <div className="absolute w-full h-full z-[100] flex items-center justify-center">
-          <ModalOverlay
-            onClick={() => {
-              setSaveConfirmModal(undefined);
-            }}
-          />
-          <div className=" flex flex-col justify-between w-[calc(100%-20px)] h-full max-h-[150px] z-[110] bg-white rounded-[16px] p-[10px] ">
-            <span className="text-center">{`There is a food named ${saveConfirmModal.name} saved in the store already. Would you like to overwrite it?`}</span>
-            <div className="flex">
-              <Button
-                onClick={() => {
-                  upsertFood(saveConfirmModal);
-                  onClose();
-                }}
-              >
-                Yes
-              </Button>
-              <Button
-                className="bg-red-600"
-                onClick={() => {
-                  setSaveConfirmModal(undefined);
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-      <div className="absolute flex items-center w-full h-full">
-        <ModalOverlay onClick={onClose} />
-
-        <div className="flex w-full h-fit flex-col bg-white z-[10] rounded-[16px] mx-[10px] py-[10px]">
-          <div className="flex justify-end pr-[20px]">
-            <AiOutlineClose style={{ fontSize: "25px" }} onClick={onClose} />
-          </div>
-          <ReactSelect
-            key={JSON.stringify(baseFoodValues)} // TODO: there might be a better way to do this
-            className="px-[5px] h-[30px] m-[15px]"
-            options={foods.map((food, i) => ({ label: food.name, value: i }))}
-            onChange={(selectedOption) => {
-              const selectedFoodItem = foods[Number(selectedOption?.value)];
-              setBaseFoodValues(selectedFoodItem);
-              setValue("food", selectedFoodItem);
-            }}
-            placeholder="Select food from store..."
-          />
-          <form
-            className="flex flex-col px-[20px] gap-y-[10px]"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Input
-              {...register("food.name", { required: true })}
-              label="Name"
-              error={errors.food?.name}
-              placeholder="Insert food name"
-            />
-            <Input
-              {...register("food.calories", { required: true })}
-              label="Calories"
-              type="number"
-              error={errors.food?.calories}
-              placeholder="Insert food calories"
-            />
-            <Input
-              {...register("food.carbohydrates", { required: true })}
-              label="Carbs"
-              type="number"
-              error={errors.food?.carbohydrates}
-              placeholder="Insert food carbohydrates"
-            />
-            <Input
-              {...register("food.proteins", { required: true })}
-              label="Proteins"
-              type="number"
-              error={errors.food?.proteins}
-              placeholder="Insert food proteins"
-            />
-            <Input
-              {...register("food.fats", { required: true })}
-              label="Fats"
-              type="number"
-              error={errors.food?.fats}
-              placeholder="Insert food fats"
-            />
-            <Input
-              {...remainingGramsProps}
-              onChange={(e) => {
-                if (["addToDay", "edit"].includes(selectedFood.type)) {
-                  handleValuesCalculation(Number(e.currentTarget.value));
-                  return;
-                }
-                onGramsChange(e);
+        <Modal
+          className="z-[200]"
+          onClose={() => {
+            setSaveConfirmModal(undefined);
+          }}
+        >
+          <span className="text-center">{`There is a food named ${saveConfirmModal.name} saved in the store already. Would you like to overwrite it?`}</span>
+          <div className="flex">
+            <Button
+              onClick={() => {
+                upsertFood(saveConfirmModal);
+                onClose();
               }}
-              label="Grams"
-              type="number"
-              error={errors.food?.grams}
-              placeholder="Insert quantity in grams"
-            />
-            {!baseFoodValues && (
-              <Checkbox
-                label="Also save to store"
-                checked={shouldSaveToStore}
-                onChange={() => {
-                  setShouldSaveToStore((prev) => !prev);
-                }}
-              />
-            )}
-            <Button type="button" onClick={clearForm}>
-              Clear
+            >
+              Yes
             </Button>
-            <div className="flex">
-              <Button>{selectedFood.type === "edit" ? "Edit" : "Save"}</Button>
-              {selectedFood.type === "addToStore" && (
-                <Button
-                  type="button"
-                  className="bg-red-600"
-                  onClick={handleStoredFoodDeletion}
-                >
-                  Delete
-                </Button>
-              )}
-            </div>
-          </form>
-        </div>
-      </div>
+            <Button
+              className="bg-red-600"
+              onClick={() => {
+                setSaveConfirmModal(undefined);
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Modal>
+      )}
+      <Modal onClose={onClose}>
+        <ReactSelect
+          key={JSON.stringify(baseFoodValues)} // TODO: there might be a better way to do this
+          className="px-[5px] h-[30px] m-[15px]"
+          options={foods.map((food, i) => ({ label: food.name, value: i }))}
+          onChange={(selectedOption) => {
+            const selectedFoodItem = foods[Number(selectedOption?.value)];
+            setBaseFoodValues(selectedFoodItem);
+            setValue("food", selectedFoodItem);
+          }}
+          placeholder="Select food from store..."
+        />
+        <form
+          className="flex flex-col px-[20px] gap-y-[10px]"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Input
+            {...register("food.name", { required: true })}
+            label="Name"
+            error={errors.food?.name}
+            placeholder="Insert food name"
+          />
+          <Input
+            {...register("food.calories", { required: true })}
+            label="Calories"
+            type="number"
+            error={errors.food?.calories}
+            placeholder="Insert food calories"
+          />
+          <Input
+            {...register("food.carbohydrates", { required: true })}
+            label="Carbs"
+            type="number"
+            error={errors.food?.carbohydrates}
+            placeholder="Insert food carbohydrates"
+          />
+          <Input
+            {...register("food.proteins", { required: true })}
+            label="Proteins"
+            type="number"
+            error={errors.food?.proteins}
+            placeholder="Insert food proteins"
+          />
+          <Input
+            {...register("food.fats", { required: true })}
+            label="Fats"
+            type="number"
+            error={errors.food?.fats}
+            placeholder="Insert food fats"
+          />
+          <Input
+            {...remainingGramsProps}
+            onChange={(e) => {
+              if (["addToDay", "edit"].includes(selectedFood.type)) {
+                handleValuesCalculation(Number(e.currentTarget.value));
+                return;
+              }
+              onGramsChange(e);
+            }}
+            label="Grams"
+            type="number"
+            error={errors.food?.grams}
+            placeholder="Insert quantity in grams"
+          />
+          {!baseFoodValues && (
+            <Checkbox
+              label="Also save to store"
+              checked={shouldSaveToStore}
+              onChange={() => {
+                setShouldSaveToStore((prev) => !prev);
+              }}
+            />
+          )}
+          <Button type="button" onClick={clearForm}>
+            Clear
+          </Button>
+          <div className="flex">
+            <Button>{selectedFood.type === "edit" ? "Edit" : "Save"}</Button>
+            {selectedFood.type === "addToStore" && (
+              <Button
+                type="button"
+                className="bg-red-600"
+                onClick={handleStoredFoodDeletion}
+              >
+                Delete
+              </Button>
+            )}
+          </div>
+        </form>
+      </Modal>
     </>
   );
 };

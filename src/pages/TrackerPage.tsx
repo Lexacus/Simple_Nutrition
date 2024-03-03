@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
-import { FavoriteMealModal } from "../components/FavoriteMealModal";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
 import { LineDivider } from "../components/ui/LineDivider";
@@ -241,7 +240,7 @@ function TrackerPage() {
                   setAddOverlayOpen(false);
                 }}
               >
-                Add new food
+                Manage food store
               </Button>
               {/* <Button
                 onClick={() => {
