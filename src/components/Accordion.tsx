@@ -61,7 +61,11 @@ export const Accordion: FC<AccordionProps> = ({
   return (
     <div className="flex flex-col px-[10px] gap-y-[10px] py-[10px]">
       <div onClick={onTabClick} className="flex justify-between items-center">
-        <span className="capitalize">{tabName}</span>
+        <span className="capitalize">{`${tabName} ${
+          foodItems?.length && foodItems.length > 0
+            ? `(${foodItems.length})`
+            : ""
+        }`}</span>
         {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
       </div>
 
