@@ -8,6 +8,11 @@ type FoodStore = {
   setFoods: (foods: Food[]) => void;
   upsertFood: (food: Food) => void;
   deleteFood: (name: string) => void;
+  favoriteMeals: { name: string; mealFoods: Food[] }[];
+  upsertFavoriteMeal: (favoriteMeal: {
+    name: string;
+    mealFoods: Food[];
+  }) => void;
 };
 
 export const useFoodStore = createWithEqualityFn<FoodStore>()(
@@ -35,6 +40,12 @@ export const useFoodStore = createWithEqualityFn<FoodStore>()(
           currentFoods.splice(foodToDeleteIndex, 1);
         }
         return set({ foods: [...currentFoods] });
+      },
+      favoriteMeals: [],
+      upsertFavoriteMeal: (favoriteMeal) => {
+        const currentFavoriteMeals = get().favoriteMeals;
+        // TODO: Add check for already existing favorite meals with same name
+        return set({ favoriteMeals: [...currentFavoriteMeals, favoriteMeal] });
       },
     }),
     {

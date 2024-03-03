@@ -3,11 +3,13 @@ import { useEffect, useMemo, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
+import { FavoriteMealModal } from "../components/FavoriteMealModal";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
 import { LineDivider } from "../components/ui/LineDivider";
+import { ModalOverlay } from "../components/ui/ModalOverlay";
 import { useTrackerStore } from "../store/TrackerStore";
-import { Food, Meals } from "../types";
+import { Food } from "../types";
 
 const initializeTabs = () => {
   return [false, false, false, false, false];
@@ -45,6 +47,8 @@ function TrackerPage() {
   );
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
+  const [addOverlayOpen, setAddOverlayOpen] = useState(false);
+  const [favoriteMealModalOpen, setFavoriteMealModalOpen] = useState(false);
 
   const onTabClick = (tab: number) => () => {
     setOpenTabs((prev) => {
@@ -166,6 +170,13 @@ function TrackerPage() {
           onEdit={onFoodEdit}
         />
       )}
+      {/*  {favoriteMealModalOpen && (
+        <FavoriteMealModal
+          onClose={() => {
+            setFavoriteMealModalOpen(false);
+          }}
+        />
+      )} */}
       <div className="flex flex-col w-full h-full max-h-screen border border-green-600">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
@@ -215,9 +226,40 @@ function TrackerPage() {
             />
           </div>
         </div>
+        {addOverlayOpen && (
+          <>
+            <ModalOverlay
+              onClick={() => {
+                setAddOverlayOpen(false);
+              }}
+            />
+            <div className="flex flex-col absolute bottom-[110px] right-[10px] gap-y-[3px] mb-[3px] items-end">
+              <Button
+                className="mx-0"
+                onClick={() => {
+                  onAddToStoreClick();
+                  setAddOverlayOpen(false);
+                }}
+              >
+                Add new food
+              </Button>
+              {/* <Button
+                onClick={() => {
+                  setFavoriteMealModalOpen(true);
+                  setAddOverlayOpen(false);
+                }}
+              >
+                Create favorite meal
+              </Button> */}
+            </div>
+          </>
+        )}
+
         <Button
           className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
-          onClick={onAddToStoreClick}
+          onClick={() => {
+            setAddOverlayOpen((prev) => !prev);
+          }}
         >
           <AiOutlinePlus style={{ fontSize: "50px" }} />
         </Button>

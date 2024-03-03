@@ -185,7 +185,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
           </div>
         </div>
       )}
-      <div className="absolute flex items-center w-full h-full ">
+      <div className="absolute flex items-center w-full h-full">
         <ModalOverlay onClick={onClose} />
 
         <div className="flex w-full h-fit flex-col bg-white z-[10] rounded-[16px] mx-[10px] py-[10px]">
