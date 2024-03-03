@@ -7,7 +7,7 @@ import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
 import { LineDivider } from "../components/ui/LineDivider";
 import { useTrackerStore } from "../store/TrackerStore";
-import { Food, Meals } from "../types";
+import { Food } from "../types";
 
 const initializeTabs = () => {
   return [false, false, false, false, false];

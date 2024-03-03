@@ -1,5 +1,5 @@
 import { Clipboard } from "@capacitor/clipboard";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Button } from "../components/common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
