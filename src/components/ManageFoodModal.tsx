@@ -4,10 +4,10 @@ import { AiOutlineClose } from "react-icons/ai";
 import ReactSelect from "react-select";
 import { toast } from "react-toastify";
 import { useFoodStore } from "../store/FoodStore";
-import { Food, Meals } from "../types";
+import { Food } from "../types";
 import { Button } from "./common/Button";
-import { Input } from "./common/Input";
 import { Checkbox } from "./common/Checkbox";
+import { Input } from "./common/Input";
 import { ModalOverlay } from "./ui/ModalOverlay";
 import { Modal } from "./ui/Modal";
 

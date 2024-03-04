@@ -16,6 +16,7 @@ export type Food = {
 };
 
 export type DietDay = {
-  /*  date: string; */
   foods: Food[];
 };
+
+export type FavoriteMeal = { name: string; mealFoods: Food[] };

@@ -9,12 +9,7 @@ type CheckboxProps = {
   label?: string;
 };
 
-export const Checkbox: FC<CheckboxProps> = ({
-  onChange,
-  className,
-  label,
-  checked,
-}) => {
+export const Checkbox: FC<CheckboxProps> = ({ onChange, label, checked }) => {
   return (
     <div className="flex flex-row mx-auto items-center gap-x-[5px]">
       <div

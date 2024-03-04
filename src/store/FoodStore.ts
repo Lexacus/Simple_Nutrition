@@ -1,18 +1,16 @@
 import { persist } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
-import { Food } from "../types";
+import { FavoriteMeal, Food } from "../types";
 
 type FoodStore = {
   foods: Food[];
   setFoods: (foods: Food[]) => void;
   upsertFood: (food: Food) => void;
   deleteFood: (name: string) => void;
-  favoriteMeals: { name: string; mealFoods: Food[] }[];
-  upsertFavoriteMeal: (favoriteMeal: {
-    name: string;
-    mealFoods: Food[];
-  }) => void;
+  favoriteMeals: FavoriteMeal[];
+  setFavoriteMeals: (favoriteMeals: FavoriteMeal[]) => void;
+  upsertFavoriteMeal: (favoriteMeal: FavoriteMeal) => void;
 };
 
 export const useFoodStore = createWithEqualityFn<FoodStore>()(
@@ -42,6 +40,7 @@ export const useFoodStore = createWithEqualityFn<FoodStore>()(
         return set({ foods: [...currentFoods] });
       },
       favoriteMeals: [],
+      setFavoriteMeals: (favoriteMeals) => set({ favoriteMeals }),
       upsertFavoriteMeal: (favoriteMeal) => {
         const currentFavoriteMeals = get().favoriteMeals;
         // TODO: Add check for already existing favorite meals with same name
