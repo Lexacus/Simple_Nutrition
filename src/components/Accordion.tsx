@@ -5,13 +5,12 @@ import {
   AiFillEdit,
   AiOutlineClose,
 } from "react-icons/ai";
+import ReactSelect from "react-select";
+import { useFoodStore } from "../store/FoodStore";
+import { useTrackerStore } from "../store/TrackerStore";
 import { Food, Meals } from "../types";
 import { Button } from "./common/Button";
-import { useTrackerStore } from "../store/TrackerStore";
-import { useFoodStore } from "../store/FoodStore";
-import { ModalOverlay } from "./ui/ModalOverlay";
 import { Input } from "./common/Input";
-import ReactSelect from "react-select";
 import { Modal } from "./ui/Modal";
 
 interface AccordionProps {

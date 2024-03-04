@@ -1,12 +1,12 @@
-import { FC, useState } from "react";
-import { ModalOverlay } from "./ui/ModalOverlay";
-import ReactSelect from "react-select";
-import { AiOutlineClose } from "react-icons/ai";
-import { Food } from "../types";
+import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { AiOutlineClose } from "react-icons/ai";
+import ReactSelect from "react-select";
 import { useFoodStore } from "../store/FoodStore";
-import { Input } from "./common/Input";
+import { Food } from "../types";
 import { Button } from "./common/Button";
+import { Input } from "./common/Input";
+import { ModalOverlay } from "./ui/ModalOverlay";
 
 interface FavoriteMealModalProps {
   onClose: () => void;
