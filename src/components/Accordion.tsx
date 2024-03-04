@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import {
   AiFillCaretDown,
   AiFillCaretUp,
-  AiFillEdit,
-  AiOutlineClose,
+  AiFillPlusCircle,
+  AiFillStar,
 } from "react-icons/ai";
 import ReactSelect from "react-select";
 import { useFoodStore } from "../store/FoodStore";
@@ -71,12 +71,12 @@ export const Accordion: FC<AccordionProps> = ({
     });
   };
 
-  const onDeleteClick = (index: number) => {
+  /* const onDeleteClick = (index: number) => {
     const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
     editDay(selectedDate, {
       foods: [...newFoods],
     });
-  };
+  }; */
 
   const onSaveAsFavoriteMeal = (name: string) => {
     upsertFavoriteMeal({
@@ -87,7 +87,6 @@ export const Accordion: FC<AccordionProps> = ({
 
   return (
     <>
-      {/*TODO: Temporary code duplication, remember to fix it later */}
       {favoriteMealModalOpen && (
         <Modal
           onClose={() => {
@@ -143,69 +142,79 @@ export const Accordion: FC<AccordionProps> = ({
           )}
         </Modal>
       )}
-      <div className="flex flex-col px-[10px] gap-y-[10px] py-[10px]">
-        <div onClick={onTabClick} className="flex justify-between items-center">
-          <span className="capitalize">{`${tabName} ${
-            foodItems?.length && foodItems.length > 0
-              ? `(${foodItems.length})`
-              : ""
-          }`}</span>
-          {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
+      <div className="flex flex-col p-[3px] gap-y-[0px] ">
+        <div className="flex flex-col border border-black rounded-[16px] p-[10px]">
+          <div
+            onClick={onTabClick}
+            className="flex justify-between items-center"
+          >
+            <span className="capitalize">{`${tabName} ${
+              foodItems?.length && foodItems.length > 0
+                ? `(${foodItems.length})`
+                : ""
+            }`}</span>
+            {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
+          </div>
+          {/* {open && (
+            <div className="flex">
+              <AiFillPlusCircle />
+              <AiFillStar />
+            </div>
+          )} */}
         </div>
 
         {open && (
-          <div>
+          <div className="border-b border-l border-r border-black mx-[15px] px-[3px] pt-[5px] rounded-b-[16px]">
             <div className="flex flex-col gap-y-[5px]">
               {foodItems?.map(({ foodItem: { name, grams }, index }) => {
                 return (
                   <div
                     key={`${tabName}_${name}`}
                     className="flex justify-between items-center"
+                    onClick={() => {
+                      onEditClick(index);
+                    }}
                   >
-                    <span className="text-[14px]">{` - ${name} (${grams}g)`}</span>
-                    <div className="flex justify-center items-center gap-x-[10px]">
-                      <AiFillEdit
-                        style={{ fontSize: "25px" }}
-                        onClick={() => {
-                          onEditClick(index);
-                        }}
-                      />
-                      <AiOutlineClose
-                        style={{ fontSize: "25px" }}
-                        onClick={() => {
-                          onDeleteClick(index);
-                        }}
-                      />
+                    <div className="flex flex-row items-center gap-x-[5px] ">
+                      <div className="min-w-[8px] min-h-[8px] bg-black rounded-full" />
+                      <span className="text-[14px]">{`${name} (${grams}g)`}</span>
                     </div>
                   </div>
                 );
               })}
-              {!foodItems?.length && <span>No foods in this meal yet</span>}
+              {!foodItems?.length && (
+                <span className="w-full text-center">
+                  No foods in this meal yet
+                </span>
+              )}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-row w-full items-center justify-center mt-[5px]">
               <Button
-                className="text-blue-600 bg-transparent border-none"
+                className="text-blue-600 bg-transparent border-none flex flex-col"
                 onClick={onAddClick}
               >
+                <AiFillPlusCircle />
                 Add
               </Button>
               {foodItems?.length ? (
                 <Button
-                  className="text-blue-600 bg-transparent border-none"
+                  className="text-blue-600 bg-transparent border-none flex flex-col"
                   onClick={() => {
                     setFavoriteMealModalOpen("save");
                   }}
                 >
-                  Save as favorite meal
+                  <AiFillStar />
+                  Save
                 </Button>
               ) : null}
               <Button
-                className="text-blue-600 bg-transparent border-none"
+                className="text-blue-600 bg-transparent border-none flex flex-col"
                 onClick={() => {
                   setFavoriteMealModalOpen("load");
                 }}
               >
-                Load from favorite meals
+                <AiFillStar />
+                Load
               </Button>
             </div>
           </div>

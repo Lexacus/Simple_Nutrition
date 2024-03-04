@@ -18,6 +18,7 @@ type ManageFoodModalProps = {
   };
   onSaveToDay?: (foodItem: Food) => void;
   onEdit?: ({ foodItem, index }: { foodItem: Food; index: number }) => void;
+  onDeleteFromDay?: (index: number) => void;
 };
 
 const baseFoodItem: Food = {
@@ -34,6 +35,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   selectedFood,
   onSaveToDay,
   onEdit,
+  onDeleteFromDay,
 }) => {
   const { foods, upsertFood, deleteFood } = useFoodStore(
     ({ foods, upsertFood, deleteFood }) => ({
@@ -260,11 +262,17 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
           </Button>
           <div className="flex">
             <Button>{selectedFood.type === "edit" ? "Edit" : "Save"}</Button>
-            {selectedFood.type === "addToStore" && (
+            {["addToStore", "edit"].includes(selectedFood.type) && (
               <Button
                 type="button"
                 className="bg-red-600"
-                onClick={handleStoredFoodDeletion}
+                onClick={() => {
+                  if (selectedFood.type === "addToStore") {
+                    handleStoredFoodDeletion();
+                    return;
+                  }
+                  onDeleteFromDay?.(selectedFood.index);
+                }}
               >
                 Delete
               </Button>

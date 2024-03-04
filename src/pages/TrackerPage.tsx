@@ -5,7 +5,6 @@ import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
-import { LineDivider } from "../components/ui/LineDivider";
 import { ModalOverlay } from "../components/ui/ModalOverlay";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food } from "../types";
@@ -47,7 +46,6 @@ function TrackerPage() {
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
   const [addOverlayOpen, setAddOverlayOpen] = useState(false);
-  const [favoriteMealModalOpen, setFavoriteMealModalOpen] = useState(false);
 
   const onTabClick = (tab: number) => () => {
     setOpenTabs((prev) => {
@@ -82,6 +80,14 @@ function TrackerPage() {
     editDay(selectedDate, {
       foods: newFoods,
     });
+  };
+
+  const onDeleteFromDay = (index: number) => {
+    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
+    editDay(selectedDate, {
+      foods: [...newFoods],
+    });
+    setSelectedFood(undefined);
   };
 
   // this memo calculates total nutritional values from the days and creates the day's meals
@@ -167,6 +173,7 @@ function TrackerPage() {
           }}
           onSaveToDay={onFoodSaveToDay}
           onEdit={onFoodEdit}
+          onDeleteFromDay={onDeleteFromDay}
         />
       )}
       {/*  {favoriteMealModalOpen && (
@@ -176,7 +183,7 @@ function TrackerPage() {
           }}
         />
       )} */}
-      <div className="flex flex-col w-full h-full max-h-screen border border-green-600">
+      <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
           <span>Summary</span>
@@ -188,35 +195,35 @@ function TrackerPage() {
           </div>
         </div>
         <div className="overflow-auto border-t border-black">
-          <div className="border border-black h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
+          <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
             <Accordion
               foodItems={breakfastFoods}
               onTabClick={onTabClick(0)}
               open={openTabs[0]}
               tabName="breakfast"
             />
-            <LineDivider />
+            {/*    <LineDivider /> */}
             <Accordion
               foodItems={morningSnacksFoods}
               onTabClick={onTabClick(1)}
               open={openTabs[1]}
               tabName="morningSnacks"
             />
-            <LineDivider />
+            {/*  <LineDivider /> */}
             <Accordion
               foodItems={lunchFoods}
               onTabClick={onTabClick(2)}
               open={openTabs[2]}
               tabName="lunch"
             />
-            <LineDivider />
+            {/*      <LineDivider /> */}
             <Accordion
               foodItems={eveningSnacksFoods}
               onTabClick={onTabClick(3)}
               open={openTabs[3]}
               tabName="eveningSnacks"
             />
-            <LineDivider />
+            {/*          <LineDivider /> */}
             <Accordion
               foodItems={dinnerFoods}
               onTabClick={onTabClick(4)}

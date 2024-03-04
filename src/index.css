@@ -9,4 +9,6 @@ body {
   min-height: 100vh;
   user-select: none;
   overflow: hidden;
+  /* color: white; */
+  /*   background-color: rgb(51 65 85); */
 }
