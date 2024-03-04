@@ -5,7 +5,6 @@ import { Accordion } from "../components/Accordion";
 import { DateSelector } from "../components/DateSelector";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
-import { LineDivider } from "../components/ui/LineDivider";
 import { ModalOverlay } from "../components/ui/ModalOverlay";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food } from "../types";
@@ -47,7 +46,6 @@ function TrackerPage() {
 
   const [openTabs, setOpenTabs] = useState(initializeTabs);
   const [addOverlayOpen, setAddOverlayOpen] = useState(false);
-  const [favoriteMealModalOpen, setFavoriteMealModalOpen] = useState(false);
 
   const onTabClick = (tab: number) => () => {
     setOpenTabs((prev) => {
