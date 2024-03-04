@@ -2,10 +2,8 @@ import { FC, useState } from "react";
 import {
   AiFillCaretDown,
   AiFillCaretUp,
-  AiFillEdit,
   AiFillPlusCircle,
   AiFillStar,
-  AiOutlineClose,
 } from "react-icons/ai";
 import ReactSelect from "react-select";
 import { useFoodStore } from "../store/FoodStore";
@@ -73,12 +71,12 @@ export const Accordion: FC<AccordionProps> = ({
     });
   };
 
-  const onDeleteClick = (index: number) => {
+  /* const onDeleteClick = (index: number) => {
     const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
     editDay(selectedDate, {
       foods: [...newFoods],
     });
-  };
+  }; */
 
   const onSaveAsFavoriteMeal = (name: string) => {
     upsertFavoriteMeal({
@@ -144,7 +142,7 @@ export const Accordion: FC<AccordionProps> = ({
           )}
         </Modal>
       )}
-      <div className="flex flex-col p-[3px] gap-y-[0px]">
+      <div className="flex flex-col p-[3px] gap-y-[0px] ">
         <div className="flex flex-col border border-black rounded-[16px] p-[10px]">
           <div
             onClick={onTabClick}
@@ -173,24 +171,13 @@ export const Accordion: FC<AccordionProps> = ({
                   <div
                     key={`${tabName}_${name}`}
                     className="flex justify-between items-center"
+                    onClick={() => {
+                      onEditClick(index);
+                    }}
                   >
-                    <div className="flex flex-row items-center gap-x-[5px]">
+                    <div className="flex flex-row items-center gap-x-[5px] ">
                       <div className="min-w-[8px] min-h-[8px] bg-black rounded-full" />
                       <span className="text-[14px]">{`${name} (${grams}g)`}</span>
-                    </div>
-                    <div className="flex justify-center items-center gap-x-[10px]">
-                      <AiFillEdit
-                        style={{ fontSize: "25px" }}
-                        onClick={() => {
-                          onEditClick(index);
-                        }}
-                      />
-                      <AiOutlineClose
-                        style={{ fontSize: "25px" }}
-                        onClick={() => {
-                          onDeleteClick(index);
-                        }}
-                      />
                     </div>
                   </div>
                 );

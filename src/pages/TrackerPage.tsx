@@ -82,6 +82,14 @@ function TrackerPage() {
     });
   };
 
+  const onDeleteFromDay = (index: number) => {
+    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
+    editDay(selectedDate, {
+      foods: [...newFoods],
+    });
+    setSelectedFood(undefined);
+  };
+
   // this memo calculates total nutritional values from the days and creates the day's meals
   // if the day does not exist yet, it simply creates a new empty day in the tracker store
   const {
@@ -165,6 +173,7 @@ function TrackerPage() {
           }}
           onSaveToDay={onFoodSaveToDay}
           onEdit={onFoodEdit}
+          onDeleteFromDay={onDeleteFromDay}
         />
       )}
       {/*  {favoriteMealModalOpen && (
@@ -174,7 +183,7 @@ function TrackerPage() {
           }}
         />
       )} */}
-      <div className="flex flex-col w-full h-full max-h-screen border border-green-600">
+      <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
           <span>Summary</span>
