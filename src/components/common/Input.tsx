@@ -7,10 +7,11 @@ type InputProps = HTMLAttributes<HTMLInputElement> & {
   type?: "number" | "text";
   error?: FieldError;
   placeholder?: string;
+  value?: string;
 };
 
 export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, type, error, ...props }, ref) => {
+  ({ label, type, error, value, ...props }, ref) => {
     return (
       <div className="flex flex-col">
         {label && <span>{label}</span>}
@@ -22,6 +23,7 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={type}
           step={0.01}
+          value={value}
           {...props}
         />
         {error && (
