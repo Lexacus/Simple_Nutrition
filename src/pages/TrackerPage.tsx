@@ -188,35 +188,35 @@ function TrackerPage() {
           </div>
         </div>
         <div className="overflow-auto border-t border-black">
-          <div className="border border-black h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
+          <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
             <Accordion
               foodItems={breakfastFoods}
               onTabClick={onTabClick(0)}
               open={openTabs[0]}
               tabName="breakfast"
             />
-            <LineDivider />
+            {/*    <LineDivider /> */}
             <Accordion
               foodItems={morningSnacksFoods}
               onTabClick={onTabClick(1)}
               open={openTabs[1]}
               tabName="morningSnacks"
             />
-            <LineDivider />
+            {/*  <LineDivider /> */}
             <Accordion
               foodItems={lunchFoods}
               onTabClick={onTabClick(2)}
               open={openTabs[2]}
               tabName="lunch"
             />
-            <LineDivider />
+            {/*      <LineDivider /> */}
             <Accordion
               foodItems={eveningSnacksFoods}
               onTabClick={onTabClick(3)}
               open={openTabs[3]}
               tabName="eveningSnacks"
             />
-            <LineDivider />
+            {/*          <LineDivider /> */}
             <Accordion
               foodItems={dinnerFoods}
               onTabClick={onTabClick(4)}
