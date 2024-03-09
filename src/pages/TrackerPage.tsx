@@ -202,28 +202,24 @@ function TrackerPage() {
               open={openTabs[0]}
               tabName="breakfast"
             />
-            {/*    <LineDivider /> */}
             <Accordion
               foodItems={morningSnacksFoods}
               onTabClick={onTabClick(1)}
               open={openTabs[1]}
               tabName="morningSnacks"
             />
-            {/*  <LineDivider /> */}
             <Accordion
               foodItems={lunchFoods}
               onTabClick={onTabClick(2)}
               open={openTabs[2]}
               tabName="lunch"
             />
-            {/*      <LineDivider /> */}
             <Accordion
               foodItems={eveningSnacksFoods}
               onTabClick={onTabClick(3)}
               open={openTabs[3]}
               tabName="eveningSnacks"
             />
-            {/*          <LineDivider /> */}
             <Accordion
               foodItems={dinnerFoods}
               onTabClick={onTabClick(4)}

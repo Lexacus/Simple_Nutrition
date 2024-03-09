@@ -11,7 +11,7 @@ export type Food = {
   proteins: number;
   carbohydrates: number;
   fats: number;
-  grams: number;
+  quantity: { label: string; value: number };
   meal?: Meals;
 };
 

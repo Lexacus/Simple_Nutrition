@@ -8,12 +8,13 @@ type InputProps = HTMLAttributes<HTMLInputElement> & {
   error?: FieldError;
   placeholder?: string;
   value?: string;
+  containerClassName?: string;
 };
 
 export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, type, error, value, ...props }, ref) => {
+  ({ label, type, error, value, containerClassName, ...props }, ref) => {
     return (
-      <div className="flex flex-col">
+      <div className={cn("flex flex-col", containerClassName)}>
         {label && <span>{label}</span>}
         <input
           className={cn(

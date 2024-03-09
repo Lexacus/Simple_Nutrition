@@ -25,7 +25,7 @@ const baseFoodItem: Food = {
   calories: 0,
   carbohydrates: 0,
   fats: 0,
-  grams: 0,
+  quantity: { label: "grams", value: 1 },
   name: "",
   proteins: 0,
 };
@@ -51,6 +51,10 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
       : undefined
   );
 
+  const [selectedQuantity, setSelectedQuantity] = useState(
+    baseFoodValues?.quantity?.value ?? 1
+  );
+
   const [shouldSaveToStore, setShouldSaveToStore] = useState(false);
   const [saveConfirmModal, setSaveConfirmModal] = useState<Food | undefined>();
   /*   const [foodAlreadyExists, setFoodAlreadyExists] =useState(false); */
@@ -61,6 +65,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     formState: { errors },
     setValue,
     reset,
+    getValues,
   } = useForm<{ food: Food }>({
     defaultValues: { food: { ...selectedFood.foodItem } },
   });
@@ -77,16 +82,16 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     }
     const newCalories =
       ((baseFoodValues?.calories ?? 0) * Number(value)) /
-      (baseFoodValues?.grams ?? 1);
+      (baseFoodValues?.quantity.value ?? 1);
     const newCarbohydrates =
       ((baseFoodValues?.carbohydrates ?? 0) * Number(value)) /
-      (baseFoodValues?.grams ?? 1);
+      (baseFoodValues?.quantity.value ?? 1);
     const newProteins =
       ((baseFoodValues?.proteins ?? 0) * Number(value)) /
-      (baseFoodValues?.grams ?? 1);
+      (baseFoodValues?.quantity.value ?? 1);
     const newFats =
       ((baseFoodValues?.fats ?? 0) * Number(value)) /
-      (baseFoodValues?.grams ?? 1);
+      (baseFoodValues?.quantity.value ?? 1);
     setValue("food.calories", parseFloat(newCalories.toFixed(2)));
     setValue("food.carbohydrates", parseFloat(newCarbohydrates.toFixed(2)));
     setValue("food.proteins", parseFloat(newProteins.toFixed(2)));
@@ -94,7 +99,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   };
 
   const { onChange: onGramsChange, ...remainingGramsProps } = register(
-    "food.grams",
+    "food.quantity.value",
     { required: true }
   );
 
@@ -127,6 +132,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
   const onSubmit: SubmitHandler<{ food: Food }> = (data) => {
     const foodToSave = {
       ...data.food,
+      grams: data.food.quantity.value * selectedQuantity,
       meal: selectedFood.foodItem?.meal ?? "breakfast",
     };
     // if food is being added to a meal in a day
@@ -234,20 +240,52 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             error={errors.food?.fats}
             placeholder="Insert food fats"
           />
-          <Input
-            {...remainingGramsProps}
-            onChange={(e) => {
-              if (["addToDay", "edit"].includes(selectedFood.type)) {
-                handleValuesCalculation(Number(e.currentTarget.value));
-                return;
-              }
-              onGramsChange(e);
-            }}
-            label="Grams"
-            type="number"
-            error={errors.food?.grams}
-            placeholder="Insert quantity in grams"
-          />
+          <div className="flex items-center">
+            <Input
+              {...remainingGramsProps}
+              onChange={(e) => {
+                if (["addToDay", "edit"].includes(selectedFood.type)) {
+                  handleValuesCalculation(
+                    Number(e.currentTarget.value) * selectedQuantity
+                  );
+                  return;
+                }
+                onGramsChange(e);
+              }}
+              containerClassName="max-w-[30%]"
+              label="Quantity"
+              type="number"
+              error={errors.food?.quantity?.value}
+              placeholder="Insert quantity in grams"
+            />
+            <ReactSelect
+              isSearchable={false}
+              options={[
+                { label: "grams", value: 1 },
+                { label: "Prova 25", value: 25 },
+              ]}
+              defaultValue={{
+                label: baseFoodValues?.quantity.label ?? "grams",
+                value: baseFoodValues?.quantity.value ?? 1,
+              }}
+              onChange={(selectedOption) => {
+                if (!selectedOption) {
+                  return;
+                }
+                /* handleValuesCalculation(
+                  getValues("food.grams") * selectedOption.value
+                  ); */
+                setValue(
+                  "food.quantity.value",
+                  getValues("food.quantity.value") /
+                    (selectedOption.value > selectedQuantity
+                      ? selectedOption.value * selectedQuantity
+                      : selectedOption.value / selectedQuantity)
+                );
+                setSelectedQuantity(selectedOption.value);
+              }}
+            />
+          </div>
           {!baseFoodValues && (
             <Checkbox
               label="Also save to store"

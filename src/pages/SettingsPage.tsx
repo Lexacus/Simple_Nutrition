@@ -80,6 +80,22 @@ const SettingsPage = () => {
         >
           Load tracked days from clipboard
         </Button>
+        <Button
+          onClick={() => {
+            const convertedFoods = foods.map((food) => ({
+              ...food,
+              //@ts-expect-error this will convert old foods from the store with the old type (without quantities) to the new type
+              quantity: food.quantity ?? { label: "grams", value: food.grams },
+            }));
+            setFoods(convertedFoods);
+            toast("Successfully converted foods", {
+              hideProgressBar: true,
+              type: "success",
+            });
+          }}
+        >
+          Convert food store grams to quantities
+        </Button>
       </div>
     </>
   );
