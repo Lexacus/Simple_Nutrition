@@ -7,11 +7,7 @@ import { ManageFoodModal } from "../components/ManageFoodModal";
 import { Button } from "../components/common/Button";
 import { ModalOverlay } from "../components/ui/ModalOverlay";
 import { useTrackerStore } from "../store/TrackerStore";
-import { Food } from "../types";
-
-const initializeTabs = () => {
-  return [false, false, false, false, false];
-};
+import { Food, IndexedMeals } from "../types";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -44,16 +40,7 @@ function TrackerPage() {
     })
   );
 
-  const [openTabs, setOpenTabs] = useState(initializeTabs);
   const [addOverlayOpen, setAddOverlayOpen] = useState(false);
-
-  const onTabClick = (tab: number) => () => {
-    setOpenTabs((prev) => {
-      const newTabs = [...prev];
-      newTabs[tab] = !prev[tab];
-      return newTabs;
-    });
-  };
 
   const onAddToStoreClick = () => {
     setSelectedFood({
@@ -103,14 +90,19 @@ function TrackerPage() {
     eveningSnacksFoods,
     dinnerFoods,
   } = useMemo(() => {
+    // if the current day is not present in the store, create it.
     if (!days[selectedDate]) {
       addDay(selectedDate);
     }
-    const breakfastFoods: { foodItem: Food; index: number }[] = [];
-    const morningSnacksFoods: { foodItem: Food; index: number }[] = [];
-    const lunchFoods: { foodItem: Food; index: number }[] = [];
-    const eveningSnacksFoods: { foodItem: Food; index: number }[] = [];
-    const dinnerFoods: { foodItem: Food; index: number }[] = [];
+
+    // initialize indexed arrays of foods divided by meal
+    const breakfastFoods: IndexedMeals = [];
+    const morningSnacksFoods: IndexedMeals = [];
+    const lunchFoods: IndexedMeals = [];
+    const eveningSnacksFoods: IndexedMeals = [];
+    const dinnerFoods: IndexedMeals = [];
+
+    // this reduce calculates total calories, carbs, proteins and fats based on the selected date
     const [totalCalories, totalCarbohydrates, totalProteins, totalFats] = (
       days[selectedDate].foods ?? []
     ).reduce(
@@ -176,13 +168,6 @@ function TrackerPage() {
           onDeleteFromDay={onDeleteFromDay}
         />
       )}
-      {/*  {favoriteMealModalOpen && (
-        <FavoriteMealModal
-          onClose={() => {
-            setFavoriteMealModalOpen(false);
-          }}
-        />
-      )} */}
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
@@ -196,40 +181,11 @@ function TrackerPage() {
         </div>
         <div className="overflow-auto border-t border-black">
           <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
-            <Accordion
-              foodItems={breakfastFoods}
-              onTabClick={onTabClick(0)}
-              open={openTabs[0]}
-              tabName="breakfast"
-            />
-            {/*    <LineDivider /> */}
-            <Accordion
-              foodItems={morningSnacksFoods}
-              onTabClick={onTabClick(1)}
-              open={openTabs[1]}
-              tabName="morningSnacks"
-            />
-            {/*  <LineDivider /> */}
-            <Accordion
-              foodItems={lunchFoods}
-              onTabClick={onTabClick(2)}
-              open={openTabs[2]}
-              tabName="lunch"
-            />
-            {/*      <LineDivider /> */}
-            <Accordion
-              foodItems={eveningSnacksFoods}
-              onTabClick={onTabClick(3)}
-              open={openTabs[3]}
-              tabName="eveningSnacks"
-            />
-            {/*          <LineDivider /> */}
-            <Accordion
-              foodItems={dinnerFoods}
-              onTabClick={onTabClick(4)}
-              open={openTabs[4]}
-              tabName="dinner"
-            />
+            <Accordion foodItems={breakfastFoods} tabName="breakfast" />
+            <Accordion foodItems={morningSnacksFoods} tabName="morningSnacks" />
+            <Accordion foodItems={lunchFoods} tabName="lunch" />
+            <Accordion foodItems={eveningSnacksFoods} tabName="eveningSnacks" />
+            <Accordion foodItems={dinnerFoods} tabName="dinner" />
           </div>
         </div>
         {addOverlayOpen && (
@@ -249,14 +205,6 @@ function TrackerPage() {
               >
                 Manage food store
               </Button>
-              {/* <Button
-                onClick={() => {
-                  setFavoriteMealModalOpen(true);
-                  setAddOverlayOpen(false);
-                }}
-              >
-                Create favorite meal
-              </Button> */}
             </div>
           </>
         )}

@@ -15,17 +15,11 @@ import { Modal } from "./ui/Modal";
 
 interface AccordionProps {
   tabName: Meals;
-  onTabClick: () => void;
-  open: boolean;
   foodItems?: { foodItem: Food; index: number }[];
 }
 
-export const Accordion: FC<AccordionProps> = ({
-  onTabClick,
-  open,
-  tabName,
-  foodItems,
-}) => {
+export const Accordion: FC<AccordionProps> = ({ tabName, foodItems }) => {
+  const [open, setOpen] = useState(false);
   const { days, editDay, selectedDate, setSelectedFood } = useTrackerStore(
     ({ days, editDay, selectedDate, setSelectedFood }) => ({
       days,
@@ -70,13 +64,6 @@ export const Accordion: FC<AccordionProps> = ({
       index,
     });
   };
-
-  /* const onDeleteClick = (index: number) => {
-    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
-    editDay(selectedDate, {
-      foods: [...newFoods],
-    });
-  }; */
 
   const onSaveAsFavoriteMeal = (name: string) => {
     upsertFavoriteMeal({
@@ -143,11 +130,13 @@ export const Accordion: FC<AccordionProps> = ({
         </Modal>
       )}
       <div className="flex flex-col p-[3px] gap-y-[0px] ">
-        <div className="flex flex-col border border-black rounded-[16px] p-[10px]">
-          <div
-            onClick={onTabClick}
-            className="flex justify-between items-center"
-          >
+        <div
+          className="flex flex-col border border-black rounded-[16px] p-[10px] cursor-pointer"
+          onClick={() => {
+            setOpen((prev) => !prev);
+          }}
+        >
+          <div className="flex justify-between items-center">
             <span className="capitalize">{`${tabName} ${
               foodItems?.length && foodItems.length > 0
                 ? `(${foodItems.length})`
@@ -155,12 +144,6 @@ export const Accordion: FC<AccordionProps> = ({
             }`}</span>
             {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
           </div>
-          {/* {open && (
-            <div className="flex">
-              <AiFillPlusCircle />
-              <AiFillStar />
-            </div>
-          )} */}
         </div>
 
         {open && (

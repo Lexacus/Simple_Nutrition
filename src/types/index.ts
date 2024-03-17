@@ -15,6 +15,8 @@ export type Food = {
   meal?: Meals;
 };
 
+export type IndexedMeals = { foodItem: Food; index: number }[];
+
 export type DietDay = {
   foods: Food[];
 };
