@@ -14,7 +14,7 @@ export const DateSelector = () => {
   return (
     <div className="flex w-full justify-between items-center p-[20px]">
       <AiOutlineCaretLeft
-        style={{ fontSize: "30px" }}
+        style={{ fontSize: "30px", cursor: "pointer" }}
         onClick={() => {
           setSelectedDate(
             dayjs(selectedDate).subtract(1, "day").format("YYYY-MM-DD")
@@ -27,7 +27,7 @@ export const DateSelector = () => {
       </div>
       {selectedDate !== today ? (
         <AiOutlineCaretRight
-          style={{ fontSize: "30px" }}
+          style={{ fontSize: "30px", cursor: "pointer" }}
           onClick={() => {
             setSelectedDate(
               dayjs(selectedDate).add(1, "day").format("YYYY-MM-DD")
