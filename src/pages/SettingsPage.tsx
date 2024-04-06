@@ -1,11 +1,10 @@
-import { Clipboard } from "@capacitor/clipboard";
+import dayjs from "dayjs";
+import { useRef } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../components/common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
-import { FavoriteMeal, Food } from "../types";
-import dayjs from "dayjs";
-import { useRef } from "react";
+import { parseJsonFile, saveDataToFile } from "../utils";
 
 const today = dayjs().format("DD_MM_YYYY");
 
@@ -16,6 +15,7 @@ const SettingsPage = () => {
   }));
 
   const readFoodRef = useRef<HTMLInputElement>(null);
+  const readDaysRef = useRef<HTMLInputElement>(null);
 
   const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
     ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
@@ -38,25 +38,6 @@ const SettingsPage = () => {
       type: "success",
     });
   }; */
-
-  const saveDataToFile = ({
-    data,
-    fileName,
-  }: {
-    data: unknown /* Food[] | Record<string, DietDay> */;
-    fileName: string;
-  }) => {
-    console.log("Saving cards");
-
-    const element = document.createElement("a");
-    const file = new Blob([JSON.stringify(data)], { type: "StyledText/plain" });
-
-    element.href = URL.createObjectURL(file);
-    element.download = `${fileName}.json`;
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-    URL.revokeObjectURL(element.href);
-  };
 
   const saveFoodStoreToFile = () => {
     saveDataToFile({
@@ -97,10 +78,39 @@ const SettingsPage = () => {
     saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
   };
 
-  const loadDaysFromClipboard = async () => {
+  const readDaysFromFile = () => {
+    readDaysRef.current?.click();
+  };
+
+  /*   const loadDaysFromClipboard = async () => {
     const jsonDays = await Clipboard.read();
     setDays(JSON.parse(jsonDays.value));
     toast("Successfully loaded from clipboard", {
+      hideProgressBar: true,
+      type: "success",
+    });
+  }; */
+
+  const readFoodStoreInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    const jsonFoodStore = await parseJsonFile(e.target.files[0]);
+    setFoods(jsonFoodStore.foods);
+    setFavoriteMeals(jsonFoodStore.favoriteMeals);
+    toast("Successfully loaded food store from file", {
+      hideProgressBar: true,
+      type: "success",
+    });
+  };
+
+  const readDaysInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    const jsonDays = await parseJsonFile(e.target.files[0]);
+    setDays(jsonDays);
+    toast("Successfully loaded tracked days from file", {
       hideProgressBar: true,
       type: "success",
     });
@@ -109,45 +119,21 @@ const SettingsPage = () => {
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveFoodStoreToFile}>
-          Copy food store in clipboard
+        <Button onClick={saveFoodStoreToFile}>Save food store to file</Button>
+        <Button onClick={readFoodStoreFromFile}>
+          Load food store from file
         </Button>
         <input
           ref={readFoodRef}
           type="file"
           hidden
-          onChange={async (e) => {
-            // TODO: Make own function
-            if (!e.target.files) {
-              return;
-            }
-            try {
-              const fileObject = URL.createObjectURL(e.target.files?.[0]);
-
-              const res = await fetch(fileObject);
-
-              const jsonFoodStore = await res.json();
-
-              setFoods(jsonFoodStore.foods);
-              setFavoriteMeals(jsonFoodStore.favoriteMeals);
-
-              URL.revokeObjectURL(fileObject);
-              toast("Successfully loaded food store from file", {
-                hideProgressBar: true,
-                type: "success",
-              });
-            } catch (e) {
-              console.log(e);
-            }
-          }}
+          onChange={readFoodStoreInput}
         />
-        <Button onClick={readFoodStoreFromFile}>Load food store</Button>
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveDaysToFile}>Copy tracked days in clipboard</Button>
-        <Button onClick={loadDaysFromClipboard}>
-          Load tracked days from clipboard
-        </Button>
+        <Button onClick={saveDaysToFile}>Save tracked days to file</Button>
+        <Button onClick={readDaysFromFile}>Load tracked days from file</Button>
+        <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />
       </div>
     </>
   );
