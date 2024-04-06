@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Button } from "../components/common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
-import { DietDay, FavoriteMeal, Food } from "../types";
+import { FavoriteMeal, Food } from "../types";
 import dayjs from "dayjs";
 
 const today = dayjs().format("DD_MM_YYYY");
@@ -40,7 +40,7 @@ const SettingsPage = () => {
     data,
     fileName,
   }: {
-    data: Food[] | Record<string, DietDay>;
+    data: unknown /* Food[] | Record<string, DietDay> */;
     fileName: string;
   }) => {
     console.log("Saving cards");
@@ -56,7 +56,13 @@ const SettingsPage = () => {
   };
 
   const saveFoodStoreToFile = () => {
-    saveDataToFile({ data: foods, fileName: `SM_FoodStore_${today}` });
+    saveDataToFile({
+      data: {
+        foods: foods,
+        favoriteMeals: favoriteMeals,
+      },
+      fileName: `SM_FoodStore_${today}`,
+    });
   };
 
   const loadFoodStoreFromClipboard = async () => {
