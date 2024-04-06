@@ -26,20 +26,7 @@ const SettingsPage = () => {
     })
   );
 
-  /*   const copyFoodStoreToClipboard = async () => {
-    await Clipboard.write({
-      string: JSON.stringify({
-        foods: foods,
-        favoriteMeals: favoriteMeals,
-      }),
-    });
-    toast("Successfully copied to clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
-
-  const saveFoodStoreToFile = () => {
+  const exportFoodStoreToFile = () => {
     saveDataToFile({
       data: {
         foods: foods,
@@ -49,47 +36,9 @@ const SettingsPage = () => {
     });
   };
 
-  const readFoodStoreFromFile = () => {
+  const importFoodStoreFromFile = () => {
     readFoodRef.current?.click();
   };
-  /* 
-  const loadFoodStoreFromClipboard = async () => {
-    const jsonFoodStore: {
-      foods: Food[];
-      favoriteMeals: FavoriteMeal[];
-    } = JSON.parse((await Clipboard.read()).value);
-    setFoods(jsonFoodStore.foods);
-    setFavoriteMeals(jsonFoodStore.favoriteMeals);
-    toast("Successfully loaded from clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
-
-  /*   const copyDaysToClipboard = async () => {
-    await Clipboard.write({ string: JSON.stringify(days) });
-    toast("Successfully copied to clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
-
-  const saveDaysToFile = () => {
-    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
-  };
-
-  const readDaysFromFile = () => {
-    readDaysRef.current?.click();
-  };
-
-  /*   const loadDaysFromClipboard = async () => {
-    const jsonDays = await Clipboard.read();
-    setDays(JSON.parse(jsonDays.value));
-    toast("Successfully loaded from clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
 
   const readFoodStoreInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -102,6 +51,14 @@ const SettingsPage = () => {
       hideProgressBar: true,
       type: "success",
     });
+  };
+
+  const exportDaysToFile = () => {
+    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
+  };
+
+  const importDaysFromFile = () => {
+    readDaysRef.current?.click();
   };
 
   const readDaysInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,8 +76,8 @@ const SettingsPage = () => {
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveFoodStoreToFile}>Save food store to file</Button>
-        <Button onClick={readFoodStoreFromFile}>
+        <Button onClick={exportFoodStoreToFile}>Save food store to file</Button>
+        <Button onClick={importFoodStoreFromFile}>
           Load food store from file
         </Button>
         <input
@@ -131,8 +88,10 @@ const SettingsPage = () => {
         />
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveDaysToFile}>Save tracked days to file</Button>
-        <Button onClick={readDaysFromFile}>Load tracked days from file</Button>
+        <Button onClick={exportDaysToFile}>Export tracked days to file</Button>
+        <Button onClick={importDaysFromFile}>
+          Import tracked days from file
+        </Button>
         <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />
       </div>
     </>

@@ -1,17 +1,18 @@
-import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
-import { Accordion } from "../components/Accordion";
-import { ManageFoodModal } from "../components/ManageFoodModal";
-import { Button } from "../components/common/Button";
-import { TrackerDateSelector } from "../components/date-selector/TrackerDateSelector";
-import { ModalOverlay } from "../components/ui/ModalOverlay";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food, IndexedMeals } from "../types";
+import dayjs from "dayjs";
+import { ManageFoodModal } from "../components/ManageFoodModal";
+import { DateSelector } from "../components/date-selector/DateSelector";
+import { Accordion } from "../components/Accordion";
+import { ModalOverlay } from "../components/ui/ModalOverlay";
+import { Button } from "../components/common/Button";
+import { AiOutlinePlus } from "react-icons/ai";
+import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
 
 const today = dayjs().format("YYYY-MM-DD");
 
-function TrackerPage() {
+const DietPlanPage = () => {
   const {
     selectedFood,
     selectedDate,
@@ -170,7 +171,7 @@ function TrackerPage() {
       )}
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
-          <TrackerDateSelector />
+          <WeekDateSelector />
           <span>Summary</span>
           <span>Calories: {totalCalories}</span>
           <div className="flex w-full justify-center gap-x-[10px]">
@@ -220,6 +221,6 @@ function TrackerPage() {
       </div>
     </>
   );
-}
+};
 
-export default TrackerPage;
+export default DietPlanPage;

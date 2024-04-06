@@ -14,6 +14,13 @@ export const Footer = () => {
       </Button>
       <Button
         onClick={() => {
+          navigate("/diet-plan");
+        }}
+      >
+        Diet Plan
+      </Button>
+      <Button
+        onClick={() => {
           navigate("/settings");
         }}
       >
