@@ -2,6 +2,9 @@ import { FC } from "react";
 import { DateSelector } from "./DateSelector";
 import dayjs from "dayjs";
 import { useTrackerStore } from "../../store/TrackerStore";
+import { cn } from "../../utils";
+
+const weekDays = [1, 2, 3, 4, 5, 6, 0];
 
 export const WeekDateSelector: FC = () => {
   const { selectedDate, setSelectedDate } = useTrackerStore(
@@ -12,22 +15,21 @@ export const WeekDateSelector: FC = () => {
   );
   const selectedDay = dayjs(selectedDate).day();
 
-  const previousDate = () => {
-    setSelectedDate(
-      dayjs(selectedDate).subtract(1, "day").format("YYYY-MM-DD")
-    );
-  };
-
-  const nextDate = () => {
-    setSelectedDate(dayjs(selectedDate).add(1, "day").format("YYYY-MM-DD"));
-  };
   return (
-    <DateSelector
-      selectedDate={selectedDate}
-      onLeftArrowClick={previousDate}
-      onRightArrowClick={nextDate}
-      previousDateDisabled={selectedDay === 1}
-      nextDateDisabled={selectedDay === 0}
-    />
+    <div className="flex flex-row w-full justify-between px-[5%] py-[20px]">
+      {weekDays.map((day) => (
+        <div
+          className={cn(
+            "flex items-center justify-center border min-w-[50px] min-h-[50px] text-center rounded-[16px] cursor-pointer",
+            day === selectedDay && "bg-red-600"
+          )}
+          onClick={() => {
+            setSelectedDate(
+              dayjs(selectedDate).set("day", day).format("YYYY-MM-DD")
+            );
+          }}
+        >{`${dayjs().set("day", day).format("ddd")}`}</div>
+      ))}
+    </div>
   );
 };
