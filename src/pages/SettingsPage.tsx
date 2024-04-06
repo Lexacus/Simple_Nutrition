@@ -5,6 +5,7 @@ import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { FavoriteMeal, Food } from "../types";
 import dayjs from "dayjs";
+import { useRef } from "react";
 
 const today = dayjs().format("DD_MM_YYYY");
 
@@ -13,6 +14,8 @@ const SettingsPage = () => {
     days,
     setDays,
   }));
+
+  const readFoodRef = useRef<HTMLInputElement>(null);
 
   const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
     ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
@@ -65,6 +68,10 @@ const SettingsPage = () => {
     });
   };
 
+  const readFoodStoreFromFile = () => {
+    readFoodRef.current?.click();
+  };
+  /* 
   const loadFoodStoreFromClipboard = async () => {
     const jsonFoodStore: {
       foods: Food[];
@@ -76,7 +83,7 @@ const SettingsPage = () => {
       hideProgressBar: true,
       type: "success",
     });
-  };
+  }; */
 
   /*   const copyDaysToClipboard = async () => {
     await Clipboard.write({ string: JSON.stringify(days) });
@@ -105,9 +112,36 @@ const SettingsPage = () => {
         <Button onClick={saveFoodStoreToFile}>
           Copy food store in clipboard
         </Button>
-        <Button onClick={loadFoodStoreFromClipboard}>
-          Load food store from clipboard
-        </Button>
+        <input
+          ref={readFoodRef}
+          type="file"
+          hidden
+          onChange={async (e) => {
+            // TODO: Make own function
+            if (!e.target.files) {
+              return;
+            }
+            try {
+              const fileObject = URL.createObjectURL(e.target.files?.[0]);
+
+              const res = await fetch(fileObject);
+
+              const jsonFoodStore = await res.json();
+
+              setFoods(jsonFoodStore.foods);
+              setFavoriteMeals(jsonFoodStore.favoriteMeals);
+
+              URL.revokeObjectURL(fileObject);
+              toast("Successfully loaded food store from file", {
+                hideProgressBar: true,
+                type: "success",
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+        />
+        <Button onClick={readFoodStoreFromFile}>Load food store</Button>
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
         <Button onClick={saveDaysToFile}>Copy tracked days in clipboard</Button>
