@@ -1,47 +1,45 @@
-import { useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs";
+import { useEffect, useMemo } from "react";
+import { Accordion } from "../components/Accordion";
+import { ManageFoodModal } from "../components/ManageFoodModal";
+import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
+import { useDietPlanStore } from "../store/DietPlanStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food, IndexedMeals } from "../types";
-import dayjs from "dayjs";
-import { ManageFoodModal } from "../components/ManageFoodModal";
-import { DateSelector } from "../components/date-selector/DateSelector";
-import { Accordion } from "../components/Accordion";
-import { ModalOverlay } from "../components/ui/ModalOverlay";
-import { Button } from "../components/common/Button";
-import { AiOutlinePlus } from "react-icons/ai";
-import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
 
 const today = dayjs().format("YYYY-MM-DD");
 
 const DietPlanPage = () => {
-  const {
-    selectedFood,
-    selectedDate,
-    setSelectedDate,
-    days,
-    editDay,
-    addDay,
-    setSelectedFood,
-  } = useTrackerStore(
-    ({
-      selectedFood,
-      selectedDate,
-      setSelectedDate,
-      days,
-      editDay,
-      addDay,
-      setSelectedFood,
-    }) => ({
-      selectedFood,
-      selectedDate,
-      setSelectedDate,
-      days,
-      editDay,
-      addDay,
-      setSelectedFood,
-    })
-  );
+  const { selectedFood, selectedDate, setSelectedDate, days, setSelectedFood } =
+    useTrackerStore(
+      ({
+        selectedFood,
+        selectedDate,
+        setSelectedDate,
+        days,
+        setSelectedFood,
+      }) => ({
+        selectedFood,
+        selectedDate,
+        setSelectedDate,
+        days,
+        setSelectedFood,
+      })
+    );
 
-  const [addOverlayOpen, setAddOverlayOpen] = useState(false);
+  const { dietPlan, addFoodToDay, editDay, removeFoodFromDay } =
+    useDietPlanStore(
+      ({ dietPlan, addFoodToDay, editDay, removeFoodFromDay }) => ({
+        dietPlan,
+        addFoodToDay,
+        editDay,
+        removeFoodFromDay,
+      })
+    );
+
+  const selectedDay = dayjs(selectedDate).day();
+
+  /*   const [addOverlayOpen, setAddOverlayOpen] = useState(false); */
 
   const onAddToStoreClick = () => {
     setSelectedFood({
@@ -51,9 +49,7 @@ const DietPlanPage = () => {
   };
 
   const onFoodSaveToDay = (foodItem: Food) => {
-    editDay(selectedDate, {
-      foods: [...days[selectedDate].foods, { ...foodItem }],
-    });
+    addFoodToDay(selectedDay, foodItem);
   };
 
   const onFoodEdit = ({
@@ -63,18 +59,11 @@ const DietPlanPage = () => {
     foodItem: Food;
     index: number;
   }) => {
-    const newFoods = [...days[selectedDate].foods];
-    newFoods.splice(index, 1, foodItem);
-    editDay(selectedDate, {
-      foods: newFoods,
-    });
+    editDay(selectedDay, foodItem, index);
   };
 
   const onDeleteFromDay = (index: number) => {
-    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
-    editDay(selectedDate, {
-      foods: [...newFoods],
-    });
+    removeFoodFromDay(selectedDay, index);
     setSelectedFood(undefined);
   };
 
@@ -92,9 +81,6 @@ const DietPlanPage = () => {
     dinnerFoods,
   } = useMemo(() => {
     // if the current day is not present in the store, create it.
-    if (!days[selectedDate]) {
-      addDay(selectedDate);
-    }
 
     // initialize indexed arrays of foods divided by meal
     const breakfastFoods: IndexedMeals = [];
@@ -105,7 +91,7 @@ const DietPlanPage = () => {
 
     // this reduce calculates total calories, carbs, proteins and fats based on the selected date
     const [totalCalories, totalCarbohydrates, totalProteins, totalFats] = (
-      days[selectedDate].foods ?? []
+      dietPlan[selectedDay] ?? []
     ).reduce(
       (acc, next, i) => {
         switch (next.meal) {
@@ -150,11 +136,7 @@ const DietPlanPage = () => {
       eveningSnacksFoods,
       dinnerFoods,
     };
-  }, [days, selectedDate, addDay]);
-
-  useEffect(() => {
-    setSelectedDate(dayjs(today).format("YYYY-MM-DD"));
-  }, []);
+  }, [dietPlan, selectedDay]);
 
   return (
     <>
@@ -182,14 +164,26 @@ const DietPlanPage = () => {
         </div>
         <div className="overflow-auto border-t border-black">
           <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
-            <Accordion foodItems={breakfastFoods} tabName="breakfast" />
-            <Accordion foodItems={morningSnacksFoods} tabName="morningSnacks" />
-            <Accordion foodItems={lunchFoods} tabName="lunch" />
-            <Accordion foodItems={eveningSnacksFoods} tabName="eveningSnacks" />
-            <Accordion foodItems={dinnerFoods} tabName="dinner" />
+            <Accordion
+              type="diet"
+              foodItems={breakfastFoods}
+              tabName="breakfast"
+            />
+            <Accordion
+              type="diet"
+              foodItems={morningSnacksFoods}
+              tabName="morningSnacks"
+            />
+            <Accordion type="diet" foodItems={lunchFoods} tabName="lunch" />
+            <Accordion
+              type="diet"
+              foodItems={eveningSnacksFoods}
+              tabName="eveningSnacks"
+            />
+            <Accordion type="diet" foodItems={dinnerFoods} tabName="dinner" />
           </div>
         </div>
-        {addOverlayOpen && (
+        {/*   {addOverlayOpen && (
           <>
             <ModalOverlay
               onClick={() => {
@@ -217,7 +211,7 @@ const DietPlanPage = () => {
           }}
         >
           <AiOutlinePlus style={{ fontSize: "50px" }} />
-        </Button>
+        </Button> */}
       </div>
     </>
   );

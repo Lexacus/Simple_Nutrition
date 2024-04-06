@@ -181,11 +181,27 @@ function TrackerPage() {
         </div>
         <div className="overflow-auto border-t border-black">
           <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
-            <Accordion foodItems={breakfastFoods} tabName="breakfast" />
-            <Accordion foodItems={morningSnacksFoods} tabName="morningSnacks" />
-            <Accordion foodItems={lunchFoods} tabName="lunch" />
-            <Accordion foodItems={eveningSnacksFoods} tabName="eveningSnacks" />
-            <Accordion foodItems={dinnerFoods} tabName="dinner" />
+            <Accordion
+              type="tracker"
+              foodItems={breakfastFoods}
+              tabName="breakfast"
+            />
+            <Accordion
+              type="tracker"
+              foodItems={morningSnacksFoods}
+              tabName="morningSnacks"
+            />
+            <Accordion type="tracker" foodItems={lunchFoods} tabName="lunch" />
+            <Accordion
+              type="tracker"
+              foodItems={eveningSnacksFoods}
+              tabName="eveningSnacks"
+            />
+            <Accordion
+              type="tracker"
+              foodItems={dinnerFoods}
+              tabName="dinner"
+            />
           </div>
         </div>
         {addOverlayOpen && (

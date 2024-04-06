@@ -28,6 +28,7 @@ export const TrackerDateSelector: FC = () => {
       onLeftArrowClick={previousDate}
       onRightArrowClick={nextDate}
       nextDateDisabled={selectedDate === today}
+      showDate
     />
   );
 };

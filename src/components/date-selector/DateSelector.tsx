@@ -8,6 +8,7 @@ type DateSelectorProps = {
   onRightArrowClick: () => void;
   previousDateDisabled?: boolean;
   nextDateDisabled?: boolean;
+  showDate?: boolean;
 };
 
 const ArrowPlaceholder: FC = () => {
@@ -20,6 +21,7 @@ export const DateSelector: FC<DateSelectorProps> = ({
   onRightArrowClick,
   nextDateDisabled,
   previousDateDisabled,
+  showDate,
 }) => {
   return (
     <div className="flex w-full justify-between items-center p-[20px]">
@@ -33,7 +35,7 @@ export const DateSelector: FC<DateSelectorProps> = ({
       )}
       <div className="flex flex-col items-center">
         <span>{dayjs(selectedDate).format("dddd")}</span>
-        <span>{dayjs(selectedDate).format("DD/MM/YYYY")}</span>
+        {showDate && <span>{dayjs(selectedDate).format("DD/MM/YYYY")}</span>}
       </div>
       {!nextDateDisabled ? (
         <AiOutlineCaretRight
