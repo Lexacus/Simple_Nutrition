@@ -3,7 +3,10 @@ import { toast } from "react-toastify";
 import { Button } from "../components/common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
-import { FavoriteMeal, Food } from "../types";
+import { DietDay, FavoriteMeal, Food } from "../types";
+import dayjs from "dayjs";
+
+const today = dayjs().format("DD_MM_YYYY");
 
 const SettingsPage = () => {
   const { days, setDays } = useTrackerStore(({ days, setDays }) => ({
@@ -20,7 +23,7 @@ const SettingsPage = () => {
     })
   );
 
-  const copyFoodStoreToClipboard = async () => {
+  /*   const copyFoodStoreToClipboard = async () => {
     await Clipboard.write({
       string: JSON.stringify({
         foods: foods,
@@ -31,6 +34,29 @@ const SettingsPage = () => {
       hideProgressBar: true,
       type: "success",
     });
+  }; */
+
+  const saveDataToFile = ({
+    data,
+    fileName,
+  }: {
+    data: Food[] | Record<string, DietDay>;
+    fileName: string;
+  }) => {
+    console.log("Saving cards");
+
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify(data)], { type: "StyledText/plain" });
+
+    element.href = URL.createObjectURL(file);
+    element.download = `${fileName}.json`;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+    URL.revokeObjectURL(element.href);
+  };
+
+  const saveFoodStoreToFile = () => {
+    saveDataToFile({ data: foods, fileName: `SM_FoodStore_${today}` });
   };
 
   const loadFoodStoreFromClipboard = async () => {
@@ -46,12 +72,16 @@ const SettingsPage = () => {
     });
   };
 
-  const copyDaysToClipboard = async () => {
+  /*   const copyDaysToClipboard = async () => {
     await Clipboard.write({ string: JSON.stringify(days) });
     toast("Successfully copied to clipboard", {
       hideProgressBar: true,
       type: "success",
     });
+  }; */
+
+  const saveDaysToFile = () => {
+    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
   };
 
   const loadDaysFromClipboard = async () => {
@@ -66,7 +96,7 @@ const SettingsPage = () => {
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={copyFoodStoreToClipboard}>
+        <Button onClick={saveFoodStoreToFile}>
           Copy food store in clipboard
         </Button>
         <Button onClick={loadFoodStoreFromClipboard}>
@@ -74,9 +104,7 @@ const SettingsPage = () => {
         </Button>
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={copyDaysToClipboard}>
-          Copy tracked days in clipboard
-        </Button>
+        <Button onClick={saveDaysToFile}>Copy tracked days in clipboard</Button>
         <Button onClick={loadDaysFromClipboard}>
           Load tracked days from clipboard
         </Button>
