@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Accordion } from "../components/Accordion";
 import { ManageFoodModal } from "../components/ManageFoodModal";
 import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
@@ -7,25 +7,14 @@ import { useDietPlanStore } from "../store/DietPlanStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food, IndexedMeals } from "../types";
 
-const today = dayjs().format("YYYY-MM-DD");
-
 const DietPlanPage = () => {
-  const { selectedFood, selectedDate, setSelectedDate, days, setSelectedFood } =
-    useTrackerStore(
-      ({
-        selectedFood,
-        selectedDate,
-        setSelectedDate,
-        days,
-        setSelectedFood,
-      }) => ({
-        selectedFood,
-        selectedDate,
-        setSelectedDate,
-        days,
-        setSelectedFood,
-      })
-    );
+  const { selectedFood, selectedDate, setSelectedFood } = useTrackerStore(
+    ({ selectedFood, selectedDate, setSelectedFood }) => ({
+      selectedFood,
+      selectedDate,
+      setSelectedFood,
+    })
+  );
 
   const { dietPlan, addFoodToDay, editDay, removeFoodFromDay } =
     useDietPlanStore(
@@ -41,12 +30,12 @@ const DietPlanPage = () => {
 
   /*   const [addOverlayOpen, setAddOverlayOpen] = useState(false); */
 
-  const onAddToStoreClick = () => {
+  /*   const onAddToStoreClick = () => {
     setSelectedFood({
       type: "addToStore",
       index: 0,
     });
-  };
+  }; */
 
   const onFoodSaveToDay = (foodItem: Food) => {
     addFoodToDay(selectedDay, foodItem);
