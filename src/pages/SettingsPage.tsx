@@ -40,6 +40,14 @@ const SettingsPage = () => {
     readFoodRef.current?.click();
   };
 
+  const exportDaysToFile = () => {
+    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
+  };
+
+  const importDaysFromFile = () => {
+    readDaysRef.current?.click();
+  };
+
   const readFoodStoreInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
@@ -51,14 +59,6 @@ const SettingsPage = () => {
       hideProgressBar: true,
       type: "success",
     });
-  };
-
-  const exportDaysToFile = () => {
-    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
-  };
-
-  const importDaysFromFile = () => {
-    readDaysRef.current?.click();
   };
 
   const readDaysInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
