@@ -1,58 +1,35 @@
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { useMemo } from "react";
 import { Accordion } from "../components/Accordion";
 import { ManageFoodModal } from "../components/ManageFoodModal";
-import { Button } from "../components/common/Button";
-import { DateSelector } from "../components/date-selector/DateSelector";
-import { ModalOverlay } from "../components/ui/ModalOverlay";
+import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
+import { useDietPlanStore } from "../store/DietPlanStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food, IndexedMeals } from "../types";
 
-const today = dayjs().format("YYYY-MM-DD");
-
-function TrackerPage() {
-  const {
-    selectedFood,
-    selectedDate,
-    setSelectedDate,
-    days,
-    editDay,
-    addDay,
-    setSelectedFood,
-  } = useTrackerStore(
-    ({
+const DietPlanPage = () => {
+  const { selectedFood, selectedDate, setSelectedFood } = useTrackerStore(
+    ({ selectedFood, selectedDate, setSelectedFood }) => ({
       selectedFood,
       selectedDate,
-      setSelectedDate,
-      days,
-      editDay,
-      addDay,
-      setSelectedFood,
-    }) => ({
-      selectedFood,
-      selectedDate,
-      setSelectedDate,
-      days,
-      editDay,
-      addDay,
       setSelectedFood,
     })
   );
 
-  const [addOverlayOpen, setAddOverlayOpen] = useState(false);
+  const { dietPlan, addFoodToDay, editDay, removeFoodFromDay } =
+    useDietPlanStore(
+      ({ dietPlan, addFoodToDay, editDay, removeFoodFromDay }) => ({
+        dietPlan,
+        addFoodToDay,
+        editDay,
+        removeFoodFromDay,
+      })
+    );
 
-  const onAddToStoreClick = () => {
-    setSelectedFood({
-      type: "addToStore",
-      index: 0,
-    });
-  };
+  const selectedDay = dayjs(selectedDate).day();
 
   const onFoodSaveToDay = (foodItem: Food) => {
-    editDay(selectedDate, {
-      foods: [...days[selectedDate].foods, { ...foodItem }],
-    });
+    addFoodToDay(selectedDay, foodItem);
   };
 
   const onFoodEdit = ({
@@ -62,18 +39,11 @@ function TrackerPage() {
     foodItem: Food;
     index: number;
   }) => {
-    const newFoods = [...days[selectedDate].foods];
-    newFoods.splice(index, 1, foodItem);
-    editDay(selectedDate, {
-      foods: newFoods,
-    });
+    editDay(selectedDay, foodItem, index);
   };
 
   const onDeleteFromDay = (index: number) => {
-    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
-    editDay(selectedDate, {
-      foods: [...newFoods],
-    });
+    removeFoodFromDay(selectedDay, index);
     setSelectedFood(undefined);
   };
 
@@ -91,9 +61,6 @@ function TrackerPage() {
     dinnerFoods,
   } = useMemo(() => {
     // if the current day is not present in the store, create it.
-    if (!days[selectedDate]) {
-      addDay(selectedDate);
-    }
 
     // initialize indexed arrays of foods divided by meal
     const breakfastFoods: IndexedMeals = [];
@@ -104,7 +71,7 @@ function TrackerPage() {
 
     // this reduce calculates total calories, carbs, proteins and fats based on the selected date
     const [totalCalories, totalCarbohydrates, totalProteins, totalFats] = (
-      days[selectedDate].foods ?? []
+      dietPlan[selectedDay] ?? []
     ).reduce(
       (acc, next, i) => {
         switch (next.meal) {
@@ -149,11 +116,7 @@ function TrackerPage() {
       eveningSnacksFoods,
       dinnerFoods,
     };
-  }, [days, selectedDate, addDay]);
-
-  useEffect(() => {
-    setSelectedDate(dayjs(today).format("YYYY-MM-DD"));
-  }, []);
+  }, [dietPlan, selectedDay]);
 
   return (
     <>
@@ -170,7 +133,7 @@ function TrackerPage() {
       )}
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
-          <DateSelector />
+          <WeekDateSelector />
           <span>Summary</span>
           <span>Calories: {totalCalories}</span>
           <div className="flex w-full justify-center gap-x-[10px]">
@@ -182,60 +145,27 @@ function TrackerPage() {
         <div className="overflow-auto border-t border-black">
           <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
             <Accordion
-              type="tracker"
+              type="diet"
               foodItems={breakfastFoods}
               tabName="breakfast"
             />
             <Accordion
-              type="tracker"
+              type="diet"
               foodItems={morningSnacksFoods}
               tabName="morningSnacks"
             />
-            <Accordion type="tracker" foodItems={lunchFoods} tabName="lunch" />
+            <Accordion type="diet" foodItems={lunchFoods} tabName="lunch" />
             <Accordion
-              type="tracker"
+              type="diet"
               foodItems={eveningSnacksFoods}
               tabName="eveningSnacks"
             />
-            <Accordion
-              type="tracker"
-              foodItems={dinnerFoods}
-              tabName="dinner"
-            />
+            <Accordion type="diet" foodItems={dinnerFoods} tabName="dinner" />
           </div>
         </div>
-        {addOverlayOpen && (
-          <>
-            <ModalOverlay
-              onClick={() => {
-                setAddOverlayOpen(false);
-              }}
-            />
-            <div className="flex flex-col absolute bottom-[110px] right-[10px] gap-y-[3px] mb-[3px] items-end">
-              <Button
-                className="mx-0"
-                onClick={() => {
-                  onAddToStoreClick();
-                  setAddOverlayOpen(false);
-                }}
-              >
-                Manage food store
-              </Button>
-            </div>
-          </>
-        )}
-
-        <Button
-          className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
-          onClick={() => {
-            setAddOverlayOpen((prev) => !prev);
-          }}
-        >
-          <AiOutlinePlus style={{ fontSize: "50px" }} />
-        </Button>
       </div>
     </>
   );
-}
+};
 
-export default TrackerPage;
+export default DietPlanPage;
