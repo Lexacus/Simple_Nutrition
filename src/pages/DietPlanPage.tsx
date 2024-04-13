@@ -28,15 +28,6 @@ const DietPlanPage = () => {
 
   const selectedDay = dayjs(selectedDate).day();
 
-  /*   const [addOverlayOpen, setAddOverlayOpen] = useState(false); */
-
-  /*   const onAddToStoreClick = () => {
-    setSelectedFood({
-      type: "addToStore",
-      index: 0,
-    });
-  }; */
-
   const onFoodSaveToDay = (foodItem: Food) => {
     addFoodToDay(selectedDay, foodItem);
   };
@@ -172,35 +163,6 @@ const DietPlanPage = () => {
             <Accordion type="diet" foodItems={dinnerFoods} tabName="dinner" />
           </div>
         </div>
-        {/*   {addOverlayOpen && (
-          <>
-            <ModalOverlay
-              onClick={() => {
-                setAddOverlayOpen(false);
-              }}
-            />
-            <div className="flex flex-col absolute bottom-[110px] right-[10px] gap-y-[3px] mb-[3px] items-end">
-              <Button
-                className="mx-0"
-                onClick={() => {
-                  onAddToStoreClick();
-                  setAddOverlayOpen(false);
-                }}
-              >
-                Manage food store
-              </Button>
-            </div>
-          </>
-        )}
-
-        <Button
-          className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
-          onClick={() => {
-            setAddOverlayOpen((prev) => !prev);
-          }}
-        >
-          <AiOutlinePlus style={{ fontSize: "50px" }} />
-        </Button> */}
       </div>
     </>
   );
