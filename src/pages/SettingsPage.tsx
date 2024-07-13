@@ -73,9 +73,53 @@ const SettingsPage = () => {
     });
   };
 
+  const saveFoodStoreToServer = async () => {
+    try {
+      await fetch("http://localhost:3000/foods", {
+        method: "POST",
+        body: JSON.stringify(foods),
+        headers: { "Content-Type": "application/json" },
+      });
+      toast("Successfully saved foods to server", {
+        hideProgressBar: true,
+        type: "success",
+      });
+    } catch (e) {
+      console.error(e);
+      toast("Error while saving foods to server", {
+        hideProgressBar: true,
+        type: "error",
+      });
+    }
+  };
+
+  const loadFoodStoreFromServer = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/foods", { method: "GET" });
+      const foodsFromDB = await res.json();
+      setFoods(foodsFromDB);
+      toast("Successfully loaded foods from server", {
+        hideProgressBar: true,
+        type: "success",
+      });
+    } catch (e) {
+      console.error(e);
+      toast("Error while loading foods from server", {
+        hideProgressBar: true,
+        type: "error",
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
+        <Button onClick={saveFoodStoreToServer}>
+          Save food store to server
+        </Button>
+        <Button onClick={loadFoodStoreFromServer}>
+          Load food store from server
+        </Button>
         <Button onClick={exportFoodStoreToFile}>Save food store to file</Button>
         <Button onClick={importFoodStoreFromFile}>
           Load food store from file
