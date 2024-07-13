@@ -75,7 +75,7 @@ const SettingsPage = () => {
 
   const saveFoodStoreToServer = async () => {
     try {
-      await fetch("http://192.168.1.13:3002/foods", {
+      await fetch(`${import.meta.env.VITE_API_URL}/foods`, {
         method: "POST",
         body: JSON.stringify(foods),
         headers: { "Content-Type": "application/json" },
@@ -96,7 +96,7 @@ const SettingsPage = () => {
   // Try
   const loadFoodStoreFromServer = async () => {
     try {
-      const res = await fetch("http://192.168.1.13:3002/foods", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/foods`, {
         method: "GET",
       });
       const foodsFromDB = await res.json();
