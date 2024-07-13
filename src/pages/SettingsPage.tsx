@@ -26,20 +26,7 @@ const SettingsPage = () => {
     })
   );
 
-  /*   const copyFoodStoreToClipboard = async () => {
-    await Clipboard.write({
-      string: JSON.stringify({
-        foods: foods,
-        favoriteMeals: favoriteMeals,
-      }),
-    });
-    toast("Successfully copied to clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
-
-  const saveFoodStoreToFile = () => {
+  const exportFoodStoreToFile = () => {
     saveDataToFile({
       data: {
         foods: foods,
@@ -49,47 +36,17 @@ const SettingsPage = () => {
     });
   };
 
-  const readFoodStoreFromFile = () => {
+  const importFoodStoreFromFile = () => {
     readFoodRef.current?.click();
   };
-  /* 
-  const loadFoodStoreFromClipboard = async () => {
-    const jsonFoodStore: {
-      foods: Food[];
-      favoriteMeals: FavoriteMeal[];
-    } = JSON.parse((await Clipboard.read()).value);
-    setFoods(jsonFoodStore.foods);
-    setFavoriteMeals(jsonFoodStore.favoriteMeals);
-    toast("Successfully loaded from clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
 
-  /*   const copyDaysToClipboard = async () => {
-    await Clipboard.write({ string: JSON.stringify(days) });
-    toast("Successfully copied to clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
-
-  const saveDaysToFile = () => {
+  const exportDaysToFile = () => {
     saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
   };
 
-  const readDaysFromFile = () => {
+  const importDaysFromFile = () => {
     readDaysRef.current?.click();
   };
-
-  /*   const loadDaysFromClipboard = async () => {
-    const jsonDays = await Clipboard.read();
-    setDays(JSON.parse(jsonDays.value));
-    toast("Successfully loaded from clipboard", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  }; */
 
   const readFoodStoreInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -116,11 +73,55 @@ const SettingsPage = () => {
     });
   };
 
+  const saveFoodStoreToServer = async () => {
+    try {
+      await fetch("http://localhost:3000/foods", {
+        method: "POST",
+        body: JSON.stringify(foods),
+        headers: { "Content-Type": "application/json" },
+      });
+      toast("Successfully saved foods to server", {
+        hideProgressBar: true,
+        type: "success",
+      });
+    } catch (e) {
+      console.error(e);
+      toast("Error while saving foods to server", {
+        hideProgressBar: true,
+        type: "error",
+      });
+    }
+  };
+
+  const loadFoodStoreFromServer = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/foods", { method: "GET" });
+      const foodsFromDB = await res.json();
+      setFoods(foodsFromDB);
+      toast("Successfully loaded foods from server", {
+        hideProgressBar: true,
+        type: "success",
+      });
+    } catch (e) {
+      console.error(e);
+      toast("Error while loading foods from server", {
+        hideProgressBar: true,
+        type: "error",
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveFoodStoreToFile}>Save food store to file</Button>
-        <Button onClick={readFoodStoreFromFile}>
+        <Button onClick={saveFoodStoreToServer}>
+          Save food store to server
+        </Button>
+        <Button onClick={loadFoodStoreFromServer}>
+          Load food store from server
+        </Button>
+        <Button onClick={exportFoodStoreToFile}>Save food store to file</Button>
+        <Button onClick={importFoodStoreFromFile}>
           Load food store from file
         </Button>
         <input
@@ -131,8 +132,10 @@ const SettingsPage = () => {
         />
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveDaysToFile}>Save tracked days to file</Button>
-        <Button onClick={readDaysFromFile}>Load tracked days from file</Button>
+        <Button onClick={exportDaysToFile}>Export tracked days to file</Button>
+        <Button onClick={importDaysFromFile}>
+          Import tracked days from file
+        </Button>
         <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />
       </div>
     </>

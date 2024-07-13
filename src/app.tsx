@@ -5,6 +5,7 @@ import SettingsPage from "./pages/SettingsPage";
 import { Footer } from "./components/layout/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DietPlanPage from "./pages/DietPlanPage";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
         element: <TrackerPage />,
       },
       { path: "/settings", element: <SettingsPage /> },
+      { path: "diet-plan", element: <DietPlanPage /> },
     ],
   },
 ]);

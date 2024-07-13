@@ -12,13 +12,16 @@ import { Food, Meals } from "../types";
 import { Button } from "./common/Button";
 import { Input } from "./common/Input";
 import { Modal } from "./ui/Modal";
+import { useDietPlanStore } from "../store/DietPlanStore";
+import dayjs from "dayjs";
 
 interface AccordionProps {
   tabName: Meals;
   foodItems?: { foodItem: Food; index: number }[];
+  type: "diet" | "tracker";
 }
 
-export const Accordion: FC<AccordionProps> = ({ tabName, foodItems }) => {
+export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
   const [open, setOpen] = useState(false);
   const { days, editDay, selectedDate, setSelectedFood } = useTrackerStore(
     ({ days, editDay, selectedDate, setSelectedFood }) => ({
@@ -29,12 +32,16 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems }) => {
     })
   );
 
+  const { dietPlan } = useDietPlanStore(({ dietPlan }) => ({ dietPlan }));
+
   const { favoriteMeals, upsertFavoriteMeal } = useFoodStore(
     ({ favoriteMeals, upsertFavoriteMeal }) => ({
       favoriteMeals,
       upsertFavoriteMeal,
     })
   );
+
+  const selectedDay = dayjs(selectedDate).day();
 
   const [favoriteMealModalOpen, setFavoriteMealModalOpen] = useState<
     "save" | "load" | undefined
@@ -57,9 +64,13 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems }) => {
 
   const onEditClick = (index: number) => {
     setSelectedFood({
-      foodItem: {
-        ...days[selectedDate].foods[index],
-      },
+      foodItem:
+        //TODO: is there a better way to do this?
+        type === "tracker"
+          ? {
+              ...days[selectedDate].foods[index],
+            }
+          : { ...dietPlan[selectedDay][index] },
       type: "edit",
       index,
     });
