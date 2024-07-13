@@ -14,6 +14,8 @@ const SettingsPage = () => {
     setDays,
   }));
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   const readFoodRef = useRef<HTMLInputElement>(null);
   const readDaysRef = useRef<HTMLInputElement>(null);
 
@@ -75,7 +77,7 @@ const SettingsPage = () => {
 
   const saveFoodStoreToServer = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/foods`, {
+      await fetch(`${apiUrl}/foods`, {
         method: "POST",
         body: JSON.stringify(foods),
         headers: { "Content-Type": "application/json" },
@@ -96,7 +98,7 @@ const SettingsPage = () => {
   // Try
   const loadFoodStoreFromServer = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/foods`, {
+      const res = await fetch(`${apiUrl}/foods`, {
         method: "GET",
       });
       const foodsFromDB = await res.json();
