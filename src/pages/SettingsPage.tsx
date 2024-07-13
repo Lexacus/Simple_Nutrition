@@ -75,7 +75,7 @@ const SettingsPage = () => {
 
   const saveFoodStoreToServer = async () => {
     try {
-      await fetch("http://localhost:3000/foods", {
+      await fetch("http://192.168.1.13:3002/foods", {
         method: "POST",
         body: JSON.stringify(foods),
         headers: { "Content-Type": "application/json" },
@@ -95,7 +95,9 @@ const SettingsPage = () => {
 
   const loadFoodStoreFromServer = async () => {
     try {
-      const res = await fetch("http://localhost:3000/foods", { method: "GET" });
+      const res = await fetch("http://192.168.1.13:3002/foods", {
+        method: "GET",
+      });
       const foodsFromDB = await res.json();
       setFoods(foodsFromDB);
       toast("Successfully loaded foods from server", {
