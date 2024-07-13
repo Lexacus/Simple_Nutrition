@@ -93,6 +93,7 @@ const SettingsPage = () => {
     }
   };
 
+  // Try
   const loadFoodStoreFromServer = async () => {
     try {
       const res = await fetch("http://192.168.1.13:3002/foods", {
