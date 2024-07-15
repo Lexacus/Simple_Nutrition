@@ -5,6 +5,7 @@ import { Button } from "../components/common/Button";
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { parseJsonFile, saveDataToFile } from "../utils";
+import { Food } from "../types";
 
 const today = dayjs().format("DD_MM_YYYY");
 
@@ -116,6 +117,54 @@ const SettingsPage = () => {
     }
   };
 
+  const saveTrackedDaysToServer = async () => {
+    const parsedDays = Object.entries(days).map(([key, value]) => ({
+      day: key,
+      foods: value.foods,
+    }));
+    try {
+      await fetch(`${apiUrl}/tracker`, {
+        method: "POST",
+        body: JSON.stringify(parsedDays),
+        headers: { "Content-Type": "application/json" },
+      });
+      toast("Successfully saved days to server", {
+        hideProgressBar: true,
+        type: "success",
+      });
+    } catch (e) {
+      console.error(e);
+      toast("Error while saving days to server", {
+        hideProgressBar: true,
+        type: "error",
+      });
+    }
+  };
+
+  const loadTrackedDaysFromServer = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/tracker`, {
+        method: "GET",
+      });
+      const daysFromDB: { day: string; foods: Food[] }[] = await res.json();
+      const parsedDaysFromDB = daysFromDB.reduce((acc, curr) => {
+        const newAcc = { ...acc, [curr.day]: { foods: curr.foods } };
+        return newAcc;
+      }, {});
+      setDays(parsedDaysFromDB);
+      toast("Successfully loaded days from server", {
+        hideProgressBar: true,
+        type: "success",
+      });
+    } catch (e) {
+      console.error(e);
+      toast("Error while loading days from server", {
+        hideProgressBar: true,
+        type: "error",
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
@@ -125,9 +174,11 @@ const SettingsPage = () => {
         <Button onClick={loadFoodStoreFromServer}>
           Load food store from server
         </Button>
-        <Button onClick={exportFoodStoreToFile}>Save food store to file</Button>
+        <Button onClick={exportFoodStoreToFile}>
+          Export food store to file
+        </Button>
         <Button onClick={importFoodStoreFromFile}>
-          Load food store from file
+          Import food store from file
         </Button>
         <input
           ref={readFoodRef}
@@ -137,6 +188,12 @@ const SettingsPage = () => {
         />
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
+        <Button onClick={saveTrackedDaysToServer}>
+          Save tracked days to server
+        </Button>
+        <Button onClick={loadTrackedDaysFromServer}>
+          Load tracked days from server
+        </Button>
         <Button onClick={exportDaysToFile}>Export tracked days to file</Button>
         <Button onClick={importDaysFromFile}>
           Import tracked days from file
