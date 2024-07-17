@@ -1,11 +1,12 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./app.css";
 import TrackerPage from "./pages/TrackerPage";
-import SettingsPage from "./pages/SettingsPage";
+import SettingsPage from "./pages/Settings/Settings";
 import { Footer } from "./components/layout/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DietPlanPage from "./pages/DietPlanPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createBrowserRouter([
   {
@@ -27,8 +28,14 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />;
+    </QueryClientProvider>
+  );
 }
 
 export default App;

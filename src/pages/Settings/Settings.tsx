@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import { useRef } from "react";
 import { toast } from "react-toastify";
-import { Button } from "../components/common/Button";
-import { useFoodStore } from "../store/FoodStore";
-import { useTrackerStore } from "../store/TrackerStore";
-import { parseJsonFile, saveDataToFile } from "../utils";
-import { Food } from "../types";
+import { Button } from "../../components/common/Button";
+import { useFoodStore } from "../../store/FoodStore";
+import { useTrackerStore } from "../../store/TrackerStore";
+import { parseJsonFile, saveDataToFile } from "../../utils";
+import useSettings from "./hooks/useSettings";
 
 const today = dayjs().format("DD_MM_YYYY");
 
@@ -15,11 +15,6 @@ const SettingsPage = () => {
     setDays,
   }));
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-  const readFoodRef = useRef<HTMLInputElement>(null);
-  const readDaysRef = useRef<HTMLInputElement>(null);
-
   const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
     ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
       foods,
@@ -28,6 +23,18 @@ const SettingsPage = () => {
       setFoods,
     })
   );
+
+  const {
+    foodsRefetch,
+    isFetchingAllFoods,
+    isFetchingAllTrackedDays,
+    saveAllFoods,
+    saveAllTrackedDays,
+    trackedDaysRefetch,
+  } = useSettings();
+
+  const readFoodRef = useRef<HTMLInputElement>(null);
+  const readDaysRef = useRef<HTMLInputElement>(null);
 
   const exportFoodStoreToFile = () => {
     saveDataToFile({
@@ -77,107 +84,73 @@ const SettingsPage = () => {
   };
 
   const saveFoodStoreToServer = async () => {
-    try {
-      await fetch(`${apiUrl}/foods`, {
-        method: "POST",
-        body: JSON.stringify(foods),
-        headers: { "Content-Type": "application/json" },
-      });
-      toast("Successfully saved foods to server", {
-        hideProgressBar: true,
-        type: "success",
-      });
-    } catch (e) {
-      console.error(e);
-      toast("Error while saving foods to server", {
-        hideProgressBar: true,
-        type: "error",
-      });
-    }
+    saveAllFoods(foods);
   };
 
-  // Try
   const loadFoodStoreFromServer = async () => {
-    try {
-      const res = await fetch(`${apiUrl}/foods`, {
-        method: "GET",
-      });
-      const foodsFromDB = await res.json();
-      setFoods(foodsFromDB);
-      toast("Successfully loaded foods from server", {
-        hideProgressBar: true,
-        type: "success",
-      });
-    } catch (e) {
-      console.error(e);
+    const { data: foodsFromDB } = await foodsRefetch();
+    if (!foodsFromDB) {
       toast("Error while loading foods from server", {
         hideProgressBar: true,
         type: "error",
       });
+      return;
     }
+    setFoods(foodsFromDB);
+    toast("Successfully loaded foods from server", {
+      hideProgressBar: true,
+      type: "success",
+    });
   };
 
   const saveTrackedDaysToServer = async () => {
-    const parsedDays = Object.entries(days).map(([key, value]) => ({
-      day: key,
-      foods: value.foods,
-    }));
-    try {
-      await fetch(`${apiUrl}/tracker`, {
-        method: "POST",
-        body: JSON.stringify(parsedDays),
-        headers: { "Content-Type": "application/json" },
-      });
-      toast("Successfully saved days to server", {
-        hideProgressBar: true,
-        type: "success",
-      });
-    } catch (e) {
-      console.error(e);
-      toast("Error while saving days to server", {
-        hideProgressBar: true,
-        type: "error",
-      });
-    }
+    saveAllTrackedDays(days);
   };
 
   const loadTrackedDaysFromServer = async () => {
-    try {
-      const res = await fetch(`${apiUrl}/tracker`, {
-        method: "GET",
-      });
-      const daysFromDB: { day: string; foods: Food[] }[] = await res.json();
-      const parsedDaysFromDB = daysFromDB.reduce((acc, curr) => {
-        const newAcc = { ...acc, [curr.day]: { foods: curr.foods } };
-        return newAcc;
-      }, {});
-      setDays(parsedDaysFromDB);
-      toast("Successfully loaded days from server", {
-        hideProgressBar: true,
-        type: "success",
-      });
-    } catch (e) {
-      console.error(e);
-      toast("Error while loading days from server", {
+    const { data: trackedDaysFromDB } = await trackedDaysRefetch();
+    if (!trackedDaysFromDB) {
+      toast("Error while loading tracked days from server", {
         hideProgressBar: true,
         type: "error",
       });
+      return;
     }
+    const parsedDaysFromDB = trackedDaysFromDB.reduce((acc, curr) => {
+      return { ...acc, [curr.day]: { foods: curr.foods } };
+    }, {});
+    setDays(parsedDaysFromDB);
+    toast("Successfully loaded tracked days from server", {
+      hideProgressBar: true,
+      type: "success",
+    });
   };
 
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveFoodStoreToServer}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={saveFoodStoreToServer}
+        >
           Save food store to server
         </Button>
-        <Button onClick={loadFoodStoreFromServer}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={loadFoodStoreFromServer}
+        >
           Load food store from server
         </Button>
-        <Button onClick={exportFoodStoreToFile}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={exportFoodStoreToFile}
+        >
           Export food store to file
         </Button>
-        <Button onClick={importFoodStoreFromFile}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={importFoodStoreFromFile}
+        >
           Import food store from file
         </Button>
         <input
@@ -188,14 +161,28 @@ const SettingsPage = () => {
         />
       </div>
       <div className="flex flex-col gap-y-10 mt-10">
-        <Button onClick={saveTrackedDaysToServer}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={saveTrackedDaysToServer}
+        >
           Save tracked days to server
         </Button>
-        <Button onClick={loadTrackedDaysFromServer}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={loadTrackedDaysFromServer}
+        >
           Load tracked days from server
         </Button>
-        <Button onClick={exportDaysToFile}>Export tracked days to file</Button>
-        <Button onClick={importDaysFromFile}>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={exportDaysToFile}
+        >
+          Export tracked days to file
+        </Button>
+        <Button
+          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
+          onClick={importDaysFromFile}
+        >
           Import tracked days from file
         </Button>
         <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />

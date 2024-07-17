@@ -6,6 +6,7 @@ type ButtonProps = {
   onClick?: () => void;
   className?: string;
   type?: "submit" | "button";
+  disabled?: boolean;
 };
 
 export const Button: FC<ButtonProps> = ({
@@ -13,6 +14,7 @@ export const Button: FC<ButtonProps> = ({
   onClick,
   className,
   type = "submit",
+  disabled,
 }) => {
   return (
     <button
@@ -22,6 +24,7 @@ export const Button: FC<ButtonProps> = ({
         "flex justify-center items-center border bg-blue-600 text-white rounded-[8px] w-fit h-fit px-[10px] py-[3px] mx-auto",
         className
       )}
+      disabled={disabled}
     >
       {children}
     </button>

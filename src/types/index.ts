@@ -6,6 +6,7 @@ export type Meals =
   | "dinner";
 
 export type Food = {
+  _id?: string;
   calories: number;
   name: string;
   proteins: number;
