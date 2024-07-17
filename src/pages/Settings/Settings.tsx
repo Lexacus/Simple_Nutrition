@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
-import { useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../../components/common/Button";
+import { useAuthStore } from "../../store/AuthStore";
 import { useFoodStore } from "../../store/FoodStore";
 import { useTrackerStore } from "../../store/TrackerStore";
 import { parseJsonFile, saveDataToFile } from "../../utils";
@@ -23,6 +24,9 @@ const SettingsPage = () => {
       setFoods,
     })
   );
+
+  //
+  const { setTempPassword } = useAuthStore();
 
   const {
     foodsRefetch,
@@ -126,9 +130,18 @@ const SettingsPage = () => {
     });
   };
 
+  const setTemporaryPassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setTempPassword(e.target.value);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-y-10 mt-10">
+        <input
+          className="border-[1px] border-black"
+          placeholder="Insert password"
+          onChange={setTemporaryPassword}
+        />
         <Button
           disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
           onClick={saveFoodStoreToServer}
