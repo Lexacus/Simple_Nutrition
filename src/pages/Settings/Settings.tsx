@@ -25,7 +25,7 @@ const SettingsPage = () => {
     })
   );
 
-  const { setTempPassword } = useAuthStore();
+  const { tempPassword, setTempPassword } = useAuthStore();
 
   const {
     foodsRefetch,
@@ -139,6 +139,7 @@ const SettingsPage = () => {
         <input
           className="border-[1px] border-black"
           placeholder="Insert password"
+          defaultValue={tempPassword}
           onChange={setTemporaryPassword}
         />
         <Button
