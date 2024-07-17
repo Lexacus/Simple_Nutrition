@@ -5,7 +5,7 @@ import axiosInstance from "./axios";
 const getAllFoods = async (): Promise<Food[]> => {
   const password = useAuthStore.getState().tempPassword;
   const { data: foods } = await axiosInstance.get("/foods", {
-    headers: { "x-authorization": password },
+    headers: { x_authorization: password },
   });
   return foods;
 };
@@ -14,7 +14,7 @@ const replaceAllFoods = async (foods: Food[]) => {
   const password = useAuthStore.getState().tempPassword;
 
   const { data } = await axiosInstance.post("/foods", foods, {
-    headers: { "x-authorization": password },
+    headers: { x_authorization: password },
   });
   return data;
 };

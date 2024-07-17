@@ -7,7 +7,7 @@ const getAllTrackedDays = async (): Promise<
 > => {
   const password = useAuthStore.getState().tempPassword;
   const { data: trackedDays } = await axiosInstance.get("/tracker", {
-    headers: { "x-authorization": password },
+    headers: { x_authorization: password },
   });
   return trackedDays;
 };
@@ -20,7 +20,7 @@ const replaceAllTrackedDays = async (days: Record<string, DietDay>) => {
     foods: value.foods,
   }));
   const { data } = await axiosInstance.post("/tracker", parsedDays, {
-    headers: { "x-authorization": password },
+    headers: { x_authorization: password },
   });
   return data;
 };
