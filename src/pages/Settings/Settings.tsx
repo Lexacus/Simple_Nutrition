@@ -25,7 +25,6 @@ const SettingsPage = () => {
     })
   );
 
-  //
   const { setTempPassword } = useAuthStore();
 
   const {
