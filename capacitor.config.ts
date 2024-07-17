@@ -5,7 +5,6 @@ const config: CapacitorConfig = {
   appName: "simple-nutrition",
   webDir: "dist",
   server: {
-    /*  androidScheme: "https", */
     url: "https://simple-nutrition-chi.vercel.app",
     cleartext: true,
   },
