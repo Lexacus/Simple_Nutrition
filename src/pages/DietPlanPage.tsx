@@ -1,13 +1,14 @@
-import dayjs from "dayjs";
+/* import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Accordion } from "../components/Accordion";
 import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
 import { useDietPlanStore } from "../store/DietPlanStore";
 import { useTrackerStore } from "../store/TrackerStore";
-import { Food, IndexedMeals } from "../types";
+import { Food, IndexedMeals } from "../types"; */
 
 const DietPlanPage = () => {
-  const { selectedFood, selectedDate, setSelectedFood } = useTrackerStore(
+  return <></>;
+  /*   const { selectedFood, selectedDate, setSelectedFood } = useTrackerStore(
     ({ selectedFood, selectedDate, setSelectedFood }) => ({
       selectedFood,
       selectedDate,
@@ -119,7 +120,7 @@ const DietPlanPage = () => {
 
   return (
     <>
-      {/* {selectedFood && (
+      {selectedFood && (
         <ManageFoodModal
           selectedFood={selectedFood}
           onClose={() => {
@@ -129,7 +130,7 @@ const DietPlanPage = () => {
           onEdit={onFoodEdit}
           onDeleteFromDay={onDeleteFromDay}
         />
-      )} */}
+      )}
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <WeekDateSelector />
@@ -164,7 +165,7 @@ const DietPlanPage = () => {
         </div>
       </div>
     </>
-  );
+  ); */
 };
 
 export default DietPlanPage;

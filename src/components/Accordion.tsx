@@ -1,44 +1,39 @@
+/* import dayjs from "dayjs"; */
 import { FC, useState } from "react";
-import {
-  AiFillCaretDown,
-  AiFillCaretLeft,
-  AiFillCaretUp,
-  AiFillPlusCircle,
-  AiFillStar,
-} from "react-icons/ai";
+import { AiFillPlusCircle } from "react-icons/ai";
 import ReactSelect from "react-select";
+import AddFoodModal from "../pages/Tracker/components/AddFoodModal";
+import EditFoodModal from "../pages/Tracker/components/EditFoodModal";
+/* import { useDietPlanStore } from "../store/DietPlanStore"; */
 import { useFoodStore } from "../store/FoodStore";
 import { useTrackerStore } from "../store/TrackerStore";
 import { Food, Meals } from "../types";
 import { Button } from "./common/Button";
 import { Input } from "./common/Input";
 import { Modal } from "./ui/Modal";
-import { useDietPlanStore } from "../store/DietPlanStore";
-import dayjs from "dayjs";
-import EditFoodModal from "../pages/Tracker/components/EditFoodModal";
-import AddFoodModal from "../pages/Tracker/components/AddFoodModal";
 
 interface AccordionProps {
   tabName: Meals;
   foodItems?: { foodItem: Food; index: number }[];
-  type: "diet" | "tracker";
+  /* type: "diet" | "tracker"; */
 }
 
-export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
-  const [open, setOpen] = useState(true);
+export const Accordion: FC<AccordionProps> = ({
+  tabName,
+  foodItems /* , type */,
+}) => {
   const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
 
   const [openedIndex, setOpenedIndex] = useState<number>();
-  const { days, editDay, selectedDate, setSelectedFood } = useTrackerStore(
-    ({ days, editDay, selectedDate, setSelectedFood }) => ({
-      days,
+  const { /* days, */ editDay, selectedDate } = useTrackerStore(
+    ({ /* days, */ editDay, selectedDate }) => ({
+      /* days, */
       editDay,
       selectedDate,
-      setSelectedFood,
     })
   );
 
-  const { dietPlan } = useDietPlanStore(({ dietPlan }) => ({ dietPlan }));
+  /* const { dietPlan } = useDietPlanStore(({ dietPlan }) => ({ dietPlan })); */
 
   const { favoriteMeals, upsertFavoriteMeal } = useFoodStore(
     ({ favoriteMeals, upsertFavoriteMeal }) => ({
@@ -47,7 +42,7 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
     })
   );
 
-  const selectedDay = dayjs(selectedDate).day();
+  /* const selectedDay = dayjs(selectedDate).day(); */
 
   const [favoriteMealModalOpen, setFavoriteMealModalOpen] = useState<
     "save" | "load" | undefined
@@ -60,13 +55,6 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
 
   const onAddClick = () => {
     setIsAddFoodOpen(true);
-    /*     setSelectedFood({
-      foodItem: {
-        meal: tabName,
-      },
-      type: "addToDay",
-      index: 0,
-    }); */
   };
 
   /*   const onEditClick = (index: number) => {
@@ -184,29 +172,28 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
           </div>
         </div>
 
-        {open && (
-          <div className=" px-[3px] pt-[5px] rounded-b-[16px]">
-            <div className="flex flex-col gap-y-[5px] border-[1px] border-gray-600 p-[5px] rounded-[8px]">
-              {foodItems?.map(({ foodItem: { name, grams }, index }) => {
-                return (
-                  <div
-                    key={`${tabName}_${name}`}
-                    className="flex justify-between items-center"
-                    onClick={() => setOpenedIndex(index)}
-                  >
-                    <div className="flex flex-row items-center gap-x-[5px]  w-full ">
-                      <span className="text-[14px]">{`- ${name} (${grams}g)`}</span>
-                    </div>
+        <div className=" px-[3px] pt-[5px] rounded-b-[16px]">
+          <div className="flex flex-col gap-y-[5px] border-[1px] border-gray-600 p-[5px] rounded-[8px]">
+            {foodItems?.map(({ foodItem: { name, grams }, index }) => {
+              return (
+                <div
+                  key={`${tabName}_${name}`}
+                  className="flex justify-between items-center"
+                  onClick={() => setOpenedIndex(index)}
+                >
+                  <div className="flex flex-row items-center gap-x-[5px]  w-full ">
+                    <span className="text-[14px]">{`- ${name} (${grams}g)`}</span>
                   </div>
-                );
-              })}
-              {!foodItems?.length && (
-                <span className="w-full text-center text-[14px]">
-                  No foods in this meal yet
-                </span>
-              )}
-            </div>
-            {/*   <div className="flex flex-row w-full items-center justify-center mt-[5px]">
+                </div>
+              );
+            })}
+            {!foodItems?.length && (
+              <span className="w-full text-center text-[14px]">
+                No foods in this meal yet
+              </span>
+            )}
+          </div>
+          {/*   <div className="flex flex-row w-full items-center justify-center mt-[5px]">
               <Button
                 className="text-blue-600 bg-transparent border-none flex flex-col"
                 onClick={onAddClick}
@@ -235,8 +222,7 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
                 Load
               </Button>
             </div> */}
-          </div>
-        )}
+        </div>
       </div>
     </>
   );

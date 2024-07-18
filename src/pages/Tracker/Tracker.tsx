@@ -1,43 +1,39 @@
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { useEffect, useMemo } from "react";
 import { Accordion } from "../../components/Accordion";
-import { Button } from "../../components/common/Button";
 import { DateSelector } from "../../components/date-selector/DateSelector";
-import { ModalOverlay } from "../../components/ui/ModalOverlay";
 import { useTrackerStore } from "../../store/TrackerStore";
 import { IndexedMeals } from "../../types";
-import AddFoodModal from "./components/AddFoodModal";
 
 const today = dayjs().format("YYYY-MM-DD");
 
 function TrackerPage() {
   const {
-    selectedFood,
+    /* selectedFood, */
     selectedDate,
     setSelectedDate,
     days,
     addDay,
-    setSelectedFood,
+    /*     setSelectedFood, */
   } = useTrackerStore(
     ({
-      selectedFood,
+      /* selectedFood, */
       selectedDate,
       setSelectedDate,
       days,
       addDay,
-      setSelectedFood,
+      /* setSelectedFood, */
     }) => ({
-      selectedFood,
+      /* selectedFood, */
       selectedDate,
       setSelectedDate,
       days,
       addDay,
-      setSelectedFood,
+      /* setSelectedFood, */
     })
   );
 
-  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false);
+  /*  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false); */
 
   /*   const onAddToStoreClick = () => {
     setSelectedFood({
@@ -122,11 +118,11 @@ function TrackerPage() {
 
   useEffect(() => {
     setSelectedDate(dayjs(today).format("YYYY-MM-DD"));
-  }, []);
+  }, [setSelectedDate]);
 
-  const toggleOverlayMenuOpen = () => {
+  /*   const toggleOverlayMenuOpen = () => {
     setOverlayMenuOpen((prev) => !prev);
-  };
+  }; */
 
   return (
     <>
@@ -144,23 +140,26 @@ function TrackerPage() {
         <div className="overflow-auto border-t border-black">
           <div className=" h-fit flex flex-col mx-[5px] rounded-[16px] mt-[5px] max-h-[calc(100vh-221px)]">
             <Accordion
-              type="tracker"
+              /* type="tracker" */
               foodItems={breakfastFoods}
               tabName="breakfast"
             />
             <Accordion
-              type="tracker"
+              /* type="tracker" */
               foodItems={morningSnacksFoods}
               tabName="morningSnacks"
             />
-            <Accordion type="tracker" foodItems={lunchFoods} tabName="lunch" />
             <Accordion
-              type="tracker"
+              /* type="tracker" */ foodItems={lunchFoods}
+              tabName="lunch"
+            />
+            <Accordion
+              /* type="tracker" */
               foodItems={eveningSnacksFoods}
               tabName="eveningSnacks"
             />
             <Accordion
-              type="tracker"
+              /* type="tracker" */
               foodItems={dinnerFoods}
               tabName="dinner"
             />
