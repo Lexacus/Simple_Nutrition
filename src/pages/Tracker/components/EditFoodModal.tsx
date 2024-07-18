@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { Modal } from "../../../components/ui/Modal";
 import { useTrackerStore } from "../../../store/TrackerStore";
-import { Food, Meals } from "../../../types";
+import { Food } from "../../../types";
 import FoodForm from "./FoodForm";
 
-const AddFoodModal: FC<{ onClose: () => void; selectedMeal?: Meals }> = ({
+const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({
   onClose,
-  selectedMeal,
+  selectedIndex,
 }) => {
   const { selectedDate, days, editDay } = useTrackerStore(
     ({ selectedDate, days, editDay }) => ({
@@ -16,21 +16,22 @@ const AddFoodModal: FC<{ onClose: () => void; selectedMeal?: Meals }> = ({
     })
   );
 
-  const onFoodSaveToDay = (foodItem: Food) => {
+  const onFoodEdit = (food: Food) => {
+    const newFoods = [...days[selectedDate].foods];
+    newFoods.splice(selectedIndex, 1, food);
     editDay(selectedDate, {
-      foods: [
-        ...days[selectedDate].foods,
-        { ...foodItem, meal: selectedMeal ?? "breakfast" },
-      ],
+      foods: newFoods,
     });
-    onClose();
   };
 
   return (
     <Modal onClose={onClose}>
-      <FoodForm onSubmit={onFoodSaveToDay} />
+      <FoodForm
+        onSubmit={onFoodEdit}
+        defaultValues={days[selectedDate].foods[selectedIndex]}
+      />
     </Modal>
   );
 };
 
-export default AddFoodModal;
+export default EditFoodModal;

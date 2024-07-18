@@ -14,6 +14,7 @@ import { Input } from "./common/Input";
 import { Modal } from "./ui/Modal";
 import { useDietPlanStore } from "../store/DietPlanStore";
 import dayjs from "dayjs";
+import EditFoodModal from "../pages/Tracker/components/EditFoodModal";
 
 interface AccordionProps {
   tabName: Meals;
@@ -23,6 +24,7 @@ interface AccordionProps {
 
 export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
   const [open, setOpen] = useState(false);
+  const [openedIndex, setOpenedIndex] = useState<number>();
   const { days, editDay, selectedDate, setSelectedFood } = useTrackerStore(
     ({ days, editDay, selectedDate, setSelectedFood }) => ({
       days,
@@ -85,6 +87,14 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
 
   return (
     <>
+      {!!openedIndex && (
+        <EditFoodModal
+          onClose={() => {
+            setOpenedIndex(undefined);
+          }}
+          selectedIndex={openedIndex}
+        />
+      )}
       {favoriteMealModalOpen && (
         <Modal
           onClose={() => {
@@ -165,9 +175,12 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
                   <div
                     key={`${tabName}_${name}`}
                     className="flex justify-between items-center"
-                    onClick={() => {
+                    onClick={
+                      /* () => {
                       onEditClick(index);
-                    }}
+                    } */
+                      () => setOpenedIndex(index)
+                    }
                   >
                     <div className="flex flex-row items-center gap-x-[5px] ">
                       <div className="min-w-[8px] min-h-[8px] bg-black rounded-full" />

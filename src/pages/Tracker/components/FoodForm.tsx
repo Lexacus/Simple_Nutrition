@@ -1,54 +1,91 @@
 import { ChangeEvent, FC, useState } from "react";
-import { useFormContext } from "react-hook-form";
-import ReactSelect, { SingleValue } from "react-select";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { SingleValue } from "react-select";
 import { Button } from "../../../components/common/Button";
+import { Checkbox } from "../../../components/common/Checkbox";
 import { Input } from "../../../components/common/Input";
+import { useFoodStore } from "../../../store/FoodStore";
 import { Food } from "../../../types";
+import { handleValuesCalculation } from "../utils";
+import SavedFoodSelector from "./SavedFoodSelector";
 
 type FoodFormProps = {
   onSubmit: (food: Food) => void;
-  onGramsChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  foodOptions: {
-    label: string;
-    value: number;
-  }[];
-  onFoodSelect: (
-    selectedOption: SingleValue<{
-      label: string;
-      value: number;
-    }>
-  ) => void;
+  defaultValues?: Food;
 };
 
-const FoodForm: FC<FoodFormProps> = ({
-  onSubmit,
-  onGramsChange,
-  foodOptions,
-  onFoodSelect,
-}) => {
+const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues }) => {
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useFormContext<Food>();
+    setValue,
+    reset,
+  } = useForm<Food>({ defaultValues });
+
+  const { foods, upsertFood } = useFoodStore(({ foods, upsertFood }) => ({
+    foods,
+    upsertFood,
+  }));
+
+  const [shouldSaveToStore, setShouldSaveToStore] = useState(false);
+  const [baseFoodValues, setBaseFoodValues] = useState<Food>();
 
   const { onChange: innerOnGramsChange, ...remainingGramsProps } = register(
     "grams",
     { required: true }
   );
 
+  const foodOptions = foods.map((food, i) => ({ label: food.name, value: i }));
+
+  const onFoodSelect = (
+    selectedOption: SingleValue<{
+      label: string;
+      value: number;
+    }>
+  ) => {
+    const selectedFoodItem = foods[Number(selectedOption?.value)];
+    setBaseFoodValues(selectedFoodItem);
+    reset(selectedFoodItem);
+  };
+
+  const calculateMacros = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.currentTarget.value || !baseFoodValues) {
+      return;
+    }
+    const { calories, carbohydrates, fats, proteins } = handleValuesCalculation(
+      baseFoodValues,
+      Number(e.currentTarget.value)
+    );
+    setValue("calories", calories);
+    setValue("fats", fats);
+    setValue("carbohydrates", carbohydrates);
+    setValue("proteins", proteins);
+  };
+
+  const toggleShouldSaveToStore = () => {
+    setShouldSaveToStore((prev) => !prev);
+  };
+
+  const innerOnSubmit: SubmitHandler<Food> = (data) => {
+    onSubmit(data);
+    if (shouldSaveToStore) {
+      const foodAlreadyExists = foods.find(({ name }) => name === data.name); // TODO: Replace with id?
+      if (!foodAlreadyExists) {
+        upsertFood(data);
+      }
+    }
+  };
+
   return (
     <>
-      <ReactSelect
-        /*   key={JSON.stringify(baseFoodValues)} */ // TODO: there might be a better way to do this
-        className="px-[5px] h-[30px] m-[15px]"
-        options={foodOptions}
-        onChange={onFoodSelect}
-        placeholder="Select food from store..."
+      <SavedFoodSelector
+        foodOptions={foodOptions}
+        onFoodSelect={onFoodSelect}
       />
       <form
         className="flex flex-col px-[20px] gap-y-[10px]"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(innerOnSubmit)}
       >
         <Input
           {...register("name", { required: true })}
@@ -86,19 +123,19 @@ const FoodForm: FC<FoodFormProps> = ({
         />
         <Input
           {...remainingGramsProps}
-          onChange={onGramsChange ?? innerOnGramsChange}
+          onChange={!baseFoodValues ? innerOnGramsChange : calculateMacros}
           label="Grams"
           type="number"
           error={errors.grams}
           placeholder="Insert quantity in grams"
         />
-        {/*  {!baseFoodValues && (
+        {!baseFoodValues && (
           <Checkbox
             label="Also save to store"
             checked={shouldSaveToStore}
             onChange={toggleShouldSaveToStore}
           />
-        )} */}
+        )}
         <div className="flex">
           <Button>{"Save"}</Button>
           <Button type="button" className="bg-red-600">

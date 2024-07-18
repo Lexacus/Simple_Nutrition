@@ -51,26 +51,6 @@ function TrackerPage() {
     });
   };
 
-  const onFoodSaveToDay = (foodItem: Food) => {
-    editDay(selectedDate, {
-      foods: [...days[selectedDate].foods, { ...foodItem }],
-    });
-  };
-
-  const onFoodEdit = ({
-    foodItem,
-    index,
-  }: {
-    foodItem: Food;
-    index: number;
-  }) => {
-    const newFoods = [...days[selectedDate].foods];
-    newFoods.splice(index, 1, foodItem);
-    editDay(selectedDate, {
-      foods: newFoods,
-    });
-  };
-
   const onDeleteFromDay = (index: number) => {
     const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
     editDay(selectedDate, {
@@ -159,15 +139,6 @@ function TrackerPage() {
 
   return (
     <>
-      {/* <ManageFoodModal
-          selectedFood={selectedFood}
-          onClose={() => {
-            setSelectedFood(undefined);
-          }}
-          onSaveToDay={onFoodSaveToDay}
-          onEdit={onFoodEdit}
-          onDeleteFromDay={onDeleteFromDay}
-        /> */}
       {selectedFood && (
         <AddFoodModal
           onClose={() => {
@@ -176,13 +147,6 @@ function TrackerPage() {
           selectedMeal={selectedFood.foodItem?.meal}
         />
       )}
-      {/* <Modal
-          onClose={() => {
-            setSelectedFood(undefined);
-          }}
-        >
-          <FoodForm />
-          </Modal> */}
 
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
