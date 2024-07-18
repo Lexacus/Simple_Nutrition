@@ -24,10 +24,21 @@ const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({
     });
   };
 
+  const onDeleteFromDay = () => {
+    const newFoods = days[selectedDate].foods.filter(
+      (_, i) => i !== selectedIndex
+    );
+    editDay(selectedDate, {
+      foods: [...newFoods],
+    });
+    onClose();
+  };
+
   return (
     <Modal onClose={onClose}>
       <FoodForm
         onSubmit={onFoodEdit}
+        onDelete={onDeleteFromDay}
         defaultValues={days[selectedDate].foods[selectedIndex]}
       />
     </Modal>

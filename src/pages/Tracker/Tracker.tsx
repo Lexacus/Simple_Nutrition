@@ -4,11 +4,9 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { Accordion } from "../../components/Accordion";
 import { Button } from "../../components/common/Button";
 import { DateSelector } from "../../components/date-selector/DateSelector";
-import { Modal } from "../../components/ui/Modal";
 import { ModalOverlay } from "../../components/ui/ModalOverlay";
 import { useTrackerStore } from "../../store/TrackerStore";
-import { Food, IndexedMeals } from "../../types";
-import FoodForm from "./components/FoodForm";
+import { IndexedMeals } from "../../types";
 import AddFoodModal from "./components/AddFoodModal";
 
 const today = dayjs().format("YYYY-MM-DD");
@@ -19,7 +17,6 @@ function TrackerPage() {
     selectedDate,
     setSelectedDate,
     days,
-    editDay,
     addDay,
     setSelectedFood,
   } = useTrackerStore(
@@ -28,7 +25,6 @@ function TrackerPage() {
       selectedDate,
       setSelectedDate,
       days,
-      editDay,
       addDay,
       setSelectedFood,
     }) => ({
@@ -36,28 +32,19 @@ function TrackerPage() {
       selectedDate,
       setSelectedDate,
       days,
-      editDay,
       addDay,
       setSelectedFood,
     })
   );
 
-  const [addOverlayOpen, setAddOverlayOpen] = useState(false);
+  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false);
 
-  const onAddToStoreClick = () => {
+  /*   const onAddToStoreClick = () => {
     setSelectedFood({
       type: "addToStore",
       index: 0,
     });
-  };
-
-  const onDeleteFromDay = (index: number) => {
-    const newFoods = days[selectedDate].foods.filter((_, i) => i !== index);
-    editDay(selectedDate, {
-      foods: [...newFoods],
-    });
-    setSelectedFood(undefined);
-  };
+  }; */
 
   // this memo calculates total nutritional values from the days and creates the day's meals
   // if the day does not exist yet, it simply creates a new empty day in the tracker store
@@ -137,17 +124,12 @@ function TrackerPage() {
     setSelectedDate(dayjs(today).format("YYYY-MM-DD"));
   }, []);
 
+  const toggleOverlayMenuOpen = () => {
+    setOverlayMenuOpen((prev) => !prev);
+  };
+
   return (
     <>
-      {selectedFood && (
-        <AddFoodModal
-          onClose={() => {
-            setSelectedFood(undefined);
-          }}
-          selectedMeal={selectedFood.foodItem?.meal}
-        />
-      )}
-
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <DateSelector />
@@ -160,7 +142,7 @@ function TrackerPage() {
           </div>
         </div>
         <div className="overflow-auto border-t border-black">
-          <div className=" h-fit flex flex-col mx-[15px] rounded-[16px] my-[15px] overflow-hidden">
+          <div className=" h-fit flex flex-col mx-[5px] rounded-[16px] mt-[5px] max-h-[calc(100vh-221px)]">
             <Accordion
               type="tracker"
               foodItems={breakfastFoods}
@@ -184,20 +166,15 @@ function TrackerPage() {
             />
           </div>
         </div>
-        {addOverlayOpen && (
+        {/* {addOverlayOpen && (
           <>
             <ModalOverlay
-              onClick={() => {
-                setAddOverlayOpen(false);
-              }}
+              onClick={toggleOverlayMenuOpen}
             />
             <div className="flex flex-col absolute bottom-[110px] right-[10px] gap-y-[3px] mb-[3px] items-end">
               <Button
                 className="mx-0"
-                onClick={() => {
-                  onAddToStoreClick();
-                  setAddOverlayOpen(false);
-                }}
+                onClick={}
               >
                 Manage food store
               </Button>
@@ -207,12 +184,10 @@ function TrackerPage() {
 
         <Button
           className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
-          onClick={() => {
-            setAddOverlayOpen((prev) => !prev);
-          }}
+          onClick={toggleOverlayMenuOpen}
         >
           <AiOutlinePlus style={{ fontSize: "50px" }} />
-        </Button>
+        </Button> */}
       </div>
     </>
   );

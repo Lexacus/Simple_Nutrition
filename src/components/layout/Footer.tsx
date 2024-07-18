@@ -5,7 +5,7 @@ export const Footer = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
   return (
-    <div className="absolute flex flex-row bottom-0 left-0 w-full py-[10px] bg-slate-800">
+    <div className="absolute flex flex-row bottom-[-2px] left-0 w-full py-[10px] bg-slate-800">
       <Button
         className={pathname === "/" ? "bg-red-600" : ""}
         onClick={() => {

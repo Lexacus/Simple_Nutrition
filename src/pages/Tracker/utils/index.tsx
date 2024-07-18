@@ -21,3 +21,24 @@ export const handleValuesCalculation = (
     fats: parseFloat(newFats.toFixed(2)),
   };
 };
+
+/*   // function to delete foods from the store. Pressing on the toast will "undo" the deletion, putting the food back in the store
+  const handleStoredFoodDeletion = () => {
+    if (!baseFoodValues) {
+      return;
+    }
+
+    deleteFood(baseFoodValues.name);
+    reset();
+
+    toast("Food deleted. Press to undo.", {
+      type: "success",
+      onClick: () => {
+        upsertFood({
+          ...baseFoodValues,
+          meal: selectedFood.foodItem?.meal ?? "breakfast",
+        });
+      },
+      pauseOnHover: false,
+    });
+  }; */

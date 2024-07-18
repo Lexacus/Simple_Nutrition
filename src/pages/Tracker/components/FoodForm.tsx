@@ -11,10 +11,11 @@ import SavedFoodSelector from "./SavedFoodSelector";
 
 type FoodFormProps = {
   onSubmit: (food: Food) => void;
+  onDelete?: () => void;
   defaultValues?: Food;
 };
 
-const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues }) => {
+const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   const {
     register,
     formState: { errors },
@@ -138,9 +139,11 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues }) => {
         )}
         <div className="flex">
           <Button>{"Save"}</Button>
-          <Button type="button" className="bg-red-600">
-            Clear
-          </Button>
+          {onDelete && (
+            <Button type="button" className="bg-red-600" onClick={onDelete}>
+              Delete
+            </Button>
+          )}
         </div>
       </form>
     </>

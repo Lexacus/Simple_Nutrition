@@ -11,11 +11,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const router = createBrowserRouter([
   {
     element: (
-      <>
+      <div className="flex flex-col">
         <Outlet />
         <Footer />
         <ToastContainer />
-      </>
+      </div>
     ),
     children: [
       {

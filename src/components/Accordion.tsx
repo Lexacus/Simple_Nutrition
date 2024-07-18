@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import {
   AiFillCaretDown,
+  AiFillCaretLeft,
   AiFillCaretUp,
   AiFillPlusCircle,
   AiFillStar,
@@ -15,6 +16,7 @@ import { Modal } from "./ui/Modal";
 import { useDietPlanStore } from "../store/DietPlanStore";
 import dayjs from "dayjs";
 import EditFoodModal from "../pages/Tracker/components/EditFoodModal";
+import AddFoodModal from "../pages/Tracker/components/AddFoodModal";
 
 interface AccordionProps {
   tabName: Meals;
@@ -23,7 +25,9 @@ interface AccordionProps {
 }
 
 export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+  const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
+
   const [openedIndex, setOpenedIndex] = useState<number>();
   const { days, editDay, selectedDate, setSelectedFood } = useTrackerStore(
     ({ days, editDay, selectedDate, setSelectedFood }) => ({
@@ -55,16 +59,17 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
   }>();
 
   const onAddClick = () => {
-    setSelectedFood({
+    setIsAddFoodOpen(true);
+    /*     setSelectedFood({
       foodItem: {
         meal: tabName,
       },
       type: "addToDay",
       index: 0,
-    });
+    }); */
   };
 
-  const onEditClick = (index: number) => {
+  /*   const onEditClick = (index: number) => {
     setSelectedFood({
       foodItem:
         //TODO: is there a better way to do this?
@@ -76,7 +81,7 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
       type: "edit",
       index,
     });
-  };
+  }; */
 
   const onSaveAsFavoriteMeal = (name: string) => {
     upsertFavoriteMeal({
@@ -85,9 +90,16 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
     });
   };
 
+  const closeModal = () => {
+    setIsAddFoodOpen(false);
+  };
+
   return (
     <>
-      {!!openedIndex && (
+      {isAddFoodOpen && (
+        <AddFoodModal onClose={closeModal} selectedMeal={tabName} />
+      )}
+      {openedIndex !== undefined && (
         <EditFoodModal
           onClose={() => {
             setOpenedIndex(undefined);
@@ -151,51 +163,50 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
         </Modal>
       )}
       <div className="flex flex-col p-[3px] gap-y-[0px] ">
-        <div
-          className="flex flex-col border border-black rounded-[16px] p-[10px] cursor-pointer"
-          onClick={() => {
-            setOpen((prev) => !prev);
-          }}
-        >
+        <div className="flex flex-col cursor-pointer">
           <div className="flex justify-between items-center">
-            <span className="capitalize">{`${tabName} ${
-              foodItems?.length && foodItems.length > 0
-                ? `(${foodItems.length})`
-                : ""
-            }`}</span>
-            {open ? <AiFillCaretUp /> : <AiFillCaretDown />}
+            <span className="capitalize font-bold">{`${tabName} `}</span>
+            {/* $
+            {foodItems?.length && foodItems.length > 0
+              ? `(${foodItems.length})`
+              : ""}{" "}
+            */}
+            {/* {open ? <AiFillCaretDown /> : <AiFillCaretLeft />} */}
+            {/* <Button
+              className="text-blue-600 bg-transparent border-none flex flex-col align-end"
+              onClick={onAddClick}
+            > */}
+            <AiFillPlusCircle
+              className="text-blue-600 w-[20px] h-[20px]"
+              onClick={onAddClick}
+            />
+            {/*      </Button> */}
           </div>
         </div>
 
         {open && (
-          <div className="border-b border-l border-r border-black mx-[15px] px-[3px] pt-[5px] rounded-b-[16px]">
-            <div className="flex flex-col gap-y-[5px]">
+          <div className=" px-[3px] pt-[5px] rounded-b-[16px]">
+            <div className="flex flex-col gap-y-[5px] border-[1px] border-gray-600 p-[5px] rounded-[8px]">
               {foodItems?.map(({ foodItem: { name, grams }, index }) => {
                 return (
                   <div
                     key={`${tabName}_${name}`}
                     className="flex justify-between items-center"
-                    onClick={
-                      /* () => {
-                      onEditClick(index);
-                    } */
-                      () => setOpenedIndex(index)
-                    }
+                    onClick={() => setOpenedIndex(index)}
                   >
-                    <div className="flex flex-row items-center gap-x-[5px] ">
-                      <div className="min-w-[8px] min-h-[8px] bg-black rounded-full" />
-                      <span className="text-[14px]">{`${name} (${grams}g)`}</span>
+                    <div className="flex flex-row items-center gap-x-[5px]  w-full ">
+                      <span className="text-[14px]">{`- ${name} (${grams}g)`}</span>
                     </div>
                   </div>
                 );
               })}
               {!foodItems?.length && (
-                <span className="w-full text-center">
+                <span className="w-full text-center text-[14px]">
                   No foods in this meal yet
                 </span>
               )}
             </div>
-            <div className="flex flex-row w-full items-center justify-center mt-[5px]">
+            {/*   <div className="flex flex-row w-full items-center justify-center mt-[5px]">
               <Button
                 className="text-blue-600 bg-transparent border-none flex flex-col"
                 onClick={onAddClick}
@@ -223,7 +234,7 @@ export const Accordion: FC<AccordionProps> = ({ tabName, foodItems, type }) => {
                 <AiFillStar />
                 Load
               </Button>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
