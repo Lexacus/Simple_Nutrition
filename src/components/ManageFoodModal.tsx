@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import ReactSelect from "react-select";
+import ReactSelect, { SingleValue } from "react-select";
 import { toast } from "react-toastify";
 import { useFoodStore } from "../store/FoodStore";
 import { Food } from "../types";
@@ -154,31 +154,58 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
     }
   };
 
+  const calculateMacros = (e: ChangeEvent<HTMLInputElement>) => {
+    if (["addToDay", "edit"].includes(selectedFood.type)) {
+      handleValuesCalculation(Number(e.currentTarget.value));
+      return;
+    }
+    onGramsChange(e);
+  };
+
+  const onFoodSelect = (
+    selectedOption: SingleValue<{
+      label: string;
+      value: number;
+    }>
+  ) => {
+    const selectedFoodItem = foods[Number(selectedOption?.value)];
+    setBaseFoodValues(selectedFoodItem);
+    setValue("food", selectedFoodItem);
+  };
+
+  const foodOptions = foods.map((food, i) => ({ label: food.name, value: i }));
+
+  const onDeleteClick = () => {
+    if (selectedFood.type === "addToStore") {
+      handleStoredFoodDeletion();
+      return;
+    }
+    onDeleteFromDay?.(selectedFood.index);
+  };
+
+  const toggleShouldSaveToStore = () => {
+    setShouldSaveToStore((prev) => !prev);
+  };
+
+  const closeSaveConfirmModal = () => {
+    setSaveConfirmModal(undefined);
+  };
+
+  const upsertFoodAndCloseModal = () => {
+    if (saveConfirmModal) {
+      upsertFood(saveConfirmModal);
+    }
+    onClose();
+  };
+
   return (
     <>
       {saveConfirmModal && (
-        <Modal
-          className="z-[200]"
-          onClose={() => {
-            setSaveConfirmModal(undefined);
-          }}
-        >
+        <Modal className="z-[200]" onClose={closeSaveConfirmModal}>
           <span className="text-center">{`There is a food named ${saveConfirmModal.name} saved in the store already. Would you like to overwrite it?`}</span>
           <div className="flex">
-            <Button
-              onClick={() => {
-                upsertFood(saveConfirmModal);
-                onClose();
-              }}
-            >
-              Yes
-            </Button>
-            <Button
-              className="bg-red-600"
-              onClick={() => {
-                setSaveConfirmModal(undefined);
-              }}
-            >
+            <Button onClick={upsertFoodAndCloseModal}>Yes</Button>
+            <Button className="bg-red-600" onClick={closeSaveConfirmModal}>
               Cancel
             </Button>
           </div>
@@ -188,12 +215,8 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
         <ReactSelect
           key={JSON.stringify(baseFoodValues)} // TODO: there might be a better way to do this
           className="px-[5px] h-[30px] m-[15px]"
-          options={foods.map((food, i) => ({ label: food.name, value: i }))}
-          onChange={(selectedOption) => {
-            const selectedFoodItem = foods[Number(selectedOption?.value)];
-            setBaseFoodValues(selectedFoodItem);
-            setValue("food", selectedFoodItem);
-          }}
+          options={foodOptions}
+          onChange={onFoodSelect}
           placeholder="Select food from store..."
         />
         <form
@@ -214,6 +237,13 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             placeholder="Insert food calories"
           />
           <Input
+            {...register("food.fats", { required: true })}
+            label="Fats"
+            type="number"
+            error={errors.food?.fats}
+            placeholder="Insert food fats"
+          />
+          <Input
             {...register("food.carbohydrates", { required: true })}
             label="Carbs"
             type="number"
@@ -228,21 +258,8 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             placeholder="Insert food proteins"
           />
           <Input
-            {...register("food.fats", { required: true })}
-            label="Fats"
-            type="number"
-            error={errors.food?.fats}
-            placeholder="Insert food fats"
-          />
-          <Input
             {...remainingGramsProps}
-            onChange={(e) => {
-              if (["addToDay", "edit"].includes(selectedFood.type)) {
-                handleValuesCalculation(Number(e.currentTarget.value));
-                return;
-              }
-              onGramsChange(e);
-            }}
+            onChange={calculateMacros}
             label="Grams"
             type="number"
             error={errors.food?.grams}
@@ -252,9 +269,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
             <Checkbox
               label="Also save to store"
               checked={shouldSaveToStore}
-              onChange={() => {
-                setShouldSaveToStore((prev) => !prev);
-              }}
+              onChange={toggleShouldSaveToStore}
             />
           )}
           <Button type="button" onClick={clearForm}>
@@ -266,13 +281,7 @@ export const ManageFoodModal: FC<ManageFoodModalProps> = ({
               <Button
                 type="button"
                 className="bg-red-600"
-                onClick={() => {
-                  if (selectedFood.type === "addToStore") {
-                    handleStoredFoodDeletion();
-                    return;
-                  }
-                  onDeleteFromDay?.(selectedFood.index);
-                }}
+                onClick={onDeleteClick}
               >
                 Delete
               </Button>
