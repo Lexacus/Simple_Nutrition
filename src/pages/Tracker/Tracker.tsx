@@ -1,13 +1,15 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { Accordion } from "../components/Accordion";
-import { ManageFoodModal } from "../components/ManageFoodModal";
-import { Button } from "../components/common/Button";
-import { DateSelector } from "../components/date-selector/DateSelector";
-import { ModalOverlay } from "../components/ui/ModalOverlay";
-import { useTrackerStore } from "../store/TrackerStore";
-import { Food, IndexedMeals } from "../types";
+import { Accordion } from "../../components/Accordion";
+import { Button } from "../../components/common/Button";
+import { DateSelector } from "../../components/date-selector/DateSelector";
+import { Modal } from "../../components/ui/Modal";
+import { ModalOverlay } from "../../components/ui/ModalOverlay";
+import { useTrackerStore } from "../../store/TrackerStore";
+import { Food, IndexedMeals } from "../../types";
+import FoodForm from "./components/FoodForm";
+import AddFoodModal from "./components/AddFoodModal";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -157,8 +159,7 @@ function TrackerPage() {
 
   return (
     <>
-      {selectedFood && (
-        <ManageFoodModal
+      {/* <ManageFoodModal
           selectedFood={selectedFood}
           onClose={() => {
             setSelectedFood(undefined);
@@ -166,8 +167,23 @@ function TrackerPage() {
           onSaveToDay={onFoodSaveToDay}
           onEdit={onFoodEdit}
           onDeleteFromDay={onDeleteFromDay}
+        /> */}
+      {selectedFood && (
+        <AddFoodModal
+          onClose={() => {
+            setSelectedFood(undefined);
+          }}
+          selectedMeal={selectedFood.foodItem?.meal}
         />
       )}
+      {/* <Modal
+          onClose={() => {
+            setSelectedFood(undefined);
+          }}
+        >
+          <FoodForm />
+          </Modal> */}
+
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <DateSelector />

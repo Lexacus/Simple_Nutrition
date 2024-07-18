@@ -1,6 +1,6 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./app.css";
-import TrackerPage from "./pages/TrackerPage";
+import TrackerPage from "./pages/Tracker/Tracker";
 import SettingsPage from "./pages/Settings/Settings";
 import { Footer } from "./components/layout/Footer";
 import { ToastContainer } from "react-toastify";

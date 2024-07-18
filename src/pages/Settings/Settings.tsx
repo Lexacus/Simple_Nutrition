@@ -6,7 +6,7 @@ import { useAuthStore } from "../../store/AuthStore";
 import { useFoodStore } from "../../store/FoodStore";
 import { useTrackerStore } from "../../store/TrackerStore";
 import { parseJsonFile, saveDataToFile } from "../../utils";
-import useSettings from "./hooks/useSettings";
+import useSettings from "./utils/useSettings";
 
 const today = dayjs().format("DD_MM_YYYY");
 
