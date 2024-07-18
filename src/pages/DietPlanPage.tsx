@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Accordion } from "../components/Accordion";
-import { ManageFoodModal } from "../components/ManageFoodModal";
 import { WeekDateSelector } from "../components/date-selector/WeekDateSelector";
 import { useDietPlanStore } from "../store/DietPlanStore";
 import { useTrackerStore } from "../store/TrackerStore";
@@ -120,7 +119,7 @@ const DietPlanPage = () => {
 
   return (
     <>
-      {selectedFood && (
+      {/* {selectedFood && (
         <ManageFoodModal
           selectedFood={selectedFood}
           onClose={() => {
@@ -130,7 +129,7 @@ const DietPlanPage = () => {
           onEdit={onFoodEdit}
           onDeleteFromDay={onDeleteFromDay}
         />
-      )}
+      )} */}
       <div className="flex flex-col w-full h-full max-h-screen">
         <div className="flex flex-col w-full items-center">
           <WeekDateSelector />
