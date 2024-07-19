@@ -19,25 +19,28 @@ export const WeekDateSelector: FC = () => {
 
   return (
     <div className="flex flex-row w-full justify-between px-[5%] py-[20px]">
-      {weekDays.map((day) => (
-        <div
-          className={cn(
-            "flex items-center justify-center border min-w-[50px] min-h-[50px] text-center rounded-[16px] cursor-pointer",
-            dayjs().set("day", day).format("dddd") === selectedDate &&
-              "bg-blue-600"
-          )}
-          onClick={onWeekDayClick(day)}
-        >
-          <span
+      {weekDays.map((day) => {
+        const selectedDay = dayjs().set("day", day).format("dddd");
+        return (
+          <div
+            key={selectedDay}
             className={cn(
-              selectedDate ===
-                dayjs(selectedDate).set("day", day).format("dddd")
-                ? "text-white"
-                : ""
+              "flex items-center justify-center border min-w-[50px] min-h-[50px] text-center rounded-[16px] cursor-pointer",
+              selectedDay === selectedDate && "bg-blue-600"
             )}
-          >{`${dayjs().set("day", day).format("ddd")}`}</span>
-        </div>
-      ))}
+            onClick={onWeekDayClick(day)}
+          >
+            <span
+              className={cn(
+                selectedDate ===
+                  dayjs(selectedDate).set("day", day).format("dddd")
+                  ? "text-white"
+                  : ""
+              )}
+            >{`${dayjs().set("day", day).format("ddd")}`}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };
