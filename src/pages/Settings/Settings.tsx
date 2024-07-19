@@ -11,10 +11,12 @@ import useSettings from "./utils/useSettings";
 const today = dayjs().format("DD_MM_YYYY");
 
 const SettingsPage = () => {
-  const { days, setDays } = useTrackerStore(({ days, setDays }) => ({
-    days,
-    setDays,
-  }));
+  const { trackedDays, setTrackedDays } = useTrackerStore(
+    ({ trackedDays, setTrackedDays }) => ({
+      trackedDays,
+      setTrackedDays,
+    })
+  );
 
   const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
     ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
@@ -54,7 +56,7 @@ const SettingsPage = () => {
   };
 
   const exportDaysToFile = () => {
-    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
+    saveDataToFile({ data: trackedDays, fileName: `SM_TrackedDays_${today}` });
   };
 
   const importDaysFromFile = () => {
@@ -79,7 +81,7 @@ const SettingsPage = () => {
       return;
     }
     const jsonDays = await parseJsonFile(e.target.files[0]);
-    setDays(jsonDays);
+    setTrackedDays(jsonDays);
     toast("Successfully loaded tracked days from file", {
       hideProgressBar: true,
       type: "success",
@@ -107,7 +109,7 @@ const SettingsPage = () => {
   };
 
   const saveTrackedDaysToServer = async () => {
-    saveAllTrackedDays(days);
+    saveAllTrackedDays(trackedDays);
   };
 
   const loadTrackedDaysFromServer = async () => {
@@ -122,7 +124,7 @@ const SettingsPage = () => {
     const parsedDaysFromDB = trackedDaysFromDB.reduce((acc, curr) => {
       return { ...acc, [curr.day]: { foods: curr.foods } };
     }, {});
-    setDays(parsedDaysFromDB);
+    setTrackedDays(parsedDaysFromDB);
     toast("Successfully loaded tracked days from server", {
       hideProgressBar: true,
       type: "success",
