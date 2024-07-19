@@ -1,26 +1,16 @@
 import dayjs from "dayjs";
-import { DietDay, Food } from "../types";
 import { persist } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
+import { DietDay, Food } from "../types";
 
 type TrackerStore = {
   selectedDate: string;
   setSelectedDate: (selectedDate: string) => void;
-  selectedFood?: {
-    foodItem?: Partial<Food>;
-    type: "addToDay" | "edit" | "addToStore";
-    index: number;
-  };
-  setSelectedFood: (selectedFood?: {
-    foodItem?: Partial<Food>;
-    type: "addToDay" | "edit" | "addToStore";
-    index: number;
-  }) => void;
-  days: Record<string, DietDay>;
-  setDays: (days: Record<string, DietDay>) => void;
-  addDay: (date: string) => void;
-  editDay: (date: string, day: DietDay) => void;
+  trackedDays: Record<string, DietDay>;
+  setTrackedDays: (trackedDays: Record<string, DietDay>) => void;
+  addTrackedDay: (date: string) => void;
+  editTrackedDay: (date: string, day: DietDay) => void;
 };
 
 const today = dayjs().format("YYYY-MM-DD");
@@ -30,15 +20,14 @@ export const useTrackerStore = createWithEqualityFn<TrackerStore>()(
     (set, get) => ({
       selectedDate: today,
       setSelectedDate: (selectedDate) => set({ selectedDate }),
-      selectedFood: undefined,
-      setSelectedFood: (selectedFood) => set({ selectedFood }),
-      days: {},
-      setDays: (days) => set({ days }),
-      addDay: (date) => set({ days: { ...get().days, [date]: { foods: [] } } }),
-      editDay: (date, day) => {
-        const newDays = get().days;
-        newDays[date] = day;
-        return set({ days: { ...newDays } });
+      trackedDays: {},
+      setTrackedDays: (trackedDays) => set({ trackedDays }),
+      addTrackedDay: (date) =>
+        set({ trackedDays: { ...get().trackedDays, [date]: { foods: [] } } }),
+      editTrackedDay: (date, day) => {
+        const newTrackedDays = get().trackedDays;
+        newTrackedDays[date] = day;
+        return set({ trackedDays: { ...newTrackedDays } });
       },
     }),
     {

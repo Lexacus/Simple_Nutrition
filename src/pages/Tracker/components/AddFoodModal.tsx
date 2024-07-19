@@ -8,19 +8,19 @@ const AddFoodModal: FC<{ onClose: () => void; selectedMeal?: Meals }> = ({
   onClose,
   selectedMeal,
 }) => {
-  const { selectedDate, days, editDay } = useTrackerStore(
-    ({ selectedDate, days, editDay }) => ({
+  const { selectedDate, trackedDays, editTrackedDay } = useTrackerStore(
+    ({ selectedDate, trackedDays, editTrackedDay }) => ({
       selectedDate,
-      days,
-      editDay,
+      trackedDays,
+      editTrackedDay,
     })
   );
 
-  const onFoodSaveToDay = (foodItem: Food) => {
-    editDay(selectedDate, {
+  const onFoodSaveToDay = (food: Food) => {
+    editTrackedDay(selectedDate, {
       foods: [
-        ...days[selectedDate].foods,
-        { ...foodItem, meal: selectedMeal ?? "breakfast" },
+        ...trackedDays[selectedDate].foods,
+        { ...food, meal: selectedMeal ?? "breakfast" },
       ],
     });
     onClose();
