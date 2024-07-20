@@ -17,11 +17,10 @@ type TrackerProps = {
 };
 
 const Tracker: FC<TrackerProps> = ({ type }) => {
-  const { setSelectedDate, editTrackedDay, trackedDays } = useTrackerStore(
-    ({ setSelectedDate, editTrackedDay, trackedDays }) => ({
+  const { setSelectedDate, editTrackedDay } = useTrackerStore(
+    ({ setSelectedDate, editTrackedDay }) => ({
       setSelectedDate,
       editTrackedDay,
-      trackedDays,
     })
   );
 

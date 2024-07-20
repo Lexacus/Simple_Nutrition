@@ -1,11 +1,10 @@
-import { ChangeEvent, FC, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { SingleValue } from "react-select";
 import { Button } from "@/components/common/Button";
 import { Checkbox } from "@/components/common/Checkbox";
 import { Input } from "@/components/common/Input";
 import { useFoodStore } from "@/store/FoodStore";
 import { Food, ReactSelectOption } from "@/types";
+import { ChangeEvent, FC, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { handleValuesCalculation } from "../utils";
 import SavedFoodSelector from "./SavedFoodSelector";
 

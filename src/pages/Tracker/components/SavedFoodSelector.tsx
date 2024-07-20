@@ -1,6 +1,6 @@
 import { ReactSelectOption } from "@/types";
 import { FC } from "react";
-import ReactSelect, { SingleValue } from "react-select";
+import ReactSelect from "react-select";
 
 const SavedFoodSelector: FC<{
   foodOptions: {
