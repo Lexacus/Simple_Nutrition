@@ -8,27 +8,27 @@ const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({
   onClose,
   selectedIndex,
 }) => {
-  const { selectedDate, days, editDay } = useTrackerStore(
-    ({ selectedDate, days, editDay }) => ({
+  const { selectedDate, trackedDays, editTrackedDay } = useTrackerStore(
+    ({ selectedDate, trackedDays, editTrackedDay }) => ({
       selectedDate,
-      days,
-      editDay,
+      trackedDays,
+      editTrackedDay,
     })
   );
 
   const onFoodEdit = (food: Food) => {
-    const newFoods = [...days[selectedDate].foods];
+    const newFoods = [...trackedDays[selectedDate].foods];
     newFoods.splice(selectedIndex, 1, food);
-    editDay(selectedDate, {
+    editTrackedDay(selectedDate, {
       foods: newFoods,
     });
   };
 
   const onDeleteFromDay = () => {
-    const newFoods = days[selectedDate].foods.filter(
+    const newFoods = trackedDays[selectedDate].foods.filter(
       (_, i) => i !== selectedIndex
     );
-    editDay(selectedDate, {
+    editTrackedDay(selectedDate, {
       foods: [...newFoods],
     });
     onClose();
@@ -39,7 +39,7 @@ const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({
       <FoodForm
         onSubmit={onFoodEdit}
         onDelete={onDeleteFromDay}
-        defaultValues={days[selectedDate].foods[selectedIndex]}
+        defaultValues={trackedDays[selectedDate].foods[selectedIndex]}
       />
     </Modal>
   );

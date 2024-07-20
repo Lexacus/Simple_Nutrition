@@ -1,15 +1,8 @@
+import { Food, Meals } from "@/types";
 import { FC, useState } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
-import ReactSelect from "react-select";
-import AddFoodModal from "../pages/Tracker/components/AddFoodModal";
-import EditFoodModal from "../pages/Tracker/components/EditFoodModal";
-
-import { useFoodStore } from "../store/FoodStore";
-import { useTrackerStore } from "../store/TrackerStore";
-import { Food, Meals } from "../types";
-import { Button } from "./common/Button";
-import { Input } from "./common/Input";
-import { Modal } from "./ui/Modal";
+import AddFoodModal from "./AddFoodModal";
+import EditFoodModal from "./EditFoodModal";
 
 interface MealListProps {
   tabName: Meals;
@@ -20,21 +13,21 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
   const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
 
   const [openedIndex, setOpenedIndex] = useState<number>();
-  const { editTrackedDay, selectedDate } = useTrackerStore(
+  /*   const { editTrackedDay, selectedDate } = useTrackerStore(
     ({ editTrackedDay, selectedDate }) => ({
       editTrackedDay,
       selectedDate,
     })
-  );
+  ); */
 
-  const { favoriteMeals, upsertFavoriteMeal } = useFoodStore(
+  /*   const { favoriteMeals, upsertFavoriteMeal } = useFoodStore(
     ({ favoriteMeals, upsertFavoriteMeal }) => ({
       favoriteMeals,
       upsertFavoriteMeal,
     })
-  );
+  ); */
 
-  const favoriteMealOptions = favoriteMeals.map(({ name }, i) => ({
+  /*   const favoriteMealOptions = favoriteMeals.map(({ name }, i) => ({
     label: name,
     value: i,
   }));
@@ -46,18 +39,18 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
   const [selectedFavoriteMeal, setSelectedFavoriteMeal] = useState<{
     name: string;
     mealFoods: Food[];
-  }>();
+  }>(); */
 
   const onAddClick = () => {
     setIsAddFoodOpen(true);
   };
 
-  const onSaveAsFavoriteMeal = (name: string) => {
+  /*   const onSaveAsFavoriteMeal = (name: string) => {
     upsertFavoriteMeal({
       mealFoods: foods?.map(({ food }) => food) ?? [],
       name,
     });
-  };
+  }; */
 
   const closeModal = () => {
     setIsAddFoodOpen(false);
@@ -76,7 +69,7 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
           selectedIndex={openedIndex}
         />
       )}
-      {favoriteMealModalOpen && (
+      {/*  {favoriteMealModalOpen && (
         <Modal
           onClose={() => {
             setFavoriteMealModalOpen(undefined);
@@ -104,7 +97,7 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
           {favoriteMealModalOpen === "load" && (
             <>
               <ReactSelect
-                /* key={JSON.stringify(baseFoodValues)}  */ // TODO: there might be a better way to do this
+                /* key={JSON.stringify(baseFoodValues)}   // TODO: there might be a better way to do this
                 className="px-[5px] h-[30px] m-[15px]"
                 options={favoriteMealOptions}
                 onChange={(selectedOption) => {
@@ -127,7 +120,7 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
             </>
           )}
         </Modal>
-      )}
+      )} */}
       <div className="flex flex-col p-[3px] gap-y-[0px] ">
         <div className="flex flex-col cursor-pointer">
           <div className="flex justify-between items-center">

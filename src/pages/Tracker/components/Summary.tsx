@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { DateSelector } from "../date-selector/DateSelector";
-import { WeekDateSelector } from "../date-selector/WeekDateSelector";
+import { WeekDateSelector } from "./date-selector/WeekDateSelector";
+import { DateSelector } from "./date-selector/DateSelector";
 
 type SummaryProps = {
   isPlanner?: boolean;

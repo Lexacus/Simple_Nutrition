@@ -2,13 +2,7 @@ import { useMemo } from "react";
 import { useTrackerStore } from "../store/TrackerStore";
 import { IndexedMeals } from "../types";
 
-type UseMacroCalculationProps = {
-  isPlanner?: boolean;
-};
-
-export const useMacroCalculation = ({
-  isPlanner,
-}: UseMacroCalculationProps) => {
+export const useMacroCalculation = () => {
   const { trackedDays, selectedDate, addTrackedDay } = useTrackerStore(
     ({ trackedDays, selectedDate, addTrackedDay }) => ({
       trackedDays,
@@ -17,7 +11,6 @@ export const useMacroCalculation = ({
     })
   );
 
-  /* const selectedDay = dayjs(selectedDate).day(); */
   // this memo calculates total nutritional values from the days and creates the day's meals
   // if the day does not exist yet, it simply creates a new empty day in the tracker store
   const { totals, meals } = useMemo(() => {

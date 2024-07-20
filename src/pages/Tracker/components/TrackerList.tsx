@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { IndexedMeals } from "../../types";
-import MealList from "../MealList";
+import { IndexedMeals } from "@/types";
+import MealList from "./MealList";
 
 type TrackerListProps = {
   breakfastFoods: IndexedMeals;

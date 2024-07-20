@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { persist } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
-import { DietDay, Food } from "../types";
+import { DietDay } from "../types";
 
 type TrackerStore = {
   selectedDate: string;

@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import { FC, useEffect } from "react";
-import Summary from "../../components/summary/Summary";
-import TrackerList from "../../components/trackerList/TrackerList";
 import { useMacroCalculation } from "../../hooks/useMacroCalculation";
 import { useTrackerStore } from "../../store/TrackerStore";
+import Summary from "./components/Summary";
+import TrackerList from "./components/TrackerList";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -18,9 +18,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
 
   /*   const [overlayMenuOpen, setOverlayMenuOpen] = useState(false); */
 
-  const { totals, meals } = useMacroCalculation({
-    isPlanner: type === "planner",
-  });
+  const { totals, meals } = useMacroCalculation();
 
   useEffect(() => {
     if (type !== "planner") {
