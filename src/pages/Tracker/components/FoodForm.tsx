@@ -126,11 +126,13 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           placeholder="Insert quantity in grams"
         />
         {!baseFoodValues && (
-          <Checkbox
-            label="Also save to store"
-            checked={shouldSaveToStore}
-            onChange={toggleShouldSaveToStore}
-          />
+          <div className="pt-[15px] pb-[10px]">
+            <Checkbox
+              label="Also save to store"
+              checked={shouldSaveToStore}
+              onChange={toggleShouldSaveToStore}
+            />
+          </div>
         )}
         <div className="flex">
           <Button>{"Save"}</Button>

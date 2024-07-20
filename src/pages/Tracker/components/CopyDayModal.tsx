@@ -1,13 +1,16 @@
 import { Button } from "@/components/common/Button";
+import { Checkbox } from "@/components/common/Checkbox";
 import ConfirmModal from "@/components/confirmModal/ConfirmModal";
 import { Modal } from "@/components/ui/Modal";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import { useTrackerStore } from "@/store/TrackerStore";
-import { ReactSelectOption, SelectOption } from "@/types";
+import { Meals, ReactSelectOption, SelectOption } from "@/types";
 import dayjs from "dayjs";
 import { FC, useState } from "react";
 import ReactSelect from "react-select";
 import { toast } from "react-toastify";
+
+const today = dayjs().format("YYYY-MM-DD");
 
 type CopyDayModalProps = { onClose: () => void };
 
@@ -41,6 +44,13 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
 
   const [dayToCopy, setDayToCopy] = useState<SelectOption<string>>();
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [selectedMeals, setSelectedMeals] = useState<Record<Meals, boolean>>({
+    breakfast: true,
+    dinner: true,
+    eveningSnacks: true,
+    lunch: true,
+    morningSnacks: true,
+  });
 
   const daysFilter = (day: string) => {
     const isPlannerDay = !!week[day.toLowerCase() as keyof typeof week];
@@ -81,8 +91,13 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
     if (!dayToCopy) {
       return;
     }
+
+    const mealsToCopy = Object.values(trackedDays[dayToCopy.value])[0].filter(
+      (food) => !!selectedMeals[food.meal as Meals]
+    );
+
     editTrackedDay(dayjs(selectedDate).format("YYYY-MM-DD"), {
-      ...trackedDays[dayToCopy.value],
+      foods: [...trackedDays[today].foods, ...mealsToCopy],
     });
     toast("Day copied", {
       hideProgressBar: true,
@@ -94,6 +109,13 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
 
   const toggleConfirmModal = () => {
     setConfirmModalOpen((prev) => !prev);
+  };
+
+  const toggleMeal = (meal: Meals) => () => {
+    setSelectedMeals((prev) => ({
+      ...prev,
+      [meal]: !prev[meal],
+    }));
   };
 
   if (confirmModalOpen) {
@@ -124,6 +146,35 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
           placeholder="Select day to copy..."
           isDisabled={!dayType}
         />
+        {!!dayToCopy && (
+          <div className="flex flex-col items-start w-full gap-y-[3px]">
+            <Checkbox
+              label="Breakfast"
+              checked={!!selectedMeals.breakfast}
+              onChange={toggleMeal("breakfast")}
+            />
+            <Checkbox
+              label="Morning Snacks"
+              checked={!!selectedMeals.morningSnacks}
+              onChange={toggleMeal("morningSnacks")}
+            />
+            <Checkbox
+              label="Lunch"
+              checked={!!selectedMeals.lunch}
+              onChange={toggleMeal("lunch")}
+            />
+            <Checkbox
+              label="Evening Snacks"
+              checked={!!selectedMeals.eveningSnacks}
+              onChange={toggleMeal("eveningSnacks")}
+            />
+            <Checkbox
+              label="Dinner"
+              checked={!!selectedMeals.dinner}
+              onChange={toggleMeal("dinner")}
+            />
+          </div>
+        )}
         <Button disabled={!dayToCopy} onClick={toggleConfirmModal}>
           Copy to current day
         </Button>

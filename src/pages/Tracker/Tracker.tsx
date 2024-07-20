@@ -8,6 +8,7 @@ import { useTrackerStore } from "@/store/TrackerStore";
 import Summary from "./components/Summary";
 import TrackerList from "./components/TrackerList";
 import CopyDayModal from "./components/CopyDayModal";
+import ConfirmModal from "@/components/confirmModal/ConfirmModal";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -16,12 +17,18 @@ type TrackerProps = {
 };
 
 const Tracker: FC<TrackerProps> = ({ type }) => {
-  const { setSelectedDate } = useTrackerStore(({ setSelectedDate }) => ({
-    setSelectedDate,
-  }));
+  const { setSelectedDate, editTrackedDay, trackedDays } = useTrackerStore(
+    ({ setSelectedDate, editTrackedDay, trackedDays }) => ({
+      setSelectedDate,
+      editTrackedDay,
+      trackedDays,
+    })
+  );
 
   const [overlayMenuOpen, setOverlayMenuOpen] = useState(false);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [resetConfirmationModalOpen, setResetConfirmationModalOpen] =
+    useState(false);
 
   const { totals, meals } = useMacroCalculation();
 
@@ -41,6 +48,16 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
     setCopyModalOpen(false);
   };
 
+  const toggleResetConfirmationModal = () => {
+    setResetConfirmationModalOpen((prev) => !prev);
+  };
+
+  const resetCurrentDay = () => {
+    editTrackedDay(dayjs().format("YYYY-MM-DD"), {
+      foods: [],
+    });
+  };
+
   /* const { foods } = useFoodStore(({ foods }) => ({ foods })); */
 
   return (
@@ -49,6 +66,16 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         <Summary {...totals} isPlanner={type === "planner"} />
         <TrackerList {...meals} />
         {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
+        {resetConfirmationModalOpen && (
+          <ConfirmModal
+            onClose={toggleResetConfirmationModal}
+            onConfirm={() => {
+              resetCurrentDay();
+              toggleResetConfirmationModal();
+              toggleOverlayMenuOpen();
+            }}
+          />
+        )}
         {overlayMenuOpen && (
           <>
             <ModalOverlay onClick={toggleOverlayMenuOpen} />
@@ -61,6 +88,14 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
                 }}
               >
                 Copy day
+              </Button>
+              <Button
+                className="mx-0 min-w-[160px] font-semibold"
+                onClick={() => {
+                  toggleResetConfirmationModal();
+                }}
+              >
+                Clear day
               </Button>
               <Button
                 className="mx-0 min-w-[160px] font-semibold"
