@@ -29,7 +29,7 @@ const SettingsPage = () => {
     })
   );
 
-  const { setTempPassword, tempPassword } = useAuthStore();
+  const { tempPassword, setTempPassword } = useAuthStore();
 
   const {
     foodsRefetch,
