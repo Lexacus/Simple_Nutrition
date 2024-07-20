@@ -18,41 +18,43 @@ const useSettings = () => {
       enabled: false,
     });
 
-  const { mutateAsync: saveAllFoods } = useMutation({
-    mutationKey: ["saveAllFoods"],
-    mutationFn: foodApi.replaceAllFoods,
-    onSuccess: () => {
-      toast("Successfully saved foods to server", {
-        hideProgressBar: true,
-        type: "success",
-      });
-    },
-    onError: (err) => {
-      console.error(err);
-      toast("Error while saving foods to server", {
-        hideProgressBar: true,
-        type: "error",
-      });
-    },
-  });
+  const { mutateAsync: saveAllFoods, isPending: isSavingAllFoods } =
+    useMutation({
+      mutationKey: ["saveAllFoods"],
+      mutationFn: foodApi.replaceAllFoods,
+      onSuccess: () => {
+        toast("Successfully saved foods to server", {
+          hideProgressBar: true,
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        console.error(err);
+        toast("Error while saving foods to server", {
+          hideProgressBar: true,
+          type: "error",
+        });
+      },
+    });
 
-  const { mutateAsync: saveAllTrackedDays } = useMutation({
-    mutationKey: ["saveAllTrackedDays"],
-    mutationFn: trackerApi.replaceAllTrackedDays,
-    onSuccess: () => {
-      toast("Successfully saved tracked days to server", {
-        hideProgressBar: true,
-        type: "success",
-      });
-    },
-    onError: (err) => {
-      console.error(err);
-      toast("Error while saving tracked days to server", {
-        hideProgressBar: true,
-        type: "error",
-      });
-    },
-  });
+  const { mutateAsync: saveAllTrackedDays, isPending: isSavingAllTrackedDays } =
+    useMutation({
+      mutationKey: ["saveAllTrackedDays"],
+      mutationFn: trackerApi.replaceAllTrackedDays,
+      onSuccess: () => {
+        toast("Successfully saved tracked days to server", {
+          hideProgressBar: true,
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        console.error(err);
+        toast("Error while saving tracked days to server", {
+          hideProgressBar: true,
+          type: "error",
+        });
+      },
+    });
 
   return {
     saveAllFoods,
@@ -61,6 +63,8 @@ const useSettings = () => {
     trackedDaysRefetch,
     isFetchingAllFoods,
     isFetchingAllTrackedDays,
+    isSavingAllFoods,
+    isSavingAllTrackedDays,
   };
 };
 

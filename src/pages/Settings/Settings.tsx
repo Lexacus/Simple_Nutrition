@@ -7,14 +7,18 @@ import { useFoodStore } from "../../store/FoodStore";
 import { useTrackerStore } from "../../store/TrackerStore";
 import { parseJsonFile, saveDataToFile } from "../../utils";
 import useSettings from "./utils/useSettings";
+import { ModalOverlay } from "../../components/ui/ModalOverlay";
+import Spinner from "../../components/ui/Spinner";
 
 const today = dayjs().format("DD_MM_YYYY");
 
 const SettingsPage = () => {
-  const { days, setDays } = useTrackerStore(({ days, setDays }) => ({
-    days,
-    setDays,
-  }));
+  const { trackedDays, setTrackedDays } = useTrackerStore(
+    ({ trackedDays, setTrackedDays }) => ({
+      trackedDays,
+      setTrackedDays,
+    })
+  );
 
   const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
     ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
@@ -25,7 +29,7 @@ const SettingsPage = () => {
     })
   );
 
-  const { setTempPassword } = useAuthStore();
+  const { setTempPassword, tempPassword } = useAuthStore();
 
   const {
     foodsRefetch,
@@ -34,10 +38,18 @@ const SettingsPage = () => {
     saveAllFoods,
     saveAllTrackedDays,
     trackedDaysRefetch,
+    isSavingAllFoods,
+    isSavingAllTrackedDays,
   } = useSettings();
 
   const readFoodRef = useRef<HTMLInputElement>(null);
   const readDaysRef = useRef<HTMLInputElement>(null);
+
+  const isFetching =
+    isFetchingAllFoods ||
+    isFetchingAllTrackedDays ||
+    isSavingAllFoods ||
+    isSavingAllTrackedDays;
 
   const exportFoodStoreToFile = () => {
     saveDataToFile({
@@ -54,7 +66,7 @@ const SettingsPage = () => {
   };
 
   const exportDaysToFile = () => {
-    saveDataToFile({ data: days, fileName: `SM_TrackedDays_${today}` });
+    saveDataToFile({ data: trackedDays, fileName: `SM_TrackedDays_${today}` });
   };
 
   const importDaysFromFile = () => {
@@ -79,7 +91,7 @@ const SettingsPage = () => {
       return;
     }
     const jsonDays = await parseJsonFile(e.target.files[0]);
-    setDays(jsonDays);
+    setTrackedDays(jsonDays);
     toast("Successfully loaded tracked days from file", {
       hideProgressBar: true,
       type: "success",
@@ -107,7 +119,7 @@ const SettingsPage = () => {
   };
 
   const saveTrackedDaysToServer = async () => {
-    saveAllTrackedDays(days);
+    saveAllTrackedDays(trackedDays);
   };
 
   const loadTrackedDaysFromServer = async () => {
@@ -122,7 +134,7 @@ const SettingsPage = () => {
     const parsedDaysFromDB = trackedDaysFromDB.reduce((acc, curr) => {
       return { ...acc, [curr.day]: { foods: curr.foods } };
     }, {});
-    setDays(parsedDaysFromDB);
+    setTrackedDays(parsedDaysFromDB);
     toast("Successfully loaded tracked days from server", {
       hideProgressBar: true,
       type: "success",
@@ -135,34 +147,35 @@ const SettingsPage = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-y-10 mt-10">
+      {isFetching && (
+        <div className="absolute top-0 left-0 w-[100vw] h-[100vh] flex items-center justify-center z-[100]">
+          <ModalOverlay />
+          <Spinner />
+        </div>
+      )}
+      <div className="flex flex-col gap-y-10 mt-10 px-[20px]">
         <input
-          className="border-[1px] border-black"
+          className="border-[1px] border-black  px-[10px] rounded-md"
           placeholder="Insert password"
+          defaultValue={tempPassword}
           onChange={setTemporaryPassword}
         />
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={saveFoodStoreToServer}
-        >
-          Save food store to server
-        </Button>
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={loadFoodStoreFromServer}
-        >
-          Load food store from server
-        </Button>
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={exportFoodStoreToFile}
-        >
+        <div className="flex items-center justify-between ">
+          <span>{"Food (server)"}</span>
+          <div className="flex gap-x-[5px]">
+            <Button disabled={isFetching} onClick={saveFoodStoreToServer}>
+              Save
+            </Button>
+            <Button disabled={isFetching} onClick={loadFoodStoreFromServer}>
+              Load
+            </Button>
+          </div>
+        </div>
+
+        <Button disabled={isFetching} onClick={exportFoodStoreToFile}>
           Export food store to file
         </Button>
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={importFoodStoreFromFile}
-        >
+        <Button disabled={isFetching} onClick={importFoodStoreFromFile}>
           Import food store from file
         </Button>
         <input
@@ -171,30 +184,21 @@ const SettingsPage = () => {
           hidden
           onChange={readFoodStoreInput}
         />
-      </div>
-      <div className="flex flex-col gap-y-10 mt-10">
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={saveTrackedDaysToServer}
-        >
-          Save tracked days to server
-        </Button>
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={loadTrackedDaysFromServer}
-        >
-          Load tracked days from server
-        </Button>
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={exportDaysToFile}
-        >
+        <div className="flex items-center justify-between ">
+          <span>{"Tracked days (server)"}</span>
+          <div className="flex gap-x-[5px]">
+            <Button disabled={isFetching} onClick={saveTrackedDaysToServer}>
+              Save
+            </Button>
+            <Button disabled={isFetching} onClick={loadTrackedDaysFromServer}>
+              Load
+            </Button>
+          </div>
+        </div>
+        <Button disabled={isFetching} onClick={exportDaysToFile}>
           Export tracked days to file
         </Button>
-        <Button
-          disabled={isFetchingAllFoods || isFetchingAllTrackedDays}
-          onClick={importDaysFromFile}
-        >
+        <Button disabled={isFetching} onClick={importDaysFromFile}>
           Import tracked days from file
         </Button>
         <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />

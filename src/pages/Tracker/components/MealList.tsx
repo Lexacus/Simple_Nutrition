@@ -1,48 +1,36 @@
-/* import dayjs from "dayjs"; */
+import { Food, Meals } from "@/types";
 import { FC, useState } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
-import ReactSelect from "react-select";
-import AddFoodModal from "../pages/Tracker/components/AddFoodModal";
-import EditFoodModal from "../pages/Tracker/components/EditFoodModal";
-/* import { useDietPlanStore } from "../store/DietPlanStore"; */
-import { useFoodStore } from "../store/FoodStore";
-import { useTrackerStore } from "../store/TrackerStore";
-import { Food, Meals } from "../types";
-import { Button } from "./common/Button";
-import { Input } from "./common/Input";
-import { Modal } from "./ui/Modal";
+import AddFoodModal from "./AddFoodModal";
+import EditFoodModal from "./EditFoodModal";
 
-interface AccordionProps {
+interface MealListProps {
   tabName: Meals;
-  foodItems?: { foodItem: Food; index: number }[];
-  /* type: "diet" | "tracker"; */
+  foods?: { food: Food; index: number }[];
 }
 
-export const Accordion: FC<AccordionProps> = ({
-  tabName,
-  foodItems /* , type */,
-}) => {
+const MealList: FC<MealListProps> = ({ tabName, foods }) => {
   const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
 
   const [openedIndex, setOpenedIndex] = useState<number>();
-  const { /* days, */ editDay, selectedDate } = useTrackerStore(
-    ({ /* days, */ editDay, selectedDate }) => ({
-      /* days, */
-      editDay,
+  /*   const { editTrackedDay, selectedDate } = useTrackerStore(
+    ({ editTrackedDay, selectedDate }) => ({
+      editTrackedDay,
       selectedDate,
     })
-  );
+  ); */
 
-  /* const { dietPlan } = useDietPlanStore(({ dietPlan }) => ({ dietPlan })); */
-
-  const { favoriteMeals, upsertFavoriteMeal } = useFoodStore(
+  /*   const { favoriteMeals, upsertFavoriteMeal } = useFoodStore(
     ({ favoriteMeals, upsertFavoriteMeal }) => ({
       favoriteMeals,
       upsertFavoriteMeal,
     })
-  );
+  ); */
 
-  /* const selectedDay = dayjs(selectedDate).day(); */
+  /*   const favoriteMealOptions = favoriteMeals.map(({ name }, i) => ({
+    label: name,
+    value: i,
+  }));
 
   const [favoriteMealModalOpen, setFavoriteMealModalOpen] = useState<
     "save" | "load" | undefined
@@ -51,32 +39,18 @@ export const Accordion: FC<AccordionProps> = ({
   const [selectedFavoriteMeal, setSelectedFavoriteMeal] = useState<{
     name: string;
     mealFoods: Food[];
-  }>();
+  }>(); */
 
   const onAddClick = () => {
     setIsAddFoodOpen(true);
   };
 
-  /*   const onEditClick = (index: number) => {
-    setSelectedFood({
-      foodItem:
-        //TODO: is there a better way to do this?
-        type === "tracker"
-          ? {
-              ...days[selectedDate].foods[index],
-            }
-          : { ...dietPlan[selectedDay][index] },
-      type: "edit",
-      index,
-    });
-  }; */
-
-  const onSaveAsFavoriteMeal = (name: string) => {
+  /*   const onSaveAsFavoriteMeal = (name: string) => {
     upsertFavoriteMeal({
-      mealFoods: foodItems?.map(({ foodItem }) => foodItem) ?? [],
+      mealFoods: foods?.map(({ food }) => food) ?? [],
       name,
     });
-  };
+  }; */
 
   const closeModal = () => {
     setIsAddFoodOpen(false);
@@ -95,7 +69,7 @@ export const Accordion: FC<AccordionProps> = ({
           selectedIndex={openedIndex}
         />
       )}
-      {favoriteMealModalOpen && (
+      {/*  {favoriteMealModalOpen && (
         <Modal
           onClose={() => {
             setFavoriteMealModalOpen(undefined);
@@ -123,12 +97,9 @@ export const Accordion: FC<AccordionProps> = ({
           {favoriteMealModalOpen === "load" && (
             <>
               <ReactSelect
-                /* key={JSON.stringify(baseFoodValues)}  */ // TODO: there might be a better way to do this
+                /* key={JSON.stringify(baseFoodValues)}   // TODO: there might be a better way to do this
                 className="px-[5px] h-[30px] m-[15px]"
-                options={favoriteMeals.map(({ name }, i) => ({
-                  label: name,
-                  value: i,
-                }))}
+                options={favoriteMealOptions}
                 onChange={(selectedOption) => {
                   setSelectedFavoriteMeal(
                     favoriteMeals[Number(selectedOption?.value)]
@@ -138,7 +109,7 @@ export const Accordion: FC<AccordionProps> = ({
               />
               <Button
                 onClick={() => {
-                  editDay(selectedDate, {
+                  editTrackedDay(selectedDate, {
                     foods: [...(selectedFavoriteMeal?.mealFoods ?? [])],
                   });
                   setFavoriteMealModalOpen(undefined);
@@ -149,32 +120,21 @@ export const Accordion: FC<AccordionProps> = ({
             </>
           )}
         </Modal>
-      )}
+      )} */}
       <div className="flex flex-col p-[3px] gap-y-[0px] ">
         <div className="flex flex-col cursor-pointer">
           <div className="flex justify-between items-center">
             <span className="capitalize font-bold">{`${tabName} `}</span>
-            {/* $
-            {foodItems?.length && foodItems.length > 0
-              ? `(${foodItems.length})`
-              : ""}{" "}
-            */}
-            {/* {open ? <AiFillCaretDown /> : <AiFillCaretLeft />} */}
-            {/* <Button
-              className="text-blue-600 bg-transparent border-none flex flex-col align-end"
-              onClick={onAddClick}
-            > */}
             <AiFillPlusCircle
               className="text-blue-600 w-[20px] h-[20px]"
               onClick={onAddClick}
             />
-            {/*      </Button> */}
           </div>
         </div>
 
         <div className=" px-[3px] pt-[5px] rounded-b-[16px]">
           <div className="flex flex-col gap-y-[5px] border-[1px] border-gray-600 p-[5px] rounded-[8px]">
-            {foodItems?.map(({ foodItem: { name, grams }, index }) => {
+            {foods?.map(({ food: { name, grams }, index }) => {
               return (
                 <div
                   key={`${tabName}_${name}`}
@@ -187,43 +147,16 @@ export const Accordion: FC<AccordionProps> = ({
                 </div>
               );
             })}
-            {!foodItems?.length && (
+            {!foods?.length && (
               <span className="w-full text-center text-[14px]">
                 No foods in this meal yet
               </span>
             )}
           </div>
-          {/*   <div className="flex flex-row w-full items-center justify-center mt-[5px]">
-              <Button
-                className="text-blue-600 bg-transparent border-none flex flex-col"
-                onClick={onAddClick}
-              >
-                <AiFillPlusCircle />
-                Add
-              </Button>
-              {foodItems?.length ? (
-                <Button
-                  className="text-blue-600 bg-transparent border-none flex flex-col"
-                  onClick={() => {
-                    setFavoriteMealModalOpen("save");
-                  }}
-                >
-                  <AiFillStar />
-                  Save
-                </Button>
-              ) : null}
-              <Button
-                className="text-blue-600 bg-transparent border-none flex flex-col"
-                onClick={() => {
-                  setFavoriteMealModalOpen("load");
-                }}
-              >
-                <AiFillStar />
-                Load
-              </Button>
-            </div> */}
         </div>
       </div>
     </>
   );
 };
+
+export default MealList;
