@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { FC } from "react";
 import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
-import { useTrackerStore } from "../../store/TrackerStore";
+import { useTrackerStore } from "../../../../store/TrackerStore";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -27,7 +27,7 @@ export const DateSelector: FC = () => {
   };
 
   return (
-    <div className="flex w-full justify-between items-center p-[20px]">
+    <div className="flex w-full justify-between items-center p-[20px] min-h-[90px]">
       {/*  {!previousDateDisabled ? ( */}
       <AiOutlineCaretLeft
         style={{ fontSize: "30px", cursor: "pointer" }}
