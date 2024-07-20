@@ -1,3 +1,4 @@
+import { ReactSelectOption } from "@/types";
 import { FC } from "react";
 import ReactSelect, { SingleValue } from "react-select";
 
@@ -6,12 +7,7 @@ const SavedFoodSelector: FC<{
     label: string;
     value: number;
   }[];
-  onFoodSelect: (
-    selectedOption: SingleValue<{
-      label: string;
-      value: number;
-    }>
-  ) => void;
+  onFoodSelect: (ReactSelectOption: ReactSelectOption<number>) => void;
 }> = ({ foodOptions, onFoodSelect }) => {
   return (
     <ReactSelect

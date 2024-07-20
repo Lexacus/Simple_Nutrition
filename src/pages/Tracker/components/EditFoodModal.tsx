@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Modal } from "../../../components/ui/Modal";
-import { useTrackerStore } from "../../../store/TrackerStore";
-import { Food } from "../../../types";
+import { Modal } from "@/components/ui/Modal";
+import { useTrackerStore } from "@/store/TrackerStore";
+import { Food } from "@/types";
 import FoodForm from "./FoodForm";
 
 const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({

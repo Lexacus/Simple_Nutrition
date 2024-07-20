@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SingleValue } from "react-select";
-import { Button } from "../../../components/common/Button";
-import { Checkbox } from "../../../components/common/Checkbox";
-import { Input } from "../../../components/common/Input";
-import { useFoodStore } from "../../../store/FoodStore";
-import { Food } from "../../../types";
+import { Button } from "@/components/common/Button";
+import { Checkbox } from "@/components/common/Checkbox";
+import { Input } from "@/components/common/Input";
+import { useFoodStore } from "@/store/FoodStore";
+import { Food, ReactSelectOption } from "@/types";
 import { handleValuesCalculation } from "../utils";
 import SavedFoodSelector from "./SavedFoodSelector";
 
@@ -39,13 +39,8 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
 
   const foodOptions = foods.map((food, i) => ({ label: food.name, value: i }));
 
-  const onFoodSelect = (
-    selectedOption: SingleValue<{
-      label: string;
-      value: number;
-    }>
-  ) => {
-    const selectedFoodItem = foods[Number(selectedOption?.value)];
+  const onFoodSelect = (ReactSelectOption: ReactSelectOption<number>) => {
+    const selectedFoodItem = foods[Number(ReactSelectOption?.value)];
     setBaseFoodValues(selectedFoodItem);
     reset(selectedFoodItem);
   };
