@@ -16,7 +16,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
     setSelectedDate,
   }));
 
-  /*   const [overlayMenuOpen, setOverlayMenuOpen] = useState(false); */
+  /*  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false); */
 
   const { totals, meals } = useMacroCalculation();
 
