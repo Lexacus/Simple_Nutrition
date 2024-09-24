@@ -29,7 +29,9 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   }));
 
   const [shouldSaveToStore, setShouldSaveToStore] = useState(false);
-  const [baseFoodValues, setBaseFoodValues] = useState<Food>();
+  const [baseFoodValues, setBaseFoodValues] = useState<Food | undefined>(
+    defaultValues
+  );
 
   const { onChange: innerOnGramsChange, ...remainingGramsProps } = register(
     "grams",

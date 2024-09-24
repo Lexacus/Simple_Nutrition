@@ -22,6 +22,7 @@ const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({
     editTrackedDay(selectedDate, {
       foods: newFoods,
     });
+    onClose();
   };
 
   const onDeleteFromDay = () => {

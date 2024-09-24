@@ -52,22 +52,18 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
     });
   }; */
 
-  const closeModal = () => {
+  const closeModals = () => {
     setIsAddFoodOpen(false);
+    setOpenedIndex(undefined);
   };
 
   return (
     <>
       {isAddFoodOpen && (
-        <AddFoodModal onClose={closeModal} selectedMeal={tabName} />
+        <AddFoodModal onClose={closeModals} selectedMeal={tabName} />
       )}
       {openedIndex !== undefined && (
-        <EditFoodModal
-          onClose={() => {
-            setOpenedIndex(undefined);
-          }}
-          selectedIndex={openedIndex}
-        />
+        <EditFoodModal onClose={closeModals} selectedIndex={openedIndex} />
       )}
       {/*  {favoriteMealModalOpen && (
         <Modal
