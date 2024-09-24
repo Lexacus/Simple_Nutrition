@@ -1,9 +1,14 @@
+import { Button } from "@/components/common/Button";
+import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import dayjs from "dayjs";
-import { FC, useEffect } from "react";
-import { useMacroCalculation } from "../../hooks/useMacroCalculation";
-import { useTrackerStore } from "../../store/TrackerStore";
+import { FC, useEffect, useState } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
+import { useMacroCalculation } from "@/hooks/useMacroCalculation";
+import { useTrackerStore } from "@/store/TrackerStore";
 import Summary from "./components/Summary";
 import TrackerList from "./components/TrackerList";
+import CopyDayModal from "./components/CopyDayModal";
+import ConfirmModal from "@/components/confirmModal/ConfirmModal";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -12,11 +17,17 @@ type TrackerProps = {
 };
 
 const Tracker: FC<TrackerProps> = ({ type }) => {
-  const { setSelectedDate } = useTrackerStore(({ setSelectedDate }) => ({
-    setSelectedDate,
-  }));
+  const { setSelectedDate, editTrackedDay } = useTrackerStore(
+    ({ setSelectedDate, editTrackedDay }) => ({
+      setSelectedDate,
+      editTrackedDay,
+    })
+  );
 
-  /*  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false); */
+  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false);
+  const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [resetConfirmationModalOpen, setResetConfirmationModalOpen] =
+    useState(false);
 
   const { totals, meals } = useMacroCalculation();
 
@@ -28,24 +39,66 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
     setSelectedDate(dayjs(today).format("dddd"));
   }, [setSelectedDate, type]);
 
-  /*   const toggleOverlayMenuOpen = () => {
+  const toggleOverlayMenuOpen = () => {
     setOverlayMenuOpen((prev) => !prev);
-  }; */
+  };
+
+  const closeCopyModal = () => {
+    setCopyModalOpen(false);
+  };
+
+  const toggleResetConfirmationModal = () => {
+    setResetConfirmationModalOpen((prev) => !prev);
+  };
+
+  const resetCurrentDay = () => {
+    editTrackedDay(dayjs().format("YYYY-MM-DD"), {
+      foods: [],
+    });
+  };
+
+  /* const { foods } = useFoodStore(({ foods }) => ({ foods })); */
 
   return (
     <>
       <div className="flex flex-col w-full h-full max-h-screen">
         <Summary {...totals} isPlanner={type === "planner"} />
         <TrackerList {...meals} />
-        {/* {addOverlayOpen && (
+        {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
+        {resetConfirmationModalOpen && (
+          <ConfirmModal
+            onClose={toggleResetConfirmationModal}
+            onConfirm={() => {
+              resetCurrentDay();
+              toggleResetConfirmationModal();
+              toggleOverlayMenuOpen();
+            }}
+          />
+        )}
+        {overlayMenuOpen && (
           <>
-            <ModalOverlay
-              onClick={toggleOverlayMenuOpen}
-            />
+            <ModalOverlay onClick={toggleOverlayMenuOpen} />
             <div className="flex flex-col absolute bottom-[110px] right-[10px] gap-y-[3px] mb-[3px] items-end">
               <Button
-                className="mx-0"
-                onClick={}
+                className="mx-0 min-w-[160px] font-semibold"
+                onClick={() => {
+                  setCopyModalOpen(true);
+                  setOverlayMenuOpen(false);
+                }}
+              >
+                Copy day
+              </Button>
+              <Button
+                className="mx-0 min-w-[160px] font-semibold"
+                onClick={() => {
+                  toggleResetConfirmationModal();
+                }}
+              >
+                Clear day
+              </Button>
+              <Button
+                className="mx-0 min-w-[160px] font-semibold"
+                onClick={() => {}}
               >
                 Manage food store
               </Button>
@@ -53,12 +106,14 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
           </>
         )}
 
-        <Button
-          className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
-          onClick={toggleOverlayMenuOpen}
-        >
-          <AiOutlinePlus style={{ fontSize: "50px" }} />
-        </Button> */}
+        {!copyModalOpen && (
+          <Button
+            className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
+            onClick={toggleOverlayMenuOpen}
+          >
+            <AiOutlineEdit style={{ fontSize: "50px" }} />
+          </Button>
+        )}
       </div>
     </>
   );

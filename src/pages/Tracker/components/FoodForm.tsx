@@ -1,11 +1,10 @@
+import { Button } from "@/components/common/Button";
+import { Checkbox } from "@/components/common/Checkbox";
+import { Input } from "@/components/common/Input";
+import { useFoodStore } from "@/store/FoodStore";
+import { Food, ReactSelectOption } from "@/types";
 import { ChangeEvent, FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SingleValue } from "react-select";
-import { Button } from "../../../components/common/Button";
-import { Checkbox } from "../../../components/common/Checkbox";
-import { Input } from "../../../components/common/Input";
-import { useFoodStore } from "../../../store/FoodStore";
-import { Food } from "../../../types";
 import { handleValuesCalculation } from "../utils";
 import SavedFoodSelector from "./SavedFoodSelector";
 
@@ -30,7 +29,9 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   }));
 
   const [shouldSaveToStore, setShouldSaveToStore] = useState(false);
-  const [baseFoodValues, setBaseFoodValues] = useState<Food>();
+  const [baseFoodValues, setBaseFoodValues] = useState<Food | undefined>(
+    defaultValues
+  );
 
   const { onChange: innerOnGramsChange, ...remainingGramsProps } = register(
     "grams",
@@ -39,13 +40,8 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
 
   const foodOptions = foods.map((food, i) => ({ label: food.name, value: i }));
 
-  const onFoodSelect = (
-    selectedOption: SingleValue<{
-      label: string;
-      value: number;
-    }>
-  ) => {
-    const selectedFoodItem = foods[Number(selectedOption?.value)];
+  const onFoodSelect = (ReactSelectOption: ReactSelectOption<number>) => {
+    const selectedFoodItem = foods[Number(ReactSelectOption?.value)];
     setBaseFoodValues(selectedFoodItem);
     reset(selectedFoodItem);
   };
@@ -131,11 +127,13 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           placeholder="Insert quantity in grams"
         />
         {!baseFoodValues && (
-          <Checkbox
-            label="Also save to store"
-            checked={shouldSaveToStore}
-            onChange={toggleShouldSaveToStore}
-          />
+          <div className="pt-[15px] pb-[10px]">
+            <Checkbox
+              label="Also save to store"
+              checked={shouldSaveToStore}
+              onChange={toggleShouldSaveToStore}
+            />
+          </div>
         )}
         <div className="flex">
           <Button>{"Save"}</Button>

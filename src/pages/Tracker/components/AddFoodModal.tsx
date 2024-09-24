@@ -1,13 +1,12 @@
 import { FC } from "react";
-import { Modal } from "../../../components/ui/Modal";
-import { useTrackerStore } from "../../../store/TrackerStore";
-import { Food, Meals } from "../../../types";
+import { Modal } from "@/components/ui/Modal";
+import { useTrackerStore } from "@/store/TrackerStore";
+import { Food, Meals } from "@/types";
 import FoodForm from "./FoodForm";
 
-const AddFoodModal: FC<{ onClose: () => void; selectedMeal?: Meals }> = ({
-  onClose,
-  selectedMeal,
-}) => {
+type AddFoodModalProps = { onClose: () => void; selectedMeal?: Meals };
+
+const AddFoodModal: FC<AddFoodModalProps> = ({ onClose, selectedMeal }) => {
   const { selectedDate, trackedDays, editTrackedDay } = useTrackerStore(
     ({ selectedDate, trackedDays, editTrackedDay }) => ({
       selectedDate,

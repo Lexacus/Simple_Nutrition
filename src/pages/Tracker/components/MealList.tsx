@@ -52,22 +52,18 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
     });
   }; */
 
-  const closeModal = () => {
+  const closeModals = () => {
     setIsAddFoodOpen(false);
+    setOpenedIndex(undefined);
   };
 
   return (
     <>
       {isAddFoodOpen && (
-        <AddFoodModal onClose={closeModal} selectedMeal={tabName} />
+        <AddFoodModal onClose={closeModals} selectedMeal={tabName} />
       )}
       {openedIndex !== undefined && (
-        <EditFoodModal
-          onClose={() => {
-            setOpenedIndex(undefined);
-          }}
-          selectedIndex={openedIndex}
-        />
+        <EditFoodModal onClose={closeModals} selectedIndex={openedIndex} />
       )}
       {/*  {favoriteMealModalOpen && (
         <Modal
@@ -100,9 +96,9 @@ const MealList: FC<MealListProps> = ({ tabName, foods }) => {
                 /* key={JSON.stringify(baseFoodValues)}   // TODO: there might be a better way to do this
                 className="px-[5px] h-[30px] m-[15px]"
                 options={favoriteMealOptions}
-                onChange={(selectedOption) => {
+                onChange={(ReactSelectOption) => {
                   setSelectedFavoriteMeal(
-                    favoriteMeals[Number(selectedOption?.value)]
+                    favoriteMeals[Number(ReactSelectOption?.value)]
                   );
                 }}
                 placeholder="Select favorite meal..."

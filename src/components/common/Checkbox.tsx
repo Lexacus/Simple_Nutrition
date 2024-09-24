@@ -11,7 +11,7 @@ type CheckboxProps = {
 
 export const Checkbox: FC<CheckboxProps> = ({ onChange, label, checked }) => {
   return (
-    <div className="flex flex-row mx-auto items-center gap-x-[5px]">
+    <div className="flex flex-row items-center gap-x-[5px]">
       <div
         className={cn(
           "flex items-center justify-center w-6 h-6 border border-black rounded-full",
