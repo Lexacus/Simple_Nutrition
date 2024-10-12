@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 import { cn } from "../../utils";
 
 type ButtonProps = {
-  children: ReactNode;
+  children?: ReactNode;
   onClick?: () => void;
   className?: string;
   type?: "submit" | "button";

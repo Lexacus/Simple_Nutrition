@@ -5,7 +5,7 @@ import { cn } from "../../utils";
 
 interface ModalProps {
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
   onClose: () => void;
   hasOverlay?: boolean;
 }
