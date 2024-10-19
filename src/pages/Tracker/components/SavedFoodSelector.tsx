@@ -15,6 +15,7 @@ const SavedFoodSelector: FC<{
       className="px-[5px] h-[30px] m-[15px]"
       options={foodOptions}
       onChange={onFoodSelect}
+      isClearable
       placeholder="Select food from store..."
     />
   );

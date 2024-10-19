@@ -16,7 +16,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
   onConfirm,
 }) => {
   return (
-    <Modal onClose={onClose} className="z-[1000]">
+    <Modal onClose={onClose} hasOverlay={false} className="z-[1000]">
       <div className="flex flex-col gap-y-[15px]">
         <span className="w-full text-center">
           {customText ?? "Are you sure?"}

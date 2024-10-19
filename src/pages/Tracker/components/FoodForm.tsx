@@ -41,6 +41,15 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   const foodOptions = foods.map((food, i) => ({ label: food.name, value: i }));
 
   const onFoodSelect = (ReactSelectOption: ReactSelectOption<number>) => {
+    if (!ReactSelectOption) {
+      setBaseFoodValues(undefined);
+      setValue("name", "");
+      setValue("calories", 0);
+      setValue("carbohydrates", 0);
+      setValue("fats", 0);
+      setValue("proteins", 0);
+      return;
+    }
     const selectedFoodItem = foods[Number(ReactSelectOption?.value)];
     setBaseFoodValues(selectedFoodItem);
     reset(selectedFoodItem);

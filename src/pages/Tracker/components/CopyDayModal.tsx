@@ -132,7 +132,6 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
 
   return (
     <>
-      <ModalOverlay onClick={onClose} />
       <Modal onClose={onClose}>
         <ReactSelect
           options={dayTypeOptions}
