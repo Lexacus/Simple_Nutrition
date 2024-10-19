@@ -11,8 +11,7 @@ const SavedFoodSelector: FC<{
 }> = ({ foodOptions, onFoodSelect }) => {
   return (
     <ReactSelect
-      /*   key={JSON.stringify(baseFoodValues)} */ // TODO: there might be a better way to do this
-      className="px-[5px] h-[30px] m-[15px]"
+      className="px-[5px] h-[30px] m-[10px]"
       options={foodOptions}
       onChange={onFoodSelect}
       isClearable

@@ -3,7 +3,6 @@ import { Input } from "@/components/common/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useFoodStore } from "@/store/FoodStore";
 import { Food, Meals } from "@/types";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 const FavoriteMealModal = ({
@@ -26,8 +25,9 @@ const FavoriteMealModal = ({
     }
     upsertFavoriteMeal({
       mealFoods: foods?.map(({ food }) => food) ?? [],
-      name: mealName,
+      name: mealName.trimStart(),
     });
+    onClose();
   };
 
   return (

@@ -21,12 +21,16 @@ export const Modal: FC<ModalProps> = ({
   return (
     <div
       className={cn(
-        "flex absolute w-full h-full left-0 top-0 z-[100] items-center justify-center",
-        className
+        "flex absolute w-full h-full left-0 top-0 z-[100] items-center justify-center"
       )}
     >
       {hasOverlay && <ModalOverlay onClick={onClose} />}
-      <div className="flex w-full max-w-[500px] h-fit flex-col gap-y-[10px] bg-white z-[110] rounded-[16px] mx-[10px] p-[10px]">
+      <div
+        className={cn(
+          "flex w-full max-w-[500px] h-fit flex-col gap-y-[10px] bg-white z-[110] rounded-[16px] mx-[10px] p-[10px]",
+          className
+        )}
+      >
         <div className="flex justify-between mt-[5px]">
           <span className="font-semibold">{title}</span>
           <AiOutlineClose
