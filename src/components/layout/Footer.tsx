@@ -1,35 +1,41 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "../common/Button";
 
 export const Footer = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
+
+  const handleNavigate = (to: string) => () => {
+    navigate(to);
+  };
+
   return (
-    <div className="absolute flex flex-row bottom-[-2px] left-0 w-full py-[10px] bg-slate-800">
-      <Button
-        className={pathname === "/" ? "bg-red-600" : ""}
-        onClick={() => {
-          navigate("/");
-        }}
+    <div
+      role="tablist"
+      className="absolute bottom-0 left-0 w-full tabs tabs-boxed"
+    >
+      <a
+        role="tab"
+        className={pathname === "/" ? "tab tab-active" : "tab"}
+        onClick={handleNavigate("/")}
       >
         Tracker
-      </Button>
-      <Button
-        className={pathname === "/diet-plan" ? "bg-red-600" : ""}
-        onClick={() => {
-          navigate("/diet-plan");
-        }}
+      </a>
+      <a
+        role="tab"
+        className={
+          pathname === "/diet-plan" ? "tab tab-active [--tab-bg:blue]" : "tab"
+        }
+        onClick={handleNavigate("/diet-plan")}
       >
-        Diet Plan
-      </Button>
-      <Button
-        className={pathname === "/settings" ? "bg-red-600" : ""}
-        onClick={() => {
-          navigate("/settings");
-        }}
+        Diet plan
+      </a>
+      <a
+        role="tab"
+        className={pathname === "/settings" ? "tab tab-active" : "tab"}
+        onClick={handleNavigate("/settings")}
       >
         Settings
-      </Button>
+      </a>
     </div>
   );
 };

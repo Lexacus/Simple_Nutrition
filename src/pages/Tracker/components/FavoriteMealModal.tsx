@@ -41,7 +41,7 @@ const FavoriteMealModal = ({
                 setMealName(e.currentTarget.value);
               }}
             />
-            <Button onClick={handleSaveAsFavorite}>
+            <Button onClick={handleSaveAsFavorite} disabled={!mealName}>
               Save meal as favorite
             </Button>
           </div>
