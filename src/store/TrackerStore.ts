@@ -11,6 +11,8 @@ type TrackerStore = {
   setTrackedDays: (trackedDays: Record<string, DietDay>) => void;
   addTrackedDay: (date: string) => void;
   editTrackedDay: (date: string, day: DietDay) => void;
+  overlayMenuOpen: boolean;
+  setOverlayMenuOpen: (bool: boolean) => void;
 };
 
 const today = dayjs().format("YYYY-MM-DD");
@@ -29,6 +31,8 @@ export const useTrackerStore = createWithEqualityFn<TrackerStore>()(
         newTrackedDays[date] = day;
         return set({ trackedDays: { ...newTrackedDays } });
       },
+      overlayMenuOpen: false,
+      setOverlayMenuOpen: (overlayMenuOpen) => set({ overlayMenuOpen }),
     }),
     {
       name: "tracker-store",

@@ -52,7 +52,11 @@ const MealList: FC<MealListProps> = ({ tabName, foods, isEditable = true }) => {
           <div className="flex justify-between items-center">
             <span
               className="capitalize font-bold"
-              onClick={isEditable ? openFavoriteMealModal : undefined}
+              onClick={
+                isEditable && !!foods?.length
+                  ? openFavoriteMealModal
+                  : undefined
+              }
             >{`${tabName} `}</span>
             {isEditable && (
               <AiFillPlusCircle
@@ -76,11 +80,6 @@ const MealList: FC<MealListProps> = ({ tabName, foods, isEditable = true }) => {
                 </div>
               </div>
             ))}
-            {!foods?.length && (
-              <span className="w-full text-center text-[14px]">
-                No foods in this meal yet
-              </span>
-            )}
           </div>
         </div>
       </div>
