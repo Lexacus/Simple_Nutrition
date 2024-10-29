@@ -17,14 +17,25 @@ type TrackerProps = {
 };
 
 const Tracker: FC<TrackerProps> = ({ type }) => {
-  const { setSelectedDate, editTrackedDay } = useTrackerStore(
-    ({ setSelectedDate, editTrackedDay }) => ({
+  const {
+    setSelectedDate,
+    editTrackedDay,
+    overlayMenuOpen,
+    setOverlayMenuOpen,
+  } = useTrackerStore(
+    ({
       setSelectedDate,
       editTrackedDay,
+      overlayMenuOpen,
+      setOverlayMenuOpen,
+    }) => ({
+      setSelectedDate,
+      editTrackedDay,
+      overlayMenuOpen,
+      setOverlayMenuOpen,
     })
   );
 
-  const [overlayMenuOpen, setOverlayMenuOpen] = useState(false);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
   const [resetConfirmationModalOpen, setResetConfirmationModalOpen] =
     useState(false);
@@ -40,7 +51,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
   }, [setSelectedDate, type]);
 
   const toggleOverlayMenuOpen = () => {
-    setOverlayMenuOpen((prev) => !prev);
+    setOverlayMenuOpen(!overlayMenuOpen);
   };
 
   const closeCopyModal = () => {

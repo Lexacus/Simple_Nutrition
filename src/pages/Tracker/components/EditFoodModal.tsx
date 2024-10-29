@@ -36,7 +36,7 @@ const EditFoodModal: FC<{ onClose: () => void; selectedIndex: number }> = ({
   };
 
   return (
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} title="Edit Food">
       <FoodForm
         onSubmit={onFoodEdit}
         onDelete={onDeleteFromDay}
