@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../../components/common/Button";
 import { useAuthStore } from "../../store/AuthStore";
@@ -9,6 +9,7 @@ import { parseJsonFile, saveDataToFile } from "../../utils";
 import useSettings from "./utils/useSettings";
 import { ModalOverlay } from "../../components/ui/ModalOverlay";
 import Spinner from "../../components/ui/Spinner";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const today = dayjs().format("DD_MM_YYYY");
 
@@ -41,6 +42,8 @@ const SettingsPage = () => {
     isSavingAllFoods,
     isSavingAllTrackedDays,
   } = useSettings();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const readFoodRef = useRef<HTMLInputElement>(null);
   const readDaysRef = useRef<HTMLInputElement>(null);
@@ -145,6 +148,10 @@ const SettingsPage = () => {
     setTempPassword(e.target.value);
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <>
       {isFetching && (
@@ -154,12 +161,26 @@ const SettingsPage = () => {
         </div>
       )}
       <div className="flex flex-col gap-y-10 mt-10 px-[20px]">
-        <input
-          className="border-[1px] border-black  px-[10px] rounded-md"
-          placeholder="Insert password"
-          defaultValue={tempPassword}
-          onChange={setTemporaryPassword}
-        />
+        <div className="flex relative border-red-600 w-full items-center">
+          <input
+            className="border-[1px] border-black  px-[10px] rounded-md w-full"
+            type={showPassword ? "text" : "password"}
+            placeholder="Insert password"
+            defaultValue={tempPassword}
+            onChange={setTemporaryPassword}
+          />
+          {showPassword ? (
+            <FaEyeSlash
+              className="absolute right-[10px]"
+              onClick={toggleShowPassword}
+            />
+          ) : (
+            <FaEye
+              className="absolute right-[10px]"
+              onClick={toggleShowPassword}
+            />
+          )}
+        </div>
         <div className="flex items-center justify-between ">
           <span>{"Food (server)"}</span>
           <div className="flex gap-x-[5px]">
