@@ -6,7 +6,8 @@ import EditFoodModal from "./EditFoodModal";
 import FavoriteMealModal from "./FavoriteMealModal";
 
 interface MealListProps {
-  tabName: Meals;
+  tabName: string;
+  mealName: Meals;
   foods?: { food: Food; index: number }[];
   isEditable?: boolean;
 }
@@ -21,7 +22,12 @@ const TabName = ({ title }: { title: string }) => {
   );
 };
 
-const MealList: FC<MealListProps> = ({ tabName, foods, isEditable = true }) => {
+const MealList: FC<MealListProps> = ({
+  mealName,
+  tabName,
+  foods,
+  isEditable = true,
+}) => {
   const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
 
   const [openedIndex, setOpenedIndex] = useState<number>();
@@ -45,7 +51,7 @@ const MealList: FC<MealListProps> = ({ tabName, foods, isEditable = true }) => {
   return (
     <>
       {isAddFoodOpen && (
-        <AddFoodModal onClose={closeModals} selectedMeal={tabName} />
+        <AddFoodModal onClose={closeModals} selectedMeal={mealName} />
       )}
       {openedIndex !== undefined && (
         <EditFoodModal onClose={closeModals} selectedIndex={openedIndex} />
@@ -54,7 +60,7 @@ const MealList: FC<MealListProps> = ({ tabName, foods, isEditable = true }) => {
         <FavoriteMealModal
           onClose={closeModals}
           foods={foods}
-          selectedMeal={tabName}
+          selectedMeal={mealName}
         />
       )}
 
