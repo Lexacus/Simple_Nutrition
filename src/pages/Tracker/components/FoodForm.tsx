@@ -152,7 +152,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           </div>
         )}
         <div className="flex justify-around w-full">
-          <Button disabled={!isDirty || hasUndefinedProperty(watch())}>
+          <Button disabled={/* !isDirty ||  */ hasUndefinedProperty(watch())}>
             {"Save"}
           </Button>
           {onDelete && (
