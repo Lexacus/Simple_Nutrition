@@ -84,7 +84,8 @@ export const SavedMealSelector = ({
         />
         {selectedFavoriteMeal && (
           <MealList
-            tabName={selectedMeal ?? "breakfast"}
+            tabName={selectedMeal}
+            mealName={selectedMeal ?? "breakfast"}
             foods={favoriteMealFoods}
             isEditable={false}
           />

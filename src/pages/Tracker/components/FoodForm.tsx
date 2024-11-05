@@ -23,7 +23,7 @@ function hasUndefinedProperty(obj: Record<string, unknown>): boolean {
 const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   const {
     register,
-    formState: { errors, isDirty },
+    formState: { errors },
     handleSubmit,
     setValue,
     reset,
@@ -152,9 +152,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           </div>
         )}
         <div className="flex justify-around w-full">
-          <Button disabled={/* !isDirty ||  */ hasUndefinedProperty(watch())}>
-            {"Save"}
-          </Button>
+          <Button disabled={hasUndefinedProperty(watch())}>{"Save"}</Button>
           {onDelete && (
             <Button type="button" className="btn-error" onClick={onDelete}>
               Delete
