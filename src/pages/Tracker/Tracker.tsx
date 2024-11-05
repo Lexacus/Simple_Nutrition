@@ -118,12 +118,12 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         )}
 
         {!copyModalOpen && (
-          <Button
-            className="rounded-full w-[50px] h-[50px] absolute bottom-[60px] right-[10px]"
+          <button
+            className="btn btn-circle btn-primary absolute bottom-[60px] right-[10px]"
             onClick={toggleOverlayMenuOpen}
           >
-            <AiOutlineEdit style={{ fontSize: "50px" }} />
-          </Button>
+            <AiOutlineEdit style={{ width: "25px", height: "25px" }} />
+          </button>
         )}
       </div>
     </>

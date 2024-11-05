@@ -16,9 +16,13 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
       <div className="flex flex-col">
         {label && <span>{label}</span>}
         <input
-          className={cn(
+          /*  className={cn(
             "rounded-[8px] px-[10px] py-[2px] border",
             error ? "border-red-600" : " border-black"
+          )} */
+          className={cn(
+            "input input-bordered rounded-[8px] px-[10px] py-[2px] min-h-[1rem] h-[2rem]",
+            error ? "border-red-600" : ""
           )}
           ref={ref}
           type={type}
@@ -27,7 +31,7 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <span>
+          <span className={"text-red-600"}>
             {error.type === "required"
               ? "Campo obbligatorio"
               : "Campo non valido"}
