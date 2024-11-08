@@ -22,18 +22,18 @@ export const WeekDateSelector: FC = () => {
       {weekDays.map((day) => {
         const selectedDay = dayjs().set("day", day).format("dddd");
         return (
-          <div
+          <button
             key={selectedDay}
             className={cn(
-              "flex items-center justify-center border min-w-[50px] min-h-[50px] text-center rounded-[16px] cursor-pointer",
-              selectedDay === selectedDate && "bg-blue-600"
+              "btn  min-w-[50px] min-h-[50px] p-0",
+              selectedDay === selectedDate && "btn-primary"
             )}
             onClick={onWeekDayClick(day)}
           >
             <span
               className={cn(selectedDay === selectedDate ? "text-white" : "")}
             >{`${dayjs().set("day", day).format("ddd")}`}</span>
-          </div>
+          </button>
         );
       })}
     </div>

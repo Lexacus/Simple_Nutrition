@@ -10,6 +10,7 @@ import useSettings from "./utils/useSettings";
 import { ModalOverlay } from "../../components/ui/ModalOverlay";
 import Spinner from "../../components/ui/Spinner";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useSettingsStore } from "@/store/SettingsStore";
 
 const today = dayjs().format("DD_MM_YYYY");
 
@@ -31,6 +32,9 @@ const SettingsPage = () => {
   );
 
   const { tempPassword, setTempPassword } = useAuthStore();
+  const { darkTheme, toggleDarkTheme } = useSettingsStore(
+    ({ darkTheme, toggleDarkTheme }) => ({ darkTheme, toggleDarkTheme })
+  );
 
   const {
     foodsRefetch,
@@ -182,6 +186,16 @@ const SettingsPage = () => {
           )}
         </div>
         <div className="flex items-center justify-between ">
+          <span>{"Dark mode"}</span>
+          <input
+            type="checkbox"
+            value="dark"
+            checked={darkTheme}
+            onChange={toggleDarkTheme}
+            className="toggle theme-controller rounded-[1.9rem]"
+          />
+        </div>
+        <div className="flex items-center justify-between ">
           <span>{"Food (server)"}</span>
           <div className="flex gap-x-[5px]">
             <Button disabled={isFetching} onClick={saveFoodStoreToServer}>
@@ -192,13 +206,18 @@ const SettingsPage = () => {
             </Button>
           </div>
         </div>
+        <div className="flex items-center justify-between ">
+          <span>{"Food (file)"}</span>
+          <div className="flex gap-x-[5px]">
+            <Button disabled={isFetching} onClick={exportFoodStoreToFile}>
+              Export
+            </Button>
+            <Button disabled={isFetching} onClick={importFoodStoreFromFile}>
+              Import
+            </Button>
+          </div>
+        </div>
 
-        <Button disabled={isFetching} onClick={exportFoodStoreToFile}>
-          Export food store to file
-        </Button>
-        <Button disabled={isFetching} onClick={importFoodStoreFromFile}>
-          Import food store from file
-        </Button>
         <input
           ref={readFoodRef}
           type="file"
@@ -216,12 +235,17 @@ const SettingsPage = () => {
             </Button>
           </div>
         </div>
-        <Button disabled={isFetching} onClick={exportDaysToFile}>
-          Export tracked days to file
-        </Button>
-        <Button disabled={isFetching} onClick={importDaysFromFile}>
-          Import tracked days from file
-        </Button>
+        <div className="flex items-center justify-between ">
+          <span>{"Tracked days (server)"}</span>
+          <div className="flex gap-x-[5px]">
+            <Button disabled={isFetching} onClick={exportDaysToFile}>
+              Export
+            </Button>
+            <Button disabled={isFetching} onClick={importDaysFromFile}>
+              Import
+            </Button>
+          </div>
+        </div>
         <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />
       </div>
     </>

@@ -9,6 +9,7 @@ import Summary from "./components/Summary";
 import TrackerList from "./components/TrackerList";
 import CopyDayModal from "./components/CopyDayModal";
 import ConfirmModal from "@/components/confirmModal/ConfirmModal";
+import { useSettingsStore } from "@/store/SettingsStore";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -73,6 +74,12 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
   return (
     <>
       <div className="flex flex-col w-full h-full max-h-screen">
+        <input
+          type="checkbox"
+          value="dark"
+          checked={useSettingsStore.getState().darkTheme}
+          className="toggle theme-controller rounded-[1.9rem] hidden"
+        />
         <Summary {...totals} isPlanner={type === "planner"} />
         <TrackerList {...meals} />
         {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
