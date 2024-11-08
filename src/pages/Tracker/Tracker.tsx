@@ -69,15 +69,13 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
     });
   };
 
-  /* const { foods } = useFoodStore(({ foods }) => ({ foods })); */
-
   return (
     <>
       <div className="flex flex-col w-full h-full max-h-screen">
         <input
           type="checkbox"
           value="dark"
-          checked={useSettingsStore.getState().darkTheme}
+          defaultChecked={useSettingsStore.getState().darkTheme}
           className="toggle theme-controller rounded-[1.9rem] hidden"
         />
         <Summary {...totals} isPlanner={type === "planner"} />
