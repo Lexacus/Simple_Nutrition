@@ -21,14 +21,19 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
         <span className="w-full text-center">
           {customText ?? "Are you sure?"}
         </span>
-        <div className="flex">
-          <Button onClick={onConfirm}>{confirmButtonText ?? "Confirm"}</Button>
-          <Button
-            className="bg-white text-blue-600 border-blue-600 font-semibold"
+        <div className="flex w-full justify-around">
+          <button
+            className="btn btn-primary min-h-0 max-h-[2rem]"
+            onClick={onConfirm}
+          >
+            {confirmButtonText ?? "Confirm"}
+          </button>
+          <button
+            className="btn btn-neutral-content min-h-0 max-h-[2rem]"
             onClick={onClose}
           >
             Cancel
-          </Button>
+          </button>
         </div>
       </div>
     </Modal>

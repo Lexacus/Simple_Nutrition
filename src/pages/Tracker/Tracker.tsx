@@ -67,6 +67,8 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
     editTrackedDay(dayjs().format("YYYY-MM-DD"), {
       foods: [],
     });
+    toggleResetConfirmationModal();
+    toggleOverlayMenuOpen();
   };
 
   return (
@@ -84,11 +86,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         {resetConfirmationModalOpen && (
           <ConfirmModal
             onClose={toggleResetConfirmationModal}
-            onConfirm={() => {
-              resetCurrentDay();
-              toggleResetConfirmationModal();
-              toggleOverlayMenuOpen();
-            }}
+            onConfirm={resetCurrentDay}
           />
         )}
         {overlayMenuOpen && (
