@@ -27,7 +27,7 @@ export const Modal: FC<ModalProps> = ({
       {hasOverlay && <ModalOverlay onClick={onClose} />}
       <div
         className={cn(
-          "flex w-full max-w-[500px] h-fit flex-col gap-y-[10px] bg-white z-[110] rounded-[16px] mx-[10px] p-[10px]",
+          "flex w-full max-w-[500px] h-fit flex-col gap-y-[10px] bg-neutral z-[110] rounded-[16px] mx-[10px] p-[10px]",
           className
         )}
       >

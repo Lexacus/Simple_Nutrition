@@ -91,19 +91,20 @@ export const SavedMealSelector = ({
           />
         )}
         <div className="flex justify-around w-full">
-          <Button
+          <button
+            className="btn btn-primary"
             onClick={handleLoadFromFavorites}
             disabled={!selectedFavoriteMeal}
           >
             Load selected
-          </Button>
-          <Button
-            className="btn-error"
+          </button>
+          <button
+            className="btn btn-error"
             onClick={handleDeleteFromFavorites}
             disabled={!selectedFavoriteMeal}
           >
             Delete selected
-          </Button>
+          </button>
         </div>
       </div>
     </>
