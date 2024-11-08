@@ -32,8 +32,8 @@ const MacroStat = ({
   return (
     <div className="flex flex-col w-full items-center">
       <div className=" flex justify-between w-full px-[5px]">
-        <span>{name}</span>
-        <span>{`${value} / ${max}`}</span>
+        <span className="text-[14px]">{name}</span>
+        <span className="text-[14px]">{`${value} / ${max}`}</span>
       </div>
       <progress
         className={cn(
@@ -61,24 +61,20 @@ const Summary: FC<SummaryProps> = ({
   return (
     <div className="flex flex-col w-full items-center p-[5px] gap-y-[10px]">
       {isPlanner ? <WeekDateSelector /> : <DateSelector />}
-      <div className="collapse collapse-arrow border border-primary rounded-[16px]">
-        <input type="checkbox" defaultChecked={true} />
-        <div className="collapse-title text-xl font-medium">Macros</div>
-        <div className="collapse-content flex flex-col gap-y-[5px]">
-          <MacroStat max={maxCalories} name="Calories" value={totalCalories} />
-          <MacroStat
-            max={maxCarbohydrates}
-            name="Carbs"
-            value={totalCarbohydrates}
-          />
-          <MacroStat
-            max={maxProteins}
-            name="Proteins"
-            value={totalProteins}
-            maxIsGoal
-          />
-          <MacroStat max={maxFats} name="Fats" value={totalFats} />
-        </div>
+      <div className=" flex flex-col w-full gap-y-[5px] rounded-[16px] p-[10px]">
+        <MacroStat max={maxCalories} name="Calories" value={totalCalories} />
+        <MacroStat
+          max={maxCarbohydrates}
+          name="Carbs"
+          value={totalCarbohydrates}
+        />
+        <MacroStat
+          max={maxProteins}
+          name="Proteins"
+          value={totalProteins}
+          maxIsGoal
+        />
+        <MacroStat max={maxFats} name="Fats" value={totalFats} />
       </div>
     </div>
   );
