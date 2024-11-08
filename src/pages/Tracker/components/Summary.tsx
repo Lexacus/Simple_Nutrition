@@ -27,7 +27,7 @@ const MacroStat = ({
     <div className="flex flex-col w-full items-center">
       <div className=" flex justify-between w-full px-[5px]">
         <span className="text-[14px]">{name}</span>
-        <span className="text-[14px]">{`${value} / ${max}`}</span>
+        <span className="text-[14px]">{`${value.toFixed(1)} / ${max}`}</span>
       </div>
       <progress
         className={cn(
