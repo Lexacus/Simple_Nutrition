@@ -1,18 +1,12 @@
-import dayjs from "dayjs";
-import { ChangeEvent, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { Button } from "../../components/common/Button";
-import { useAuthStore } from "../../store/AuthStore";
-import { useFoodStore } from "../../store/FoodStore";
-import { useTrackerStore } from "../../store/TrackerStore";
-import { parseJsonFile, saveDataToFile } from "../../utils";
-import useSettings from "./utils/useSettings";
+import { useSettingsStore } from "@/store/SettingsStore";
+import { ChangeEvent, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ModalOverlay } from "../../components/ui/ModalOverlay";
 import Spinner from "../../components/ui/Spinner";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useSettingsStore } from "@/store/SettingsStore";
+import { useAuthStore } from "../../store/AuthStore";
 import StoreManagement from "./components/StoreManagement";
-import { SubmitHandler, useForm } from "react-hook-form";
+import useSettings from "./utils/useSettings";
 
 const calculateCarbs = ({
   maxCalories,
@@ -32,34 +26,10 @@ const SettingsPage = () => {
     ({ darkTheme, toggleDarkTheme }) => ({ darkTheme, toggleDarkTheme })
   );
 
-  const {
-    maxCalories,
-    maxCarbohydrates,
-    maxProteins,
-    maxFats,
-    setMaxCalories,
-    setMaxCarbohydrates,
-    setMaxFats,
-    setMaxProteins,
-  } = useSettingsStore(
-    ({
-      maxCalories,
-      maxCarbohydrates,
-      maxProteins,
-      maxFats,
-      setMaxCalories,
-      setMaxCarbohydrates,
-      setMaxFats,
-      setMaxProteins,
-    }) => ({
-      maxCalories,
-      maxCarbohydrates,
-      maxProteins,
-      maxFats,
-      setMaxCalories,
-      setMaxCarbohydrates,
-      setMaxFats,
-      setMaxProteins,
+  const { macroLimits, setMacroLimits } = useSettingsStore(
+    ({ macroLimits, setMacroLimits }) => ({
+      macroLimits,
+      setMacroLimits,
     })
   );
 
@@ -98,7 +68,7 @@ const SettingsPage = () => {
     maxProteins: number;
     maxFats: number;
   }>({
-    defaultValues: { maxCalories, maxCarbohydrates, maxFats, maxProteins },
+    defaultValues: macroLimits,
   });
 
   const onSubmit: SubmitHandler<{
@@ -107,16 +77,18 @@ const SettingsPage = () => {
     maxProteins: number;
     maxFats: number;
   }> = ({ maxCalories, maxCarbohydrates, maxFats, maxProteins }) => {
-    setMaxCalories(maxCalories);
-    setMaxProteins(maxProteins);
-    setMaxFats(maxFats);
     if (!autoCalculateCarbs) {
-      setMaxCarbohydrates(maxCarbohydrates);
+      setMacroLimits({ maxCalories, maxCarbohydrates, maxFats, maxProteins });
       return;
     }
     const newMaxCarbs = calculateCarbs({ maxCalories, maxFats, maxProteins });
     setValue("maxCarbohydrates", newMaxCarbs);
-    setMaxCarbohydrates(newMaxCarbs);
+    setMacroLimits({
+      maxCalories,
+      maxCarbohydrates: newMaxCarbs,
+      maxFats,
+      maxProteins,
+    });
   };
 
   return (

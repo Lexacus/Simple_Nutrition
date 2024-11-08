@@ -52,33 +52,31 @@ const Summary: FC<SummaryProps> = ({
   totalProteins,
   isPlanner,
 }) => {
-  const { maxCalories, maxCarbohydrates, maxProteins, maxFats } =
-    useSettingsStore(
-      ({ maxCalories, maxCarbohydrates, maxProteins, maxFats }) => ({
-        maxCalories,
-        maxCarbohydrates,
-        maxProteins,
-        maxFats,
-      })
-    );
+  const { macroLimits } = useSettingsStore(({ macroLimits }) => ({
+    macroLimits,
+  }));
 
   return (
     <div className="flex flex-col w-full items-center p-[5px] gap-y-[10px]">
       {isPlanner ? <WeekDateSelector /> : <DateSelector />}
       <div className=" flex flex-col w-full gap-y-[5px] rounded-[16px] p-[10px]">
-        <MacroStat max={maxCalories} name="Calories" value={totalCalories} />
         <MacroStat
-          max={maxCarbohydrates}
+          max={macroLimits.maxCalories}
+          name="Calories"
+          value={totalCalories}
+        />
+        <MacroStat
+          max={macroLimits.maxCarbohydrates}
           name="Carbs"
           value={totalCarbohydrates}
         />
         <MacroStat
-          max={maxProteins}
+          max={macroLimits.maxProteins}
           name="Proteins"
           value={totalProteins}
           maxIsGoal
         />
-        <MacroStat max={maxFats} name="Fats" value={totalFats} />
+        <MacroStat max={macroLimits.maxFats} name="Fats" value={totalFats} />
       </div>
     </div>
   );
