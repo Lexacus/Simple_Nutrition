@@ -2,6 +2,7 @@ import { FC } from "react";
 import { WeekDateSelector } from "./date-selector/WeekDateSelector";
 import { DateSelector } from "./date-selector/DateSelector";
 import { cn } from "@/utils";
+import { useSettingsStore } from "@/store/SettingsStore";
 
 type SummaryProps = {
   isPlanner?: boolean;
@@ -10,13 +11,6 @@ type SummaryProps = {
   totalProteins: number;
   totalFats: number;
 };
-
-// TODO: Implement max macros selection settings instead of fixed numbers
-
-const maxCalories = 2500;
-const maxCarbohydrates = 300;
-const maxProteins = 150;
-const maxFats = 70;
 
 const MacroStat = ({
   name,
@@ -58,6 +52,16 @@ const Summary: FC<SummaryProps> = ({
   totalProteins,
   isPlanner,
 }) => {
+  const { maxCalories, maxCarbohydrates, maxProteins, maxFats } =
+    useSettingsStore(
+      ({ maxCalories, maxCarbohydrates, maxProteins, maxFats }) => ({
+        maxCalories,
+        maxCarbohydrates,
+        maxProteins,
+        maxFats,
+      })
+    );
+
   return (
     <div className="flex flex-col w-full items-center p-[5px] gap-y-[10px]">
       {isPlanner ? <WeekDateSelector /> : <DateSelector />}

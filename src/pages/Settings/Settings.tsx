@@ -11,46 +11,68 @@ import { ModalOverlay } from "../../components/ui/ModalOverlay";
 import Spinner from "../../components/ui/Spinner";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSettingsStore } from "@/store/SettingsStore";
+import StoreManagement from "./components/StoreManagement";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-const today = dayjs().format("DD_MM_YYYY");
+const calculateCarbs = ({
+  maxCalories,
+  maxFats,
+  maxProteins,
+}: {
+  maxCalories: number;
+  maxFats: number;
+  maxProteins: number;
+}) => {
+  return Math.ceil((maxCalories - maxFats * 9 - maxProteins * 4) / 4);
+};
 
 const SettingsPage = () => {
-  const { trackedDays, setTrackedDays } = useTrackerStore(
-    ({ trackedDays, setTrackedDays }) => ({
-      trackedDays,
-      setTrackedDays,
-    })
-  );
-
-  const { foods, favoriteMeals, setFavoriteMeals, setFoods } = useFoodStore(
-    ({ foods, favoriteMeals, setFavoriteMeals, setFoods }) => ({
-      foods,
-      favoriteMeals,
-      setFavoriteMeals,
-      setFoods,
-    })
-  );
-
   const { tempPassword, setTempPassword } = useAuthStore();
   const { darkTheme, toggleDarkTheme } = useSettingsStore(
     ({ darkTheme, toggleDarkTheme }) => ({ darkTheme, toggleDarkTheme })
   );
 
   const {
-    foodsRefetch,
+    maxCalories,
+    maxCarbohydrates,
+    maxProteins,
+    maxFats,
+    setMaxCalories,
+    setMaxCarbohydrates,
+    setMaxFats,
+    setMaxProteins,
+  } = useSettingsStore(
+    ({
+      maxCalories,
+      maxCarbohydrates,
+      maxProteins,
+      maxFats,
+      setMaxCalories,
+      setMaxCarbohydrates,
+      setMaxFats,
+      setMaxProteins,
+    }) => ({
+      maxCalories,
+      maxCarbohydrates,
+      maxProteins,
+      maxFats,
+      setMaxCalories,
+      setMaxCarbohydrates,
+      setMaxFats,
+      setMaxProteins,
+    })
+  );
+
+  const [autoCalculateCarbs, setAutoCalculateCarbs] = useState(true);
+
+  const {
     isFetchingAllFoods,
     isFetchingAllTrackedDays,
-    saveAllFoods,
-    saveAllTrackedDays,
-    trackedDaysRefetch,
     isSavingAllFoods,
     isSavingAllTrackedDays,
   } = useSettings();
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const readFoodRef = useRef<HTMLInputElement>(null);
-  const readDaysRef = useRef<HTMLInputElement>(null);
 
   const isFetching =
     isFetchingAllFoods ||
@@ -58,102 +80,43 @@ const SettingsPage = () => {
     isSavingAllFoods ||
     isSavingAllTrackedDays;
 
-  const exportFoodStoreToFile = () => {
-    saveDataToFile({
-      data: {
-        foods: foods,
-        favoriteMeals: favoriteMeals,
-      },
-      fileName: `SM_FoodStore_${today}`,
-    });
-  };
-
-  const importFoodStoreFromFile = () => {
-    readFoodRef.current?.click();
-  };
-
-  const exportDaysToFile = () => {
-    saveDataToFile({ data: trackedDays, fileName: `SM_TrackedDays_${today}` });
-  };
-
-  const importDaysFromFile = () => {
-    readDaysRef.current?.click();
-  };
-
-  const readFoodStoreInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    const jsonFoodStore = await parseJsonFile(e.target.files[0]);
-    setFoods(jsonFoodStore.foods);
-    setFavoriteMeals(jsonFoodStore.favoriteMeals);
-    toast("Successfully loaded food store from file", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  };
-
-  const readDaysInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    const jsonDays = await parseJsonFile(e.target.files[0]);
-    setTrackedDays(jsonDays);
-    toast("Successfully loaded tracked days from file", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  };
-
-  const saveFoodStoreToServer = async () => {
-    saveAllFoods(foods);
-  };
-
-  const loadFoodStoreFromServer = async () => {
-    const { data: foodsFromDB } = await foodsRefetch();
-    if (!foodsFromDB) {
-      toast("Error while loading foods from server", {
-        hideProgressBar: true,
-        type: "error",
-      });
-      return;
-    }
-    setFoods(foodsFromDB);
-    toast("Successfully loaded foods from server", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  };
-
-  const saveTrackedDaysToServer = async () => {
-    saveAllTrackedDays(trackedDays);
-  };
-
-  const loadTrackedDaysFromServer = async () => {
-    const { data: trackedDaysFromDB } = await trackedDaysRefetch();
-    if (!trackedDaysFromDB) {
-      toast("Error while loading tracked days from server", {
-        hideProgressBar: true,
-        type: "error",
-      });
-      return;
-    }
-    const parsedDaysFromDB = trackedDaysFromDB.reduce((acc, curr) => {
-      return { ...acc, [curr.day]: { foods: curr.foods } };
-    }, {});
-    setTrackedDays(parsedDaysFromDB);
-    toast("Successfully loaded tracked days from server", {
-      hideProgressBar: true,
-      type: "success",
-    });
-  };
-
   const setTemporaryPassword = (e: ChangeEvent<HTMLInputElement>) => {
     setTempPassword(e.target.value);
   };
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const toggleCarbAutoCalculation = () => {
+    setAutoCalculateCarbs((prev) => !prev);
+  };
+
+  const { register, handleSubmit, setValue } = useForm<{
+    maxCalories: number;
+    maxCarbohydrates: number;
+    maxProteins: number;
+    maxFats: number;
+  }>({
+    defaultValues: { maxCalories, maxCarbohydrates, maxFats, maxProteins },
+  });
+
+  const onSubmit: SubmitHandler<{
+    maxCalories: number;
+    maxCarbohydrates: number;
+    maxProteins: number;
+    maxFats: number;
+  }> = ({ maxCalories, maxCarbohydrates, maxFats, maxProteins }) => {
+    setMaxCalories(maxCalories);
+    setMaxProteins(maxProteins);
+    setMaxFats(maxFats);
+    if (!autoCalculateCarbs) {
+      setMaxCarbohydrates(maxCarbohydrates);
+      return;
+    }
+    const newMaxCarbs = calculateCarbs({ maxCalories, maxFats, maxProteins });
+    setValue("maxCarbohydrates", newMaxCarbs);
+    setMaxCarbohydrates(newMaxCarbs);
   };
 
   return (
@@ -164,7 +127,8 @@ const SettingsPage = () => {
           <Spinner />
         </div>
       )}
-      <div className="flex flex-col gap-y-10 mt-10 px-[20px]">
+      <div className="flex flex-col gap-y-[10px] mt-10 px-[20px]">
+        <span className="text-[14px]">Temporary server password</span>
         <div className="flex relative border-red-600 w-full items-center">
           <input
             className="border-[1px] border-black  px-[10px] rounded-md w-full"
@@ -185,68 +149,89 @@ const SettingsPage = () => {
             />
           )}
         </div>
-        <div className="flex items-center justify-between ">
-          <span>{"Dark mode"}</span>
-          <input
-            type="checkbox"
-            value="dark"
-            checked={darkTheme}
-            onChange={toggleDarkTheme}
-            className="toggle theme-controller rounded-[1.9rem]"
-          />
-        </div>
-        <div className="flex items-center justify-between ">
-          <span>{"Food (server)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={saveFoodStoreToServer}>
-              Save
-            </Button>
-            <Button disabled={isFetching} onClick={loadFoodStoreFromServer}>
-              Load
-            </Button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between ">
-          <span>{"Food (file)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={exportFoodStoreToFile}>
-              Export
-            </Button>
-            <Button disabled={isFetching} onClick={importFoodStoreFromFile}>
-              Import
-            </Button>
-          </div>
-        </div>
 
-        <input
-          ref={readFoodRef}
-          type="file"
-          hidden
-          onChange={readFoodStoreInput}
-        />
-        <div className="flex items-center justify-between ">
-          <span>{"Tracked days (server)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={saveTrackedDaysToServer}>
-              Save
-            </Button>
-            <Button disabled={isFetching} onClick={loadTrackedDaysFromServer}>
-              Load
-            </Button>
+        <div className="flex items-center justify-between px-[15px] my-[20px]">
+          <span>{"Theme"}</span>
+          <div className="flex items-center gap-x-[10px]">
+            <span className="text-[14px]">Light</span>
+
+            <input
+              type="checkbox"
+              value="dark"
+              checked={darkTheme}
+              onChange={toggleDarkTheme}
+              className="toggle theme-controller rounded-[1.9rem]"
+            />
+            <span className="text-[14px]">Dark</span>
           </div>
         </div>
-        <div className="flex items-center justify-between ">
-          <span>{"Tracked days (server)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={exportDaysToFile}>
-              Export
-            </Button>
-            <Button disabled={isFetching} onClick={importDaysFromFile}>
-              Import
-            </Button>
+        <div className="collapse collapse-arrow bg-base-200">
+          <input type="checkbox" />
+          <div className="collapse-title text-medium font-medium">
+            Macro settings
+          </div>
+          <div className="collapse-content ">
+            <form
+              className="flex flex-col gap-y-[10px]"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="flex w-full items-center gap-x-[10px] justify-between">
+                <span>Calories</span>
+                <input
+                  {...register("maxCalories")}
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
+                />
+              </div>
+              <div className="flex w-full items-center gap-x-[10px] justify-between">
+                <span>Carbohydrates</span>
+                <input
+                  {...register("maxCarbohydrates")}
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
+                  disabled={autoCalculateCarbs}
+                />
+              </div>
+              <div className="flex w-full items-center gap-x-[10px] justify-between">
+                <span>Proteins</span>
+                <input
+                  {...register("maxProteins")}
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
+                />
+              </div>
+              <div className="flex w-full items-center gap-x-[10px] justify-between">
+                <span>Fats</span>
+                <input
+                  {...register("maxFats")}
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">
+                    Automatic carbs calculation
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={autoCalculateCarbs}
+                    onChange={toggleCarbAutoCalculation}
+                    className="checkbox checkbox-primary"
+                  />
+                </label>
+              </div>
+              <button className="btn btn-primary max-w-fit mx-auto min-h-0 max-h-[2rem]">
+                Save
+              </button>
+            </form>
           </div>
         </div>
-        <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />
+        <StoreManagement />
       </div>
     </>
   );
