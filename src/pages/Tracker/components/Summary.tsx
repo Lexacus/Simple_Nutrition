@@ -11,7 +11,7 @@ type SummaryProps = {
   totalFats: number;
 };
 
-// TODO: Implement max macros selection in settings instead of fixed numbers
+// TODO: Implement max macros selection settings instead of fixed numbers
 
 const maxCalories = 2500;
 const maxCarbohydrates = 300;
