@@ -75,7 +75,8 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         <div className="flex-none">
           <Summary {...totals} isPlanner={type === "planner"} />
         </div>
-        <div className="flex-1 overflow-y-auto pb-16">
+        <div className="flex-1 overflow-y-auto pb-24">
+          {/* <div className="flex-1 overflow-y-auto pb-36"> padding bottom per il pulsante edit */}
           <TrackerList {...meals} />
         </div>
         {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
@@ -122,7 +123,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
 
         {!copyModalOpen && (
           <button
-            className="btn btn-circle btn-primary absolute bottom-[60px] right-[10px]"
+            className="btn btn-circle btn-primary fixed bottom-[80px] right-[10px] z-10"
             onClick={toggleOverlayMenuOpen}
           >
             <AiOutlineEdit style={{ width: "25px", height: "25px" }} />
