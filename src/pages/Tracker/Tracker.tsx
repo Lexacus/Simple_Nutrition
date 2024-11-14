@@ -71,15 +71,13 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
 
   return (
     <>
-      <div className="flex flex-col w-full h-full max-h-screen">
-        <input
-          type="checkbox"
-          value="dark"
-          defaultChecked={useSettingsStore.getState().darkTheme}
-          className="toggle theme-controller rounded-[1.9rem] hidden"
-        />
-        <Summary {...totals} isPlanner={type === "planner"} />
-        <TrackerList {...meals} />
+      <div className="flex flex-col w-full h-[100dvh]">
+        <div className="flex-none">
+          <Summary {...totals} isPlanner={type === "planner"} />
+        </div>
+        <div className="flex-1 overflow-y-auto pb-16">
+          <TrackerList {...meals} />
+        </div>
         {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
         {resetConfirmationModalOpen && (
           <ConfirmModal

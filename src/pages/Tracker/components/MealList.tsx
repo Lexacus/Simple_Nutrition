@@ -1,6 +1,6 @@
 import { Food, Meals } from "@/types";
 import { FC, useState } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineInbox } from "react-icons/ai";
 import AddFoodModal from "./AddFoodModal";
 import EditFoodModal from "./EditFoodModal";
 import FavoriteMealModal from "./FavoriteMealModal";
@@ -78,13 +78,11 @@ const MealList: FC<MealListProps> = ({
             </div>
           ))}
 
-          {!foods?.length && isEditable && (
-            <button
-              className="btn btn-ghost btn-sm normal-case w-full text-xs"
-              onClick={() => setIsAddFoodOpen(true)}
-            >
-              + Add Food
-            </button>
+          {(!foods || foods.length === 0) && (
+            <div className="flex items-center gap-1 py-1.5 opacity-50 justify-center">
+              <AiOutlineInbox className="h-3 w-3" />
+              <span className="text-xs">Nessun alimento aggiunto</span>
+            </div>
           )}
         </div>
       </div>
