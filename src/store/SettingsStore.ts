@@ -1,10 +1,11 @@
 import { persist } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
+import { Theme } from '@/types/theme';
 
 type SettingsStore = {
-  darkTheme: boolean;
-  toggleDarkTheme: () => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   macroLimits: {
     maxCalories: number;
     maxCarbohydrates: number;
@@ -22,8 +23,8 @@ type SettingsStore = {
 export const useSettingsStore = createWithEqualityFn<SettingsStore>()(
   persist(
     (set, get) => ({
-      darkTheme: true,
-      toggleDarkTheme: () => set({ darkTheme: !get().darkTheme }),
+      theme: 'lex' as Theme,
+      setTheme: (theme) => set({ theme }),
       macroLimits: {
         maxCalories: 2000,
         maxCarbohydrates: 300,
@@ -32,7 +33,7 @@ export const useSettingsStore = createWithEqualityFn<SettingsStore>()(
       },
       setMacroLimits: (macroLimits) => set({ macroLimits }),
     }),
-    { name: "auth-store" }
+    { name: "settings-store" }
   ),
   shallow
 );

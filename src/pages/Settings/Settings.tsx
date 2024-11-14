@@ -1,5 +1,5 @@
 import { useSettingsStore } from "@/store/SettingsStore";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ModalOverlay } from "../../components/ui/ModalOverlay";
@@ -7,6 +7,7 @@ import Spinner from "../../components/ui/Spinner";
 import { useAuthStore } from "../../store/AuthStore";
 import StoreManagement from "./components/StoreManagement";
 import useSettings from "./utils/useSettings";
+import { Theme } from '@/types/theme';
 
 const calculateCarbs = ({
   maxCalories,
@@ -22,8 +23,8 @@ const calculateCarbs = ({
 
 const SettingsPage = () => {
   const { tempPassword, setTempPassword } = useAuthStore();
-  const { darkTheme, toggleDarkTheme } = useSettingsStore(
-    ({ darkTheme, toggleDarkTheme }) => ({ darkTheme, toggleDarkTheme })
+  const { theme, setTheme } = useSettingsStore(
+    ({ theme, setTheme }) => ({ theme, setTheme })
   );
 
   const { macroLimits, setMacroLimits } = useSettingsStore(
@@ -91,6 +92,15 @@ const SettingsPage = () => {
     });
   };
 
+  const handleThemeChange = (newTheme: Theme) => {
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, []);
+
   return (
     <>
       {isFetching && (
@@ -100,85 +110,125 @@ const SettingsPage = () => {
         </div>
       )}
       <div className="flex flex-col gap-y-[10px] mt-10 px-[20px]">
-        <span className="text-[14px]">Temporary server password</span>
-        <div className="flex relative border-red-600 w-full items-center">
-          <input
-            className="border-[1px] border-black  px-[10px] rounded-md w-full"
-            type={showPassword ? "text" : "password"}
-            placeholder="Insert password"
-            defaultValue={tempPassword}
-            onChange={setTemporaryPassword}
-          />
-          {showPassword ? (
-            <FaEyeSlash
-              className="absolute right-[10px]"
-              onClick={toggleShowPassword}
-            />
-          ) : (
-            <FaEye
-              className="absolute right-[10px]"
-              onClick={toggleShowPassword}
-            />
-          )}
-        </div>
-
         <div className="flex flex-col gap-4 p-4">
-          {/* Theme Selector */}
-          <div className="card bg-base-200 shadow-lg">
-            <div className="card-body">
-              <h2 className="card-title">Theme</h2>
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">Dark mode</span>
-                  <input
-                    type="checkbox"
-                    value="dark"
-                    checked={darkTheme}
-                    onChange={toggleDarkTheme}
-                    className="toggle toggle-primary"
-                  />
-                </label>
+          {/* Password Card */}
+          <div className="card bg-base-200 shadow-sm">
+            <div className="card-body p-2">
+              <span className="text-sm opacity-70">Temporary server password</span>
+              <div className="flex relative w-full items-center">
+                <input
+                  className="input input-bordered input-sm w-full pr-8"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Insert password"
+                  defaultValue={tempPassword}
+                  onChange={setTemporaryPassword}
+                />
+                <button 
+                  className="btn btn-ghost btn-sm absolute right-0"
+                  onClick={toggleShowPassword}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="h-4 w-4 opacity-70" />
+                  ) : (
+                    <FaEye className="h-4 w-4 opacity-70" />
+                  )}
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Macro Settings */}
-          <div className="card bg-base-200 shadow-lg">
-            <div className="card-body">
-              <h2 className="card-title">Macro Settings</h2>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Calories</span>
-                  </label>
+          {/* Theme Card */}
+          <div className="flex flex-col gap-2 px-4 py-2">
+            <span className="text-sm font-medium">Theme</span>
+            <div className="join w-full">
+              <button 
+                className={`join-item btn btn-sm flex-1 ${theme === 'light' ? 'btn-active' : ''}`}
+                onClick={() => handleThemeChange('light')}
+              >
+                Light
+              </button>
+              <button 
+                className={`join-item btn btn-sm flex-1 ${theme === 'dark' ? 'btn-active' : ''}`}
+                onClick={() => handleThemeChange('dark')}
+              >
+                Dark
+              </button>
+              <button 
+                className={`join-item btn btn-sm flex-1 ${theme === 'lex' ? 'btn-active' : ''}`}
+                onClick={() => handleThemeChange('lex')}
+              >
+                Lex
+              </button>
+            </div>
+          </div>
+          <div className="collapse collapse-arrow bg-base-200">
+            <input type="checkbox" />
+            <div className="collapse-title text-medium font-medium">
+              Macro settings
+            </div>
+            <div className="collapse-content ">
+              <form
+                className="flex flex-col gap-y-[10px]"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className="flex w-full items-center gap-x-[10px] justify-between">
+                  <span>Calories</span>
                   <input
                     {...register("maxCalories")}
                     type="text"
-                    placeholder="Enter calories"
-                    className="input input-bordered w-full"
+                    placeholder="Type here"
+                    className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
                   />
                 </div>
-                
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Proteins (g)</span>
-                  </label>
+                <div className="flex w-full items-center gap-x-[10px] justify-between">
+                  <span>Carbohydrates</span>
+                  <input
+                    {...register("maxCarbohydrates")}
+                    type="text"
+                    placeholder="Type here"
+                    className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
+                    disabled={autoCalculateCarbs}
+                  />
+                </div>
+                <div className="flex w-full items-center gap-x-[10px] justify-between">
+                  <span>Proteins</span>
                   <input
                     {...register("maxProteins")}
                     type="text"
-                    placeholder="Enter proteins"
-                    className="input input-bordered w-full"
+                    placeholder="Type here"
+                    className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
                   />
                 </div>
-
-                <button type="submit" className="btn btn-primary w-full">
-                  Save Settings
+                <div className="flex w-full items-center gap-x-[10px] justify-between">
+                  <span>Fats</span>
+                  <input
+                    {...register("maxFats")}
+                    type="text"
+                    placeholder="Type here"
+                    className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">
+                      Automatic carbs calculation
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={autoCalculateCarbs}
+                      onChange={toggleCarbAutoCalculation}
+                      className="checkbox checkbox-primary"
+                    />
+                  </label>
+                </div>
+                <button className="btn btn-primary max-w-fit mx-auto min-h-0 max-h-[2rem]">
+                  Save
                 </button>
               </form>
             </div>
           </div>
+          <StoreManagement />
         </div>
-        <StoreManagement />
       </div>
     </>
   );
