@@ -1,49 +1,42 @@
 import { useTrackerStore } from "@/store/TrackerStore";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AiOutlineHome, AiOutlineCalendar, AiOutlineSetting } from "react-icons/ai";
 
 export const Footer = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
-
-  const handleNavigate = (to: string) => () => {
-    navigate(to);
-  };
-
   const { overlayMenuOpen } = useTrackerStore(({ overlayMenuOpen }) => ({
     overlayMenuOpen,
   }));
 
   if (!overlayMenuOpen) {
     return (
-      <div
-        role="tablist"
-        className="absolute bottom-0 left-0 w-full tabs tabs-boxed"
-      >
-        <a
-          role="tab"
-          className={pathname === "/" ? "tab tab-active" : "tab"}
-          onClick={handleNavigate("/")}
+      <div className="btm-nav bg-base-200">
+        <button 
+          className={pathname === "/" ? "active" : ""} 
+          onClick={() => navigate("/")}
         >
-          Tracker
-        </a>
-        <a
-          role="tab"
-          className={
-            pathname === "/diet-plan" ? "tab tab-active [--tab-bg:blue]" : "tab"
-          }
-          onClick={handleNavigate("/diet-plan")}
+          <AiOutlineHome className="h-5 w-5" />
+          <span className="btm-nav-label">Tracker</span>
+        </button>
+        
+        <button 
+          className={pathname === "/diet-plan" ? "active" : ""} 
+          onClick={() => navigate("/diet-plan")}
         >
-          Diet plan
-        </a>
-        <a
-          role="tab"
-          className={pathname === "/settings" ? "tab tab-active" : "tab"}
-          onClick={handleNavigate("/settings")}
+          <AiOutlineCalendar className="h-5 w-5" />
+          <span className="btm-nav-label">Plan</span>
+        </button>
+        
+        <button 
+          className={pathname === "/settings" ? "active" : ""} 
+          onClick={() => navigate("/settings")}
         >
-          Settings
-        </a>
+          <AiOutlineSetting className="h-5 w-5" />
+          <span className="btm-nav-label">Settings</span>
+        </button>
       </div>
     );
   }
-  return <></>;
+  return null;
 };

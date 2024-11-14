@@ -122,85 +122,60 @@ const SettingsPage = () => {
           )}
         </div>
 
-        <div className="flex items-center justify-between px-[15px] my-[20px]">
-          <span>{"Theme"}</span>
-          <div className="flex items-center gap-x-[10px]">
-            <span className="text-[14px]">Light</span>
-
-            <input
-              type="checkbox"
-              value="dark"
-              checked={darkTheme}
-              onChange={toggleDarkTheme}
-              className="toggle theme-controller rounded-[1.9rem]"
-            />
-            <span className="text-[14px]">Dark</span>
-          </div>
-        </div>
-        <div className="collapse collapse-arrow bg-base-200">
-          <input type="checkbox" />
-          <div className="collapse-title text-medium font-medium">
-            Macro settings
-          </div>
-          <div className="collapse-content ">
-            <form
-              className="flex flex-col gap-y-[10px]"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="flex w-full items-center gap-x-[10px] justify-between">
-                <span>Calories</span>
-                <input
-                  {...register("maxCalories")}
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
-                />
-              </div>
-              <div className="flex w-full items-center gap-x-[10px] justify-between">
-                <span>Carbohydrates</span>
-                <input
-                  {...register("maxCarbohydrates")}
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
-                  disabled={autoCalculateCarbs}
-                />
-              </div>
-              <div className="flex w-full items-center gap-x-[10px] justify-between">
-                <span>Proteins</span>
-                <input
-                  {...register("maxProteins")}
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
-                />
-              </div>
-              <div className="flex w-full items-center gap-x-[10px] justify-between">
-                <span>Fats</span>
-                <input
-                  {...register("maxFats")}
-                  type="text"
-                  placeholder="Type here"
-                  className="input input-bordered w-full max-w-[100px] min-h-[30px] h-[30px] p-[5px] text-[14px] text-center"
-                />
-              </div>
+        <div className="flex flex-col gap-4 p-4">
+          {/* Theme Selector */}
+          <div className="card bg-base-200 shadow-lg">
+            <div className="card-body">
+              <h2 className="card-title">Theme</h2>
               <div className="form-control">
                 <label className="label cursor-pointer">
-                  <span className="label-text">
-                    Automatic carbs calculation
-                  </span>
+                  <span className="label-text">Dark mode</span>
                   <input
                     type="checkbox"
-                    checked={autoCalculateCarbs}
-                    onChange={toggleCarbAutoCalculation}
-                    className="checkbox checkbox-primary"
+                    value="dark"
+                    checked={darkTheme}
+                    onChange={toggleDarkTheme}
+                    className="toggle toggle-primary"
                   />
                 </label>
               </div>
-              <button className="btn btn-primary max-w-fit mx-auto min-h-0 max-h-[2rem]">
-                Save
-              </button>
-            </form>
+            </div>
+          </div>
+
+          {/* Macro Settings */}
+          <div className="card bg-base-200 shadow-lg">
+            <div className="card-body">
+              <h2 className="card-title">Macro Settings</h2>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Calories</span>
+                  </label>
+                  <input
+                    {...register("maxCalories")}
+                    type="text"
+                    placeholder="Enter calories"
+                    className="input input-bordered w-full"
+                  />
+                </div>
+                
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Proteins (g)</span>
+                  </label>
+                  <input
+                    {...register("maxProteins")}
+                    type="text"
+                    placeholder="Enter proteins"
+                    className="input input-bordered w-full"
+                  />
+                </div>
+
+                <button type="submit" className="btn btn-primary w-full">
+                  Save Settings
+                </button>
+              </form>
+            </div>
           </div>
         </div>
         <StoreManagement />

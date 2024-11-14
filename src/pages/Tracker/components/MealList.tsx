@@ -12,16 +12,6 @@ interface MealListProps {
   isEditable?: boolean;
 }
 
-const TabName = ({ title }: { title: string }) => {
-  return (
-    <div className="flex flex-col cursor-pointer">
-      <div className="flex justify-between items-center">
-        <span className="capitalize font-bold">{`${title} `}</span>
-      </div>
-    </div>
-  );
-};
-
 const MealList: FC<MealListProps> = ({
   mealName,
   tabName,
@@ -29,80 +19,73 @@ const MealList: FC<MealListProps> = ({
   isEditable = true,
 }) => {
   const [isAddFoodOpen, setIsAddFoodOpen] = useState(false);
-
   const [openedIndex, setOpenedIndex] = useState<number>();
   const [favoriteModalOpen, setFavoriteModalOpen] = useState(false);
-
-  const onAddClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    setIsAddFoodOpen(true);
-  };
-
-  const openFavoriteMealModal = () => {
-    setFavoriteModalOpen(true);
-  };
-
-  const closeModals = () => {
-    setIsAddFoodOpen(false);
-    setOpenedIndex(undefined);
-    setFavoriteModalOpen(false);
-  };
 
   return (
     <>
       {isAddFoodOpen && (
-        <AddFoodModal onClose={closeModals} selectedMeal={mealName} />
+        <AddFoodModal 
+          onClose={() => setIsAddFoodOpen(false)} 
+          selectedMeal={mealName} 
+        />
       )}
       {openedIndex !== undefined && (
-        <EditFoodModal onClose={closeModals} selectedIndex={openedIndex} />
+        <EditFoodModal 
+          onClose={() => setOpenedIndex(undefined)} 
+          selectedIndex={openedIndex} 
+        />
       )}
       {favoriteModalOpen && (
         <FavoriteMealModal
-          onClose={closeModals}
+          onClose={() => setFavoriteModalOpen(false)}
           foods={foods}
           selectedMeal={mealName}
         />
       )}
 
-      <div className="flex flex-col p-[3px] gap-y-[0px] ">
-        <div className=" px-[3px] pt-[5px] rounded-b-[16px]">
-          <div
-            className="flex flex-row gap-y-[5px] border-[1px] border-gray-600 p-[5px] rounded-[8px] h-full items-center"
-            onClick={
-              isEditable && !!foods?.length ? openFavoriteMealModal : undefined
-            }
-          >
-            <div className="flex flex-col w-full h-full">
-              <TabName title={tabName} />
-              {/* FOOD LIST */}
-              {foods?.map(({ food: { name, grams }, index }) => (
-                <div
-                  key={`${tabName}_${name}_${index}`}
-                  className="flex justify-between items-center cursor-pointer w-fit"
-                  onClick={
-                    isEditable
-                      ? (e) => {
-                          e.stopPropagation();
-                          setOpenedIndex(index);
-                        }
-                      : undefined
-                  }
-                >
-                  <div className="flex flex-row items-center gap-x-[5px] w-fit ">
-                    <span className="text-[14px]">{`- ${name} (${grams}g)`}</span>
-                  </div>
-                </div>
-              ))}
+      <div className="card bg-base-200 shadow-sm">
+        <div className="card-body p-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-medium">{tabName}</h3>
+              {foods && foods.length > 0 && (
+                <span className="badge badge-sm">{foods.length}</span>
+              )}
             </div>
             {isEditable && (
               <button
-                className="btn btn-circle btn-primary min-w-[1.5rem] min-h-[1.5rem] w-[1.5rem] h-[1.5rem] "
-                onClick={onAddClick}
+                className="btn btn-ghost btn-xs"
+                onClick={() => setIsAddFoodOpen(true)}
               >
-                <AiOutlinePlus />
+                <AiOutlinePlus className="h-3 w-3" />
               </button>
             )}
           </div>
+
+          {foods && foods?.length > 0 && (
+            <div className="divider my-0 h-px"></div>
+          )}
+
+          {foods?.map(({ food: { name, grams }, index }) => (
+            <div
+              key={`${tabName}_${name}_${index}`}
+              className="flex justify-between items-center py-0.5 text-xs cursor-pointer hover:bg-base-300 rounded px-1"
+              onClick={isEditable ? () => setOpenedIndex(index) : undefined}
+            >
+              <span>{name}</span>
+              <span className="opacity-70">{grams}g</span>
+            </div>
+          ))}
+
+          {!foods?.length && isEditable && (
+            <button
+              className="btn btn-ghost btn-sm normal-case w-full text-xs"
+              onClick={() => setIsAddFoodOpen(true)}
+            >
+              + Add Food
+            </button>
+          )}
         </div>
       </div>
     </>

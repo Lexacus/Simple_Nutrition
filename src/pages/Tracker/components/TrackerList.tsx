@@ -18,26 +18,24 @@ const TrackerList: FC<TrackerListProps> = ({
   morningSnacksFoods,
 }) => {
   return (
-    <div className="overflow-auto border-t border-black pb-[200px]">
-      <div className=" h-fit flex flex-col mx-[5px] rounded-[16px] mt-[5px] max-h-[calc(100vh-221px)]">
-        <MealList
-          foods={breakfastFoods}
-          tabName="Breakfast"
-          mealName="breakfast"
-        />
-        <MealList
-          foods={morningSnacksFoods}
-          tabName="Morning snacks"
-          mealName="morningSnacks"
-        />
-        <MealList foods={lunchFoods} tabName="Lunch" mealName="lunch" />
-        <MealList
-          foods={eveningSnacksFoods}
-          tabName="Evening snacks"
-          mealName="eveningSnacks"
-        />
-        <MealList foods={dinnerFoods} tabName="Dinner" mealName="dinner" />
-      </div>
+    <div className="flex flex-col gap-1 px-2">
+      <MealList
+        foods={breakfastFoods}
+        tabName="Breakfast"
+        mealName="breakfast"
+      />
+      <MealList
+        foods={morningSnacksFoods}
+        tabName="Morning snacks"
+        mealName="morningSnacks"
+      />
+      <MealList foods={lunchFoods} tabName="Lunch" mealName="lunch" />
+      <MealList
+        foods={eveningSnacksFoods}
+        tabName="Evening snacks"
+        mealName="eveningSnacks"
+      />
+      <MealList foods={dinnerFoods} tabName="Dinner" mealName="dinner" />
     </div>
   );
 };

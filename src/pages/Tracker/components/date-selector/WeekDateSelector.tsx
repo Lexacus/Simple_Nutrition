@@ -1,7 +1,7 @@
+import { useTrackerStore } from "@/store/TrackerStore";
+import { cn } from "@/utils";
 import dayjs from "dayjs";
 import { FC } from "react";
-import { useTrackerStore } from "../../../../store/TrackerStore";
-import { cn } from "../../../../utils";
 
 const weekDays = [1, 2, 3, 4, 5, 6, 0];
 
@@ -18,24 +18,32 @@ export const WeekDateSelector: FC = () => {
   };
 
   return (
-    <div className="flex flex-row w-full justify-between px-[5%] py-[20px] min-h-[90px]">
-      {weekDays.map((day) => {
-        const selectedDay = dayjs().set("day", day).format("dddd");
-        return (
-          <button
-            key={selectedDay}
-            className={cn(
-              "btn  min-w-[50px] min-h-[50px] p-0",
-              selectedDay === selectedDate && "btn-primary"
-            )}
-            onClick={onWeekDayClick(day)}
-          >
-            <span
-              className={cn(selectedDay === selectedDate ? "text-white" : "")}
-            >{`${dayjs().set("day", day).format("ddd")}`}</span>
-          </button>
-        );
-      })}
+    <div className="w-full px-2">
+      <div className="card bg-base-200 shadow-sm">
+        <div className="card-body p-2">
+          <div className="grid grid-cols-7 gap-1">
+            {weekDays.map((day) => {
+              const selectedDay = dayjs().set("day", day).format("dddd");
+              return (
+                <button
+                  key={selectedDay}
+                  onClick={onWeekDayClick(day)}
+                  className={cn(
+                    "flex flex-col items-center justify-center p-1 rounded-lg transition-colors",
+                    selectedDay === selectedDate 
+                      ? "bg-primary text-primary-content" 
+                      : "hover:bg-base-300"
+                  )}
+                >
+                  <span className="text-xs">
+                    {dayjs().set("day", day).format("ddd")}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

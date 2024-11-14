@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { WeekDateSelector } from "./date-selector/WeekDateSelector";
 import { DateSelector } from "./date-selector/DateSelector";
-import { cn } from "@/utils";
 import { useSettingsStore } from "@/store/SettingsStore";
 
 type SummaryProps = {
@@ -10,39 +9,6 @@ type SummaryProps = {
   totalCarbohydrates: number;
   totalProteins: number;
   totalFats: number;
-};
-
-const MacroStat = ({
-  name,
-  max,
-  value,
-  maxIsGoal = false,
-}: {
-  name: string;
-  value: number;
-  max: number;
-  maxIsGoal?: boolean;
-}) => {
-  return (
-    <div className="flex flex-col w-full items-center">
-      <div className=" flex justify-between w-full px-[5px]">
-        <span className="text-[14px]">{name}</span>
-        <span className="text-[14px]">{`${value} / ${max}`}</span>
-      </div>
-      <progress
-        className={cn(
-          "progress w-full",
-          value < max
-            ? "progress-primary"
-            : maxIsGoal
-            ? "progress-accent"
-            : "progress-error"
-        )}
-        value={value}
-        max={max}
-      />
-    </div>
-  );
 };
 
 const Summary: FC<SummaryProps> = ({
@@ -57,26 +23,78 @@ const Summary: FC<SummaryProps> = ({
   }));
 
   return (
-    <div className="flex flex-col w-full items-center p-[5px] gap-y-[10px]">
+    <div className="flex flex-col w-full items-center p-2 gap-2">
       {isPlanner ? <WeekDateSelector /> : <DateSelector />}
-      <div className=" flex flex-col w-full gap-y-[5px] rounded-[16px] p-[10px]">
-        <MacroStat
-          max={macroLimits.maxCalories}
-          name="Calories"
-          value={totalCalories}
-        />
-        <MacroStat
-          max={macroLimits.maxCarbohydrates}
-          name="Carbs"
-          value={totalCarbohydrates}
-        />
-        <MacroStat
-          max={macroLimits.maxProteins}
-          name="Proteins"
-          value={totalProteins}
-          maxIsGoal
-        />
-        <MacroStat max={macroLimits.maxFats} name="Fats" value={totalFats} />
+      
+      {/* Calories Card */}
+      <div className="card bg-base-200 shadow-sm w-full">
+        <div className="card-body p-2">
+          <div className="flex justify-between items-center">
+            <span className="text-sm opacity-70">Calories</span>
+            <span className="text-sm font-semibold">
+              {totalCalories}/{macroLimits.maxCalories}
+            </span>
+          </div>
+          <progress 
+            className="progress progress-primary w-full h-2" 
+            value={totalCalories} 
+            max={macroLimits.maxCalories}
+          />
+        </div>
+      </div>
+
+      {/* Macros Grid */}
+      <div className="grid grid-cols-3 gap-2 w-full">
+        {/* Carbs */}
+        <div className="card bg-base-200 shadow-sm">
+          <div className="card-body p-2">
+            <div className="flex flex-col">
+              <span className="text-xs opacity-70">Carbs</span>
+              <span className="text-sm font-semibold text-secondary">
+                {totalCarbohydrates}/{macroLimits.maxCarbohydrates}
+              </span>
+              <progress 
+                className="progress progress-secondary w-full h-1.5" 
+                value={totalCarbohydrates}
+                max={macroLimits.maxCarbohydrates}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Proteins */}
+        <div className="card bg-base-200 shadow-sm">
+          <div className="card-body p-2">
+            <div className="flex flex-col">
+              <span className="text-xs opacity-70">Protein</span>
+              <span className="text-sm font-semibold text-accent">
+                {totalProteins}/{macroLimits.maxProteins}
+              </span>
+              <progress 
+                className="progress progress-accent w-full h-1.5" 
+                value={totalProteins}
+                max={macroLimits.maxProteins}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Fats */}
+        <div className="card bg-base-200 shadow-sm">
+          <div className="card-body p-2">
+            <div className="flex flex-col">
+              <span className="text-xs opacity-70">Fats</span>
+              <span className="text-sm font-semibold text-info">
+                {totalFats}/{macroLimits.maxFats}
+              </span>
+              <progress 
+                className="progress progress-info w-full h-1.5" 
+                value={totalFats}
+                max={macroLimits.maxFats}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
