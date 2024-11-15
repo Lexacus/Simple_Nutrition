@@ -79,8 +79,8 @@ const MealList: FC<MealListProps> = ({
           ))}
 
           {(!foods || foods.length === 0) && (
-            <div className="flex items-center gap-1 py-1.5 opacity-50 justify-center">
-              <AiOutlineInbox className="h-3 w-3" />
+            <div className="flex lg:flex-col items-center justify-center py-3 opacity-50">
+              <AiOutlineInbox className="w-6 h-6 mb-1" />
               <span className="text-xs">Nessun alimento aggiunto</span>
             </div>
           )}
