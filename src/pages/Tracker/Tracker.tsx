@@ -2,7 +2,7 @@ import { Button } from "@/components/common/Button";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import dayjs from "dayjs";
 import { FC, useEffect, useState } from "react";
-import { AiOutlineEdit, AiOutlineHome, AiOutlineCalendar, AiOutlineSetting, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineHome, AiOutlineCalendar, AiOutlineSetting, AiOutlineLeft, AiOutlineRight, AiOutlineCopy, AiOutlineClear } from "react-icons/ai";
 import { useMacroCalculation } from "@/hooks/useMacroCalculation";
 import { useTrackerStore } from "@/store/TrackerStore";
 import Summary from "./components/Summary";
@@ -77,7 +77,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
       {/* Layout Desktop */}
       <div className="hidden lg:flex flex-1">
         {/* Sidebar sinistra con navigazione e summary */}
-        <div className="w-[300px] border-r border-base-300 flex flex-col">
+        <div className="w-[350px] border-r border-base-300 flex flex-col">
           {/* Desktop Nav */}
           <div className="p-4 border-b border-base-300">
             <div className="flex items-center gap-2 mb-6">
@@ -109,34 +109,34 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
           </div>
 
           {/* Summary e Actions */}
-          <div className="flex-1 overflow-y-auto p-4">
-            <Summary {...totals} isPlanner={type === "planner"} />
+          <div className="flex-1 flex flex-col overflow-y-auto">
+            <div className="flex-1 p-4">
+              <Summary {...totals} isPlanner={type === "planner"} />
+            </div>
             
-            <div className="mt-6">
-              <div className="card bg-base-200">
-                <div className="card-body p-3">
-                  <h3 className="text-sm font-medium mb-2">Quick Actions</h3>
-                  <div className="flex flex-col gap-2">
-                    <button 
-                      className="btn btn-sm w-full"
-                      onClick={() => setCopyModalOpen(true)}
-                    >
-                      Copy day
-                    </button>
-                    <button 
-                      className="btn btn-sm w-full"
-                      onClick={toggleResetConfirmationModal}
-                    >
-                      Clear day
-                    </button>
-                    <button 
-                      className="btn btn-sm w-full"
-                      onClick={() => navigate("/settings")}
-                    >
-                      Manage food store
-                    </button>
-                  </div>
-                </div>
+            {/* Quick Actions - stile come nav buttons ma small */}
+            <div className="p-4 border-t border-base-300">
+              <div className="flex flex-col gap-2">
+                <button 
+                  className="btn btn-sm btn-ghost justify-start gap-2 w-full"
+                  onClick={() => setCopyModalOpen(true)}
+                >
+                  <AiOutlineCopy className="h-4 w-4" />
+                  Copy day
+                </button>
+                <button 
+                  className="btn btn-sm btn-ghost justify-start gap-2 w-full"
+                  onClick={toggleResetConfirmationModal}
+                >
+                  <AiOutlineClear className="h-4 w-4" />
+                  Clear day
+                </button>
+                <button 
+                  className="btn btn-sm w-full"
+                  onClick={() => navigate("/settings")}
+                >
+                  Manage food store
+                </button>
               </div>
             </div>
           </div>

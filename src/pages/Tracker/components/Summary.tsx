@@ -31,9 +31,11 @@ const Summary: FC<SummaryProps> = ({
         <div className="card-body p-2">
           <div className="flex justify-between items-center mb-1">
             <span className="text-sm opacity-70">Calories</span>
-            <span className="text-sm font-semibold">
-              {totalCalories}/{macroLimits.maxCalories}
-            </span>
+            <div className="min-w-[90px] text-right">
+              <span className="text-sm font-semibold">
+                {totalCalories}/{macroLimits.maxCalories}
+              </span>
+            </div>
           </div>
           <progress 
             className="progress progress-primary w-full h-2" 
@@ -44,16 +46,18 @@ const Summary: FC<SummaryProps> = ({
       </div>
 
       {/* Macros Grid */}
-      <div className="grid grid-cols-3 gap-2 w-full">
+      <div className="grid grid-cols-1 gap-2 w-full">
         {/* Carbs */}
         <div className="card bg-base-200 shadow-sm">
           <div className="card-body p-2">
             <div className="flex flex-col">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs opacity-70">Carbs</span>
-                <span className="text-xs font-semibold text-secondary">
-                  {totalCarbohydrates}/{macroLimits.maxCarbohydrates}
-                </span>
+                <div className="min-w-[90px] text-right">
+                  <span className="text-xs font-semibold text-secondary">
+                    {totalCarbohydrates}/{macroLimits.maxCarbohydrates}
+                  </span>
+                </div>
               </div>
               <progress 
                 className="progress progress-secondary w-full h-1.5" 
@@ -70,9 +74,11 @@ const Summary: FC<SummaryProps> = ({
             <div className="flex flex-col">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs opacity-70">Protein</span>
-                <span className="text-xs font-semibold text-accent">
-                  {totalProteins}/{macroLimits.maxProteins}
-                </span>
+                <div className="min-w-[90px] text-right">
+                  <span className="text-xs font-semibold text-accent">
+                    {totalProteins}/{macroLimits.maxProteins}
+                  </span>
+                </div>
               </div>
               <progress 
                 className="progress progress-accent w-full h-1.5" 
@@ -89,9 +95,11 @@ const Summary: FC<SummaryProps> = ({
             <div className="flex flex-col">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs opacity-70">Fats</span>
-                <span className="text-xs font-semibold text-info">
-                  {totalFats}/{macroLimits.maxFats}
-                </span>
+                <div className="min-w-[90px] text-right">
+                  <span className="text-xs font-semibold text-info">
+                    {totalFats}/{macroLimits.maxFats}
+                  </span>
+                </div>
               </div>
               <progress 
                 className="progress progress-info w-full h-1.5" 

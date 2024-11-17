@@ -117,7 +117,7 @@ const SettingsPage = () => {
       {/* Layout Desktop */}
       <div className="hidden lg:flex flex-1 overflow-hidden">
         {/* Sidebar sinistra con navigazione - mantieni fixed */}
-        <div className="w-[300px] border-r border-base-300 flex flex-col overflow-y-auto">
+        <div className="w-[350px] border-r border-base-300 flex flex-col overflow-y-auto">
           {/* Desktop Nav */}
           <div className="p-4 border-b border-base-300">
             <div className="flex items-center gap-2 mb-6">
