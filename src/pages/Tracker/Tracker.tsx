@@ -79,27 +79,27 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         {/* Sidebar sinistra con navigazione e summary */}
         <div className="w-[350px] border-r border-base-300 flex flex-col">
           {/* Desktop Nav */}
-          <div className="p-4 border-b border-base-300">
-            <div className="flex items-center gap-2 mb-6">
-              <h1 className="text-xl font-bold">Simple Nutrition</h1>
+          <div className="p-3 border-b border-base-300">
+            <div className="flex items-center gap-2 mb-4">
+              <h1 className="text-lg font-bold">Simple Nutrition</h1>
             </div>
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-1.5">
               <button 
-                className={`btn btn-ghost justify-start gap-2 ${type === "tracker" ? "btn-active" : ""}`}
+                className={`btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem] ${type === "tracker" ? "btn-active" : ""}`}
                 onClick={() => navigate("/")}
               >
                 <AiOutlineHome className="h-5 w-5" />
                 Daily Tracker
               </button>
               <button 
-                className={`btn btn-ghost justify-start gap-2 ${type === "planner" ? "btn-active" : ""}`}
+                className={`btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem] ${type === "planner" ? "btn-active" : ""}`}
                 onClick={() => navigate("/diet-plan")}
               >
                 <AiOutlineCalendar className="h-5 w-5" />
                 Meal Planner
               </button>
               <button 
-                className="btn btn-ghost justify-start gap-2"
+                className="btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem]"
                 onClick={() => navigate("/settings")}
               >
                 <AiOutlineSetting className="h-5 w-5" />
