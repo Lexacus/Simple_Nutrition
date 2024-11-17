@@ -46,14 +46,14 @@ const Summary: FC<SummaryProps> = ({
       </div>
 
       {/* Macros Grid */}
-      <div className="grid grid-cols-1 gap-2 w-full">
+      <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 w-full">
         {/* Carbs */}
         <div className="card bg-base-200 shadow-sm">
           <div className="card-body p-2">
             <div className="flex flex-col">
-              <div className="flex justify-between items-center mb-1">
+              <div className="flex justify-between items-center mb-1 gap-1 lg:gap-2">
                 <span className="text-xs opacity-70">Carbs</span>
-                <div className="min-w-[90px] text-right">
+                <div className="text-right">
                   <span className="text-xs font-semibold text-secondary">
                     {totalCarbohydrates}/{macroLimits.maxCarbohydrates}
                   </span>
@@ -72,9 +72,9 @@ const Summary: FC<SummaryProps> = ({
         <div className="card bg-base-200 shadow-sm">
           <div className="card-body p-2">
             <div className="flex flex-col">
-              <div className="flex justify-between items-center mb-1">
+              <div className="flex justify-between items-center mb-1 gap-1 lg:gap-2">
                 <span className="text-xs opacity-70">Protein</span>
-                <div className="min-w-[90px] text-right">
+                <div className="text-right">
                   <span className="text-xs font-semibold text-accent">
                     {totalProteins}/{macroLimits.maxProteins}
                   </span>
@@ -93,9 +93,9 @@ const Summary: FC<SummaryProps> = ({
         <div className="card bg-base-200 shadow-sm">
           <div className="card-body p-2">
             <div className="flex flex-col">
-              <div className="flex justify-between items-center mb-1">
+              <div className="flex justify-between items-center mb-1 gap-1 lg:gap-2">
                 <span className="text-xs opacity-70">Fats</span>
-                <div className="min-w-[90px] text-right">
+                <div className="text-right">
                   <span className="text-xs font-semibold text-info">
                     {totalFats}/{macroLimits.maxFats}
                   </span>

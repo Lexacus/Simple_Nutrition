@@ -142,56 +142,50 @@ const StoreManagement = () => {
       <div className="collapse-title text-medium font-medium">
         Store management
       </div>
-      <div className="collapse-content flex flex-col gap-y-[10px]">
-        <div className="flex items-center justify-between ">
-          <span>{"Food (server)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={saveFoodStoreToServer}>
+      <div className="collapse-content flex flex-col gap-3">
+        <div className="flex items-center">
+          <span className="flex-1">Food (server)</span>
+          <div className="flex gap-2">
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={saveFoodStoreToServer} disabled={isFetching}>
               Save
-            </Button>
-            <Button disabled={isFetching} onClick={loadFoodStoreFromServer}>
+            </button>
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={loadFoodStoreFromServer} disabled={isFetching}>
               Load
-            </Button>
+            </button>
           </div>
         </div>
-        <div className="flex items-center justify-between ">
-          <span>{"Food (file)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={exportFoodStoreToFile}>
+        <div className="flex items-center">
+          <span className="flex-1">Food (file)</span>
+          <div className="flex gap-2">
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={exportFoodStoreToFile} disabled={isFetching}>
               Export
-            </Button>
-            <Button disabled={isFetching} onClick={importFoodStoreFromFile}>
+            </button>
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={importFoodStoreFromFile} disabled={isFetching}>
               Import
-            </Button>
+            </button>
           </div>
         </div>
-
-        <input
-          ref={readFoodRef}
-          type="file"
-          hidden
-          onChange={readFoodStoreInput}
-        />
-        <div className="flex items-center justify-between ">
-          <span>{"Tracked days (server)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={saveTrackedDaysToServer}>
+        <input ref={readFoodRef} type="file" hidden onChange={readFoodStoreInput} />
+        <div className="flex items-center">
+          <span className="flex-1">Tracked days (server)</span>
+          <div className="flex gap-2">
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={saveTrackedDaysToServer} disabled={isFetching}>
               Save
-            </Button>
-            <Button disabled={isFetching} onClick={loadTrackedDaysFromServer}>
+            </button>
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={loadTrackedDaysFromServer} disabled={isFetching}>
               Load
-            </Button>
+            </button>
           </div>
         </div>
-        <div className="flex items-center justify-between ">
-          <span>{"Tracked days (server)"}</span>
-          <div className="flex gap-x-[5px]">
-            <Button disabled={isFetching} onClick={exportDaysToFile}>
+        <div className="flex items-center">
+          <span className="flex-1">Tracked days (file)</span>
+          <div className="flex gap-2">
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={exportDaysToFile} disabled={isFetching}>
               Export
-            </Button>
-            <Button disabled={isFetching} onClick={importDaysFromFile}>
+            </button>
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={importDaysFromFile} disabled={isFetching}>
               Import
-            </Button>
+            </button>
           </div>
         </div>
         <input ref={readDaysRef} type="file" hidden onChange={readDaysInput} />
