@@ -113,11 +113,11 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-[100dvh]">
+    <div className="flex flex-col w-full h-[100dvh] overflow-hidden">
       {/* Layout Desktop */}
-      <div className="hidden lg:flex flex-1">
-        {/* Sidebar sinistra con navigazione */}
-        <div className="w-[300px] border-r border-base-300 flex flex-col">
+      <div className="hidden lg:flex flex-1 overflow-hidden">
+        {/* Sidebar sinistra con navigazione - mantieni fixed */}
+        <div className="w-[300px] border-r border-base-300 flex flex-col overflow-y-auto">
           {/* Desktop Nav */}
           <div className="p-4 border-b border-base-300">
             <div className="flex items-center gap-2 mb-6">
@@ -149,9 +149,9 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        {/* Area principale desktop */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 overflow-y-auto p-6">
+        {/* Area principale desktop - permetti lo scroll */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6">
             <div className="max-w-3xl mx-auto">
               <SettingsContent 
                 isFetching={isFetching}
@@ -172,18 +172,18 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      {/* Layout Mobile */}
-      <div className="lg:hidden flex flex-col h-full">
-        {/* Header Mobile */}
+      {/* Layout Mobile - modifica per permettere lo scroll */}
+      <div className="lg:hidden flex flex-col h-full overflow-hidden">
+        {/* Header Mobile - mantieni fixed */}
         <div className="navbar bg-base-100 border-b border-base-200 flex-none">
           <div className="flex-1">
             <h1 className="text-xl font-bold">Settings</h1>
           </div>
         </div>
 
-        {/* Contenuto Mobile */}
+        {/* Contenuto Mobile - permetti lo scroll */}
         <div className="flex-1 overflow-y-auto">
-          <div className="p-4">
+          <div className="p-4 pb-24">
             <SettingsContent 
               isFetching={isFetching}
               showPassword={showPassword}
