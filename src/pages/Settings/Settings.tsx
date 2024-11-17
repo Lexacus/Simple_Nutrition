@@ -98,10 +98,6 @@ const SettingsPage = () => {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, []);
-
   return (
     <div className="flex flex-col w-full h-[100dvh]">
       {/* Layout Desktop */}

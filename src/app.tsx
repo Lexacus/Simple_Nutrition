@@ -6,6 +6,7 @@ import "./app.css";
 import { Footer } from "./components/layout/Footer";
 import SettingsPage from "./pages/Settings/Settings";
 import Tracker from "./pages/Tracker/Tracker";
+import { ThemeInitializer } from "./components/ThemeInitializer";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeInitializer />
       <RouterProvider router={router} />
     </QueryClientProvider>
   );
