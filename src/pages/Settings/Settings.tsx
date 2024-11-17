@@ -1,6 +1,6 @@
 import { useSettingsStore } from "@/store/SettingsStore";
 import { Theme } from '@/types/theme';
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineCalendar, AiOutlineHome, AiOutlineSetting } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,21 @@ const calculateCarbs = ({
   maxFats: number;
   maxProteins: number;
 }) => {
-  return Math.ceil((maxCalories - maxFats * 9 - maxProteins * 4) / 4);
+  // Calcola le calorie da grassi e proteine
+  const caloriesFromFats = maxFats * 9;
+  const caloriesFromProteins = maxProteins * 4;
+  
+  // Calcola le calorie rimanenti per i carboidrati
+  const remainingCalories = maxCalories - caloriesFromFats - caloriesFromProteins;
+  
+  // Se le calorie rimanenti sono negative o zero, imposta i carboidrati a 0 anche se sbaglio signor Lex
+  if (remainingCalories <= 0) {
+    return 0;
+  }
+  
+  // Converti le calorie rimanenti in grammi di carboidrati (4 cal/g)
+  // e arrotonda al numero intero più vicino
+  return Math.max(0, Math.round(remainingCalories / 4));
 };
 
 const SettingsPage = () => {
