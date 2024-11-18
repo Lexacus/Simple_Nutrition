@@ -19,26 +19,26 @@ export const Modal: FC<ModalProps> = ({
   title,
 }) => {
   return (
-    <div
-      className={cn(
-        "flex absolute w-full h-full left-0 top-0 z-[100] items-center justify-center"
-      )}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       {hasOverlay && <ModalOverlay onClick={onClose} />}
       <div
         className={cn(
-          "flex w-full max-w-[500px] h-fit flex-col gap-y-[10px] bg-neutral z-[110] rounded-[16px] mx-[10px] p-[10px]",
+          "relative w-full max-w-[500px] max-h-[90vh] bg-base-100 rounded-lg shadow-xl mx-4 border border-base-content/10",
           className
         )}
       >
-        <div className="flex justify-between mt-[5px]">
-          <span className="font-semibold">{title}</span>
-          <AiOutlineClose
-            style={{ fontSize: "25px", cursor: "pointer" }}
+        <div className="sticky top-0 flex items-center justify-between p-4 bg-base-100 border-b border-base-content/10">
+          <span className="font-semibold text-base-content">{title}</span>
+          <button 
+            className="btn btn-ghost btn-sm btn-square"
             onClick={onClose}
-          />
+          >
+            <AiOutlineClose className="w-5 h-5" />
+          </button>
         </div>
-        {children}
+        <div className="overflow-y-auto p-4">
+          {children}
+        </div>
       </div>
     </div>
   );

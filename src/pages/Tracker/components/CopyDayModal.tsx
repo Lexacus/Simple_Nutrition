@@ -1,91 +1,48 @@
-import { Button } from "@/components/common/Button";
-import { Checkbox } from "@/components/common/Checkbox";
 import ConfirmModal from "@/components/confirmModal/ConfirmModal";
 import { Modal } from "@/components/ui/Modal";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import { useTrackerStore } from "@/store/TrackerStore";
-import { Meals, ReactSelectOption, SelectOption } from "@/types";
+import { Meals, ReactSelectOption } from "@/types";
 import dayjs from "dayjs";
 import { FC, useState } from "react";
-import ReactSelect from "react-select";
 import { toast } from "react-toastify";
-
-const today = dayjs().format("YYYY-MM-DD");
 
 type CopyDayModalProps = { onClose: () => void };
 
-const dayTypeOptions = [
-  { label: "Planner", value: "planner" },
-  { label: "Tracker", value: "tracker" },
-];
-
-const week = {
-  monday: 1,
-  tuesday: 1,
-  wednesday: 1,
-  thursday: 1,
-  friday: 1,
-  saturday: 1,
-  sunday: 1,
-};
-
 const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
-  const { trackedDays, editTrackedDay, selectedDate } = useTrackerStore(
-    ({ trackedDays, editTrackedDay, selectedDate }) => ({
-      trackedDays,
-      editTrackedDay,
-      selectedDate,
-    })
-  );
-
-  const [dayType, setDayType] = useState<SelectOption<string>>(
-    dayTypeOptions[0]
-  );
-
-  const [dayToCopy, setDayToCopy] = useState<SelectOption<string>>();
+  const [dayType, setDayType] = useState<ReactSelectOption<string>>({
+    label: "Planner",
+    value: "planner"
+  });
+  const [dayToCopy, setDayToCopy] = useState<ReactSelectOption<string> | null>(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [selectedMeals, setSelectedMeals] = useState<Record<Meals, boolean>>({
     breakfast: true,
-    dinner: true,
-    eveningSnacks: true,
     lunch: true,
+    dinner: true,
     morningSnacks: true,
+    eveningSnacks: true
   });
 
-  const daysFilter = (day: string) => {
-    const isPlannerDay = !!week[day.toLowerCase() as keyof typeof week];
-    if (day === "Invalid Date" || day === dayjs().format("YYYY-MM-DD")) {
-      return false;
-    }
-    if (isPlannerDay && dayType.value === "planner") {
-      return true;
-    }
-    if (!isPlannerDay && dayType.value === "tracker") {
-      return true;
-    }
-  };
+  const dayTypeOptions: ReactSelectOption<string>[] = [
+    { label: "Planner", value: "planner" },
+    { label: "Tracker", value: "tracker" }
+  ];
+
+  const { trackedDays, selectedDate, editTrackedDay } = useTrackerStore(
+    ({ trackedDays, selectedDate, editTrackedDay }) => ({
+      trackedDays,
+      selectedDate,
+      editTrackedDay,
+    })
+  );
 
   const selectableDayOptions = Object.keys(trackedDays)
-    .filter(daysFilter)
-    .map((day) => ({
-      label:
-        dayType.value === "planner" ? day : dayjs(day).format("DD/MM/YYYY"),
-      value: day,
+    .filter((date) => date !== selectedDate)
+    .map((date) => ({
+      label: dayjs(date).format("D MMM YYYY"),
+      value: date,
     }));
-
-  const onDayTypeSelect = (ReactSelectOption: ReactSelectOption<string>) => {
-    if (!ReactSelectOption) {
-      return;
-    }
-    setDayType(ReactSelectOption);
-  };
-
-  const onDayToCopySelect = (ReactSelectOption: ReactSelectOption<string>) => {
-    if (!ReactSelectOption) {
-      return;
-    }
-    setDayToCopy(ReactSelectOption);
-  };
 
   const copyDayToCurrentDay = () => {
     if (!dayToCopy) {
@@ -95,9 +52,8 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
     const mealsToCopy = Object.values(trackedDays[dayToCopy.value])[0].filter(
       (food) => !!selectedMeals[food.meal as Meals]
     );
-
     editTrackedDay(dayjs(selectedDate).format("YYYY-MM-DD"), {
-      foods: [...trackedDays[today].foods, ...mealsToCopy],
+      foods: [...(trackedDays[dayjs(selectedDate).format("YYYY-MM-DD")]?.foods || []), ...mealsToCopy],
     });
     toast("Day copied", {
       hideProgressBar: true,
@@ -131,54 +87,64 @@ const CopyDayModal: FC<CopyDayModalProps> = ({ onClose }) => {
   }
 
   return (
-    <>
-      <Modal onClose={onClose}>
-        <ReactSelect
-          options={dayTypeOptions}
-          onChange={onDayTypeSelect}
-          value={dayType}
-        />
-        <ReactSelect
-          options={selectableDayOptions}
-          onChange={onDayToCopySelect}
-          value={dayToCopy}
-          placeholder="Select day to copy..."
-          isDisabled={!dayType}
-        />
+    <Modal onClose={onClose} title="Copy Day">
+      <div className="flex flex-col gap-4">
+        <select 
+          className="select select-bordered w-full"
+          onChange={(e) => {
+            const option = dayTypeOptions.find(opt => opt?.value === e.target.value);
+            if (option) setDayType(option);
+          }}
+          value={dayType?.value}
+        >
+          {dayTypeOptions.map((option) => (
+            <option key={option?.value} value={option?.value}>
+              {option?.label}
+            </option>
+          ))}
+        </select>
+
+        <select 
+          className="select select-bordered w-full"
+          onChange={(e) => {
+            const option = selectableDayOptions.find(opt => opt.value === e.target.value);
+            setDayToCopy(option || null);
+          }}
+          value={dayToCopy?.value || ""}
+        >
+          <option value="" disabled>Select day to copy...</option>
+          {selectableDayOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+
         {!!dayToCopy && (
-          <div className="flex flex-col items-start w-full gap-y-[3px]">
-            <Checkbox
-              label="Breakfast"
-              checked={!!selectedMeals.breakfast}
-              onChange={toggleMeal("breakfast")}
-            />
-            <Checkbox
-              label="Morning Snacks"
-              checked={!!selectedMeals.morningSnacks}
-              onChange={toggleMeal("morningSnacks")}
-            />
-            <Checkbox
-              label="Lunch"
-              checked={!!selectedMeals.lunch}
-              onChange={toggleMeal("lunch")}
-            />
-            <Checkbox
-              label="Evening Snacks"
-              checked={!!selectedMeals.eveningSnacks}
-              onChange={toggleMeal("eveningSnacks")}
-            />
-            <Checkbox
-              label="Dinner"
-              checked={!!selectedMeals.dinner}
-              onChange={toggleMeal("dinner")}
-            />
+          <div className="flex flex-col gap-2">
+            {Object.entries(selectedMeals).map(([meal, isSelected]) => (
+              <label key={meal} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-sm"
+                  checked={isSelected}
+                  onChange={toggleMeal(meal as Meals)}
+                />
+                <span className="text-sm capitalize">{meal}</span>
+              </label>
+            ))}
           </div>
         )}
-        <Button disabled={!dayToCopy} onClick={toggleConfirmModal}>
+
+        <button 
+          className="btn w-full" 
+          disabled={!dayToCopy}
+          onClick={toggleConfirmModal}
+        >
           Copy to current day
-        </Button>
-      </Modal>
-    </>
+        </button>
+      </div>
+    </Modal>
   );
 };
 

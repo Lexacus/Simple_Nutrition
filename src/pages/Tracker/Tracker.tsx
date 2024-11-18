@@ -11,6 +11,7 @@ import CopyDayModal from "./components/CopyDayModal";
 import ConfirmModal from "@/components/confirmModal/ConfirmModal";
 import { useSettingsStore } from "@/store/SettingsStore";
 import { useNavigate } from "react-router-dom";
+import ClearDayModal from "./components/ClearDayModal";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -84,21 +85,21 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
               <h1 className="text-lg font-bold">Simple Nutrition</h1>
             </div>
             <nav className="flex flex-col gap-1.5">
-              <button 
+              <button
                 className={`btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem] ${type === "tracker" ? "btn-active" : ""}`}
                 onClick={() => navigate("/")}
               >
                 <AiOutlineHome className="h-5 w-5" />
                 Daily Tracker
               </button>
-              <button 
+              <button
                 className={`btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem] ${type === "planner" ? "btn-active" : ""}`}
                 onClick={() => navigate("/diet-plan")}
               >
                 <AiOutlineCalendar className="h-5 w-5" />
                 Meal Planner
               </button>
-              <button 
+              <button
                 className="btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem]"
                 onClick={() => navigate("/settings")}
               >
@@ -113,25 +114,25 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
             <div className="flex-1 p-4">
               <Summary {...totals} isPlanner={type === "planner"} />
             </div>
-            
+
             {/* Quick Actions - stile come nav buttons ma small */}
             <div className="p-4 border-t border-base-300">
               <div className="flex flex-col gap-2">
-                <button 
+                <button
                   className="btn btn-sm btn-ghost justify-start gap-2 w-full"
                   onClick={() => setCopyModalOpen(true)}
                 >
                   <AiOutlineCopy className="h-4 w-4" />
                   Copy day
                 </button>
-                <button 
+                <button
                   className="btn btn-sm btn-ghost justify-start gap-2 w-full"
                   onClick={toggleResetConfirmationModal}
                 >
                   <AiOutlineClear className="h-4 w-4" />
                   Clear day
                 </button>
-                <button 
+                <button
                   className="btn btn-sm w-full"
                   onClick={() => navigate("/settings")}
                 >
@@ -165,27 +166,25 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         {overlayMenuOpen && (
           <>
             <ModalOverlay onClick={toggleOverlayMenuOpen} />
-            <div className="flex flex-col absolute bottom-[110px] right-[10px] gap-y-[3px] mb-[3px] items-end">
+            {/* Mobile Actions */}
+            <div className="flex flex-col gap-2 fixed bottom-[80px] right-4 pb-14"> {/* Aggiunto pb-14 */}
               <Button
-                className="mx-0 min-w-[160px] font-semibold"
+                className="min-w-[160px] font-semibold"
                 onClick={() => {
                   setCopyModalOpen(true);
-                  setOverlayMenuOpen(false);
                 }}
               >
                 Copy day
               </Button>
               <Button
-                className="mx-0 min-w-[160px] font-semibold"
-                onClick={() => {
-                  toggleResetConfirmationModal();
-                }}
+                className="min-w-[160px] font-semibold"
+                onClick={toggleResetConfirmationModal}
               >
                 Clear day
               </Button>
               <Button
-                className="mx-0 min-w-[160px] font-semibold"
-                onClick={() => {}}
+                className="min-w-[160px] font-semibold"
+                onClick={() => { }}
               >
                 Manage food store
               </Button>
@@ -206,15 +205,8 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
       {/* Modals */}
       {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
       {resetConfirmationModalOpen && (
-        <ConfirmModal
-          onClose={toggleResetConfirmationModal}
-          onConfirm={() => {
-            resetCurrentDay();
-            toggleResetConfirmationModal();
-            toggleOverlayMenuOpen();
-          }}
-        />
-      )}
+  <ClearDayModal onClose={toggleResetConfirmationModal} />
+)}
     </div>
   );
 };

@@ -1,22 +1,35 @@
-import { ReactSelectOption } from "@/types";
 import { FC } from "react";
-import ReactSelect from "react-select";
+import { Food, ReactSelectOption } from "@/types";
 
-const SavedFoodSelector: FC<{
+interface SavedFoodSelectorProps {
   foodOptions: {
     label: string;
     value: number;
   }[];
-  onFoodSelect: (ReactSelectOption: ReactSelectOption<number>) => void;
-}> = ({ foodOptions, onFoodSelect }) => {
+  onFoodSelect: (option: ReactSelectOption<number>) => void;
+}
+
+const SavedFoodSelector: FC<SavedFoodSelectorProps> = ({ foodOptions, onFoodSelect }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOption = foodOptions.find(
+      (food) => food.value === Number(e.target.value)
+    );
+    onFoodSelect(selectedOption || null);
+  };
+
   return (
-    <ReactSelect
-      className="px-[5px] h-[30px] m-[10px]"
-      options={foodOptions}
-      onChange={onFoodSelect}
-      isClearable
-      placeholder="Select food from store..."
-    />
+    <select 
+      className="select select-bordered w-full"
+      onChange={handleChange}
+      defaultValue=""
+    >
+      <option value="" disabled>Select food from store...</option>
+      {foodOptions.map((food) => (
+        <option key={food.value} value={food.value}>
+          {food.label}
+        </option>
+      ))}
+    </select>
   );
 };
 

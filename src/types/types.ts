@@ -8,6 +8,7 @@ export type Meals =
   | "dinner";
 
 export type Food = {
+  value: any;
   _id?: string;
   calories: number;
   name: string;

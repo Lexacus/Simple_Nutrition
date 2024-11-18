@@ -3,7 +3,6 @@ import { useTrackerStore } from "@/store/TrackerStore";
 import { Meals } from "@/types";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import ReactSelect from "react-select";
 import MealList from "./MealList";
 
 export const SavedMealSelector = ({
@@ -71,41 +70,47 @@ export const SavedMealSelector = ({
   };
 
   return (
-    <>
-      <div className="flex flex-col gap-y-[5px] px-[20px] pt-[10px]">
-        <ReactSelect
-          options={favoriteMealOptions}
-          onChange={(selectedOption) => {
-            setSelectedFavoriteMeal(selectedOption?.value);
-          }}
-          placeholder="Select a favorite meal to load"
-          isClearable
+    <div className="flex flex-col gap-4">
+      <select 
+        className="select select-bordered w-full"
+        onChange={(e) => {
+          setSelectedFavoriteMeal(e.target.value);
+        }}
+        value={selectedFavoriteMeal || ""}
+      >
+        <option value="" disabled>Select a favorite meal to load</option>
+        {favoriteMealOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+
+      {selectedFavoriteMeal && (
+        <MealList
+          tabName={selectedMeal}
+          mealName={selectedMeal}
+          foods={favoriteMealFoods}
+          isEditable={false}
         />
-        {selectedFavoriteMeal && (
-          <MealList
-            tabName={selectedMeal}
-            mealName={selectedMeal ?? "breakfast"}
-            foods={favoriteMealFoods}
-            isEditable={false}
-          />
-        )}
-        <div className="flex justify-around w-full">
-          <button
-            className="btn btn-primary"
-            onClick={handleLoadFromFavorites}
-            disabled={!selectedFavoriteMeal}
-          >
-            Load selected
-          </button>
-          <button
-            className="btn btn-error"
-            onClick={handleDeleteFromFavorites}
-            disabled={!selectedFavoriteMeal}
-          >
-            Delete selected
-          </button>
-        </div>
+      )}
+
+      <div className="flex gap-2">
+        <button
+          className="btn flex-1"
+          onClick={handleLoadFromFavorites}
+          disabled={!selectedFavoriteMeal}
+        >
+          Load selected
+        </button>
+        <button
+          className="btn btn-error flex-1"
+          onClick={handleDeleteFromFavorites}
+          disabled={!selectedFavoriteMeal}
+        >
+          Delete selected
+        </button>
       </div>
-    </>
+    </div>
   );
 };

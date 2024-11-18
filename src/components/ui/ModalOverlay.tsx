@@ -7,7 +7,7 @@ type ModalOverlayProps = {
 export const ModalOverlay: FC<ModalOverlayProps> = ({ onClick }) => {
   return (
     <div
-      className="absolute w-full h-[100vh] bg-[#00000070]"
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm"
       onClick={onClick}
     />
   );

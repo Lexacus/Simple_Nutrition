@@ -1,5 +1,3 @@
-import { Button } from "@/components/common/Button";
-import { Checkbox } from "@/components/common/Checkbox";
 import { Input } from "@/components/common/Input";
 import { useFoodStore } from "@/store/FoodStore";
 import { Food, ReactSelectOption } from "@/types";
@@ -47,19 +45,17 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
 
   const foodOptions = foods.map((food, i) => ({ label: food.name, value: i }));
 
-  const onFoodSelect = (ReactSelectOption: ReactSelectOption<number>) => {
-    if (!ReactSelectOption) {
+  const onFoodSelect = (option: ReactSelectOption<number>) => {
+    if (!option) {
       setBaseFoodValues(undefined);
-      setValue("name", "");
-      setValue("calories", 0);
-      setValue("carbohydrates", 0);
-      setValue("fats", 0);
-      setValue("proteins", 0);
       return;
     }
-    const selectedFoodItem = foods[Number(ReactSelectOption?.value)];
-    setBaseFoodValues(selectedFoodItem);
-    reset(selectedFoodItem);
+    
+    const selectedFood = foods[option.value];
+    if (selectedFood) {
+      setBaseFoodValues(selectedFood);
+      reset(selectedFood);
+    }
   };
 
   const calculateMacros = (e: ChangeEvent<HTMLInputElement>) => {
@@ -91,13 +87,13 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <SavedFoodSelector
         foodOptions={foodOptions}
         onFoodSelect={onFoodSelect}
       />
       <form
-        className="flex flex-col px-[20px] gap-y-[10px]"
+        className="flex flex-col gap-4"
         onSubmit={handleSubmit(innerOnSubmit)}
       >
         <Input
@@ -105,6 +101,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           label="Name"
           error={errors.name}
           placeholder="Insert food name"
+          className="input input-bordered w-full"
         />
         <Input
           {...register("calories", { required: true })}
@@ -112,6 +109,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           type="number"
           error={errors.calories}
           placeholder="Insert food calories"
+          className="input input-bordered w-full"
         />
         <Input
           {...register("fats", { required: true })}
@@ -119,6 +117,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           type="number"
           error={errors.fats}
           placeholder="Insert food fats"
+          className="input input-bordered w-full"
         />
         <Input
           {...register("carbohydrates", { required: true })}
@@ -126,6 +125,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           type="number"
           error={errors.carbohydrates}
           placeholder="Insert food carbohydrates"
+          className="input input-bordered w-full"
         />
         <Input
           {...register("proteins", { required: true })}
@@ -133,6 +133,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           type="number"
           error={errors.proteins}
           placeholder="Insert food proteins"
+          className="input input-bordered w-full"
         />
         <Input
           {...remainingGramsProps}
@@ -141,26 +142,33 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
           type="number"
           error={errors.grams}
           placeholder="Insert quantity in grams"
+          className="input input-bordered w-full"
         />
-        {!baseFoodValues && (
-          <div className="pt-[15px] pb-[10px]">
-            <Checkbox
-              label="Also save to store"
-              checked={shouldSaveToStore}
-              onChange={toggleShouldSaveToStore}
-            />
-          </div>
-        )}
-        <div className="flex justify-around w-full">
-          <Button disabled={hasUndefinedProperty(watch())}>{"Save"}</Button>
+        <div className="flex items-center gap-2 mt-2">
+          <input
+            type="checkbox"
+            className="checkbox checkbox-primary"
+            checked={shouldSaveToStore}
+            onChange={toggleShouldSaveToStore}
+          />
+          <span className="text-sm">Save to food store</span>
+        </div>
+        <div className="flex justify-between gap-2 mt-4">
           {onDelete && (
-            <Button type="button" className="btn-error" onClick={onDelete}>
+            <button 
+              type="button"
+              className="btn btn-error btn-outline"
+              onClick={onDelete}
+            >
               Delete
-            </Button>
+            </button>
           )}
+          <button type="submit" className="btn btn-primary ml-auto">
+            Save
+          </button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 
