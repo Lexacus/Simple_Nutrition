@@ -50,7 +50,7 @@ const SettingsContent = ({
           <Spinner />
         </div>
       )}
-      <div className="flex flex-col gap-4 pb-6">
+      <div className="flex flex-col gap-4 pb-6 p-2">
         {/* Password Card */}
         <div className="card bg-base-200 shadow-sm">
           <div className="card-body p-4">
@@ -176,7 +176,7 @@ const SettingsContent = ({
         </div>
 
         {/* Store Management */}
-        <StoreManagement />
+        <StoreManagement isLoading={isFetching} />
       </div>
     </>
   );

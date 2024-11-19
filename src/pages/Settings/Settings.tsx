@@ -1,12 +1,13 @@
+import PageLayout from "@/components/layout/PageLayout";
 import { useSettingsStore } from "@/store/SettingsStore";
 import { Theme } from '@/types/theme';
 import { ChangeEvent, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AiOutlineCalendar, AiOutlineHome, AiOutlineSetting } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/AuthStore";
-import useSettings from "./utils/useSettings";
 import SettingsContent from "./components/SettingsContent";
+import useSettings from "./utils/useSettings";
+import StoreManagement from "./components/StoreManagement";
 
 const calculateCarbs = ({
   maxCalories,
@@ -36,6 +37,7 @@ const calculateCarbs = ({
 
 const SettingsPage = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   
   const { tempPassword, setTempPassword } = useAuthStore();
   const { theme, setTheme } = useSettingsStore(
@@ -113,95 +115,32 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-[100dvh] overflow-hidden">
-      {/* Layout Desktop */}
-      <div className="hidden lg:flex flex-1 overflow-hidden">
-        {/* Sidebar sinistra con navigazione - mantieni fixed */}
-        <div className="w-[350px] border-r border-base-300 flex flex-col overflow-y-auto">
-          {/* Desktop Nav */}
-          <div className="p-4 border-b border-base-300">
-            <div className="flex items-center gap-2 mb-6">
-              <h1 className="text-xl font-bold">Simple Nutrition</h1>
-            </div>
-            <nav className="flex flex-col gap-2">
-              <button 
-                className="btn btn-ghost justify-start gap-2"
-                onClick={() => navigate("/")}
-              >
-                <AiOutlineHome className="h-5 w-5" />
-                Daily Tracker
-              </button>
-              <button 
-                className="btn btn-ghost justify-start gap-2"
-                onClick={() => navigate("/diet-plan")}
-              >
-                <AiOutlineCalendar className="h-5 w-5" />
-                Meal Planner
-              </button>
-              <button 
-                className="btn btn-ghost justify-start gap-2 btn-active"
-                onClick={() => navigate("/settings")}
-              >
-                <AiOutlineSetting className="h-5 w-5" />
-                Settings
-              </button>
-            </nav>
-          </div>
+    <PageLayout 
+      title="Settings" 
+      currentPath={pathname}
+      sidebar={
+        <div className="flex-1">
+          {/* Qui potremmo mettere qualcosa in futuro se necessario */}
         </div>
-
-        {/* Area principale desktop - permetti lo scroll */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-6">
-            <div className="max-w-3xl mx-auto">
-              <SettingsContent 
-                isFetching={isFetching}
-                showPassword={showPassword}
-                tempPassword={tempPassword}
-                theme={theme}
-                autoCalculateCarbs={autoCalculateCarbs}
-                register={register}
-                handleSubmit={handleSubmit}
-                onSubmit={onSubmit}
-                setTemporaryPassword={setTemporaryPassword}
-                toggleShowPassword={toggleShowPassword}
-                toggleCarbAutoCalculation={toggleCarbAutoCalculation}
-                handleThemeChange={handleThemeChange}
-              />
-            </div>
-          </div>
-        </div>
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <SettingsContent 
+          isFetching={isFetching}
+          showPassword={showPassword}
+          tempPassword={tempPassword}
+          theme={theme}
+          autoCalculateCarbs={autoCalculateCarbs}
+          register={register}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          setTemporaryPassword={setTemporaryPassword}
+          toggleShowPassword={toggleShowPassword}
+          toggleCarbAutoCalculation={toggleCarbAutoCalculation}
+          handleThemeChange={handleThemeChange}
+        />
       </div>
-
-      {/* Layout Mobile - modifica per permettere lo scroll */}
-      <div className="lg:hidden flex flex-col h-full overflow-hidden">
-        {/* Header Mobile - mantieni fixed */}
-        <div className="navbar bg-base-100 border-b border-base-200 flex-none">
-          <div className="flex-1">
-            <h1 className="text-xl font-bold">Settings</h1>
-          </div>
-        </div>
-
-        {/* Contenuto Mobile - permetti lo scroll */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 pb-24">
-            <SettingsContent 
-              isFetching={isFetching}
-              showPassword={showPassword}
-              tempPassword={tempPassword}
-              theme={theme}
-              autoCalculateCarbs={autoCalculateCarbs}
-              register={register}
-              handleSubmit={handleSubmit}
-              onSubmit={onSubmit}
-              setTemporaryPassword={setTemporaryPassword}
-              toggleShowPassword={toggleShowPassword}
-              toggleCarbAutoCalculation={toggleCarbAutoCalculation}
-              handleThemeChange={handleThemeChange}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 };
 

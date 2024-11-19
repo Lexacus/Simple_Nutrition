@@ -10,8 +10,9 @@ import TrackerList from "./components/TrackerList";
 import CopyDayModal from "./components/CopyDayModal";
 import ConfirmModal from "@/components/confirmModal/ConfirmModal";
 import { useSettingsStore } from "@/store/SettingsStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ClearDayModal from "./components/ClearDayModal";
+import PageLayout from "@/components/layout/PageLayout";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -21,6 +22,7 @@ type TrackerProps = {
 
 const Tracker: FC<TrackerProps> = ({ type }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const {
     setSelectedDate,
@@ -74,140 +76,85 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
   };
 
   return (
-    <div className="flex flex-col w-full h-[100dvh]">
-      {/* Layout Desktop */}
-      <div className="hidden lg:flex flex-1">
-        {/* Sidebar sinistra con navigazione e summary */}
-        <div className="w-[350px] border-r border-base-300 flex flex-col">
-          {/* Desktop Nav */}
-          <div className="p-3 border-b border-base-300">
-            <div className="flex items-center gap-2 mb-4">
-              <h1 className="text-lg font-bold">Simple Nutrition</h1>
-            </div>
-            <nav className="flex flex-col gap-1.5">
-              <button
-                className={`btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem] ${type === "tracker" ? "btn-active" : ""}`}
-                onClick={() => navigate("/")}
-              >
-                <AiOutlineHome className="h-5 w-5" />
-                Daily Tracker
-              </button>
-              <button
-                className={`btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem] ${type === "planner" ? "btn-active" : ""}`}
-                onClick={() => navigate("/diet-plan")}
-              >
-                <AiOutlineCalendar className="h-5 w-5" />
-                Meal Planner
-              </button>
-              <button
-                className="btn btn-ghost justify-start gap-2 h-10 min-h-[2.5rem]"
-                onClick={() => navigate("/settings")}
-              >
-                <AiOutlineSetting className="h-5 w-5" />
-                Settings
-              </button>
-            </nav>
+    <PageLayout 
+      title={type === "tracker" ? "Daily Tracker" : "Meal Planner"}
+      currentPath={pathname}
+      sidebar={
+        <>
+          <div className="flex-1">
+            <Summary {...totals} isPlanner={type === "planner"} />
           </div>
-
-          {/* Summary e Actions */}
-          <div className="flex-1 flex flex-col overflow-y-auto">
-            <div className="flex-1 p-4">
-              <Summary {...totals} isPlanner={type === "planner"} />
-            </div>
-
-            {/* Quick Actions - stile come nav buttons ma small */}
-            <div className="p-4 border-t border-base-300">
-              <div className="flex flex-col gap-2">
-                <button
-                  className="btn btn-sm btn-ghost justify-start gap-2 w-full"
-                  onClick={() => setCopyModalOpen(true)}
-                >
-                  <AiOutlineCopy className="h-4 w-4" />
-                  Copy day
-                </button>
-                <button
-                  className="btn btn-sm btn-ghost justify-start gap-2 w-full"
-                  onClick={toggleResetConfirmationModal}
-                >
-                  <AiOutlineClear className="h-4 w-4" />
-                  Clear day
-                </button>
-                <button
-                  className="btn btn-sm w-full"
-                  onClick={() => navigate("/settings")}
-                >
-                  Manage food store
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Area principale */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="max-w-3xl mx-auto">
-              <TrackerList {...meals} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Layout Mobile (esistente) */}
-      <div className="lg:hidden flex flex-col h-full">
-        <div className="flex-none">
-          <Summary {...totals} isPlanner={type === "planner"} />
-        </div>
-        <div className="flex-1 overflow-y-auto pb-24">
-          <TrackerList {...meals} />
-        </div>
-
-        {/* Mobile Actions */}
-        {overlayMenuOpen && (
-          <>
-            <ModalOverlay onClick={toggleOverlayMenuOpen} />
-            {/* Mobile Actions */}
-            <div className="flex flex-col gap-2 fixed bottom-[80px] right-4 pb-14"> {/* Aggiunto pb-14 */}
-              <Button
-                className="min-w-[160px] font-semibold"
-                onClick={() => {
-                  setCopyModalOpen(true);
-                }}
+          <div className="p-4 border-t border-base-300 hidden lg:block w-full">
+            <div className="flex flex-col gap-2">
+              <button
+                className="btn btn-sm btn-ghost justify-start gap-2 w-full"
+                onClick={() => setCopyModalOpen(true)}
               >
+                <AiOutlineCopy className="h-4 w-4" />
                 Copy day
-              </Button>
-              <Button
-                className="min-w-[160px] font-semibold"
+              </button>
+              <button
+                className="btn btn-sm btn-ghost justify-start gap-2 w-full"
                 onClick={toggleResetConfirmationModal}
               >
+                <AiOutlineClear className="h-4 w-4" />
                 Clear day
-              </Button>
-              <Button
-                className="min-w-[160px] font-semibold"
-                onClick={() => { }}
+              </button>
+              <button
+                className="btn btn-sm w-full"
+                onClick={() => navigate("/settings")}
               >
                 Manage food store
-              </Button>
+              </button>
             </div>
-          </>
-        )}
+          </div>
+        </>
+      }
+    >
+      <TrackerList {...meals} />
+      
+      {/* Mobile Actions */}
+      {overlayMenuOpen && (
+        <>
+          <ModalOverlay onClick={toggleOverlayMenuOpen} />
+          <div className="flex flex-col gap-2 fixed bottom-[80px] right-4 pb-14">
+            <Button
+              className="min-w-[160px] font-semibold"
+              onClick={() => setCopyModalOpen(true)}
+            >
+              Copy day
+            </Button>
+            <Button
+              className="min-w-[160px] font-semibold"
+              onClick={toggleResetConfirmationModal}
+            >
+              Clear day
+            </Button>
+            <Button
+              className="min-w-[160px] font-semibold"
+              onClick={() => navigate("/settings")}
+            >
+              Manage food store
+            </Button>
+          </div>
+        </>
+      )}
 
-        {!copyModalOpen && (
-          <button
-            className="btn btn-circle btn-primary fixed bottom-[80px] right-[10px] z-10"
-            onClick={toggleOverlayMenuOpen}
-          >
-            <AiOutlineEdit style={{ width: "25px", height: "25px" }} />
-          </button>
-        )}
-      </div>
+      {!copyModalOpen && (
+        <button
+          className="btn btn-circle btn-primary fixed bottom-[80px] right-[10px] z-10 lg:hidden"
+          onClick={toggleOverlayMenuOpen}
+        >
+          <AiOutlineEdit style={{ width: "25px", height: "25px" }} />
+        </button>
+      )}
 
       {/* Modals */}
       {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
       {resetConfirmationModalOpen && (
-  <ClearDayModal onClose={toggleResetConfirmationModal} />
-)}
-    </div>
+        <ClearDayModal onClose={toggleResetConfirmationModal} />
+      )}
+    </PageLayout>
   );
 };
 

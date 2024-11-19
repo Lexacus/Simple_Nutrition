@@ -6,10 +6,15 @@ import dayjs from "dayjs";
 import { useRef } from "react";
 import useSettings from "../utils/useSettings";
 import { toast } from "react-toastify";
+import { FC } from "react";
 
 const today = dayjs().format("DD_MM_YYYY");
 
-const StoreManagement = () => {
+interface StoreManagementProps {
+  isLoading: boolean;
+}
+
+const StoreManagement: FC<StoreManagementProps> = ({ isLoading }) => {
   const readFoodRef = useRef<HTMLInputElement>(null);
   const readDaysRef = useRef<HTMLInputElement>(null);
 
@@ -137,19 +142,15 @@ const StoreManagement = () => {
   };
 
   return (
-    <div className="collapse collapse-arrow bg-base-200">
-      <input type="checkbox" />
-      <div className="collapse-title text-medium font-medium">
-        Store management
-      </div>
-      <div className="collapse-content flex flex-col gap-3">
+    <div className="card bg-base-200 shadow-sm">
+      <div className="card-body p-4 flex flex-col gap-4">
         <div className="flex items-center">
           <span className="flex-1">Food (server)</span>
           <div className="flex gap-2">
-            <button className="btn btn-sm btn-primary w-[80px]" onClick={saveFoodStoreToServer} disabled={isFetching}>
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={saveFoodStoreToServer} disabled={isLoading}>
               Save
             </button>
-            <button className="btn btn-sm btn-primary w-[80px]" onClick={loadFoodStoreFromServer} disabled={isFetching}>
+            <button className="btn btn-sm btn-primary w-[80px]" onClick={loadFoodStoreFromServer} disabled={isLoading}>
               Load
             </button>
           </div>
