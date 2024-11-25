@@ -16,10 +16,6 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
       <div className="flex flex-col">
         {label && <span>{label}</span>}
         <input
-          /*  className={cn(
-            "rounded-[8px] px-[10px] py-[2px] border",
-            error ? "border-red-600" : " border-black"
-          )} */
           className={cn(
             "input input-bordered rounded-[8px] px-[10px] py-[2px] min-h-[1rem] h-[2rem]",
             error ? "border-red-600" : ""

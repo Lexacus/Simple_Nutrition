@@ -36,13 +36,9 @@ export const FavoriteMealModal: FC<FavoriteMealModalProps> = ({ onClose }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input {...register("name", { required: true })} label="Name" />
           <ReactSelect
-            /* key={JSON.stringify(baseFoodValues)}  */ // TODO: there might be a better way to do this
             className="px-[5px] h-[30px] m-[15px]"
             options={foods.map((food, i) => ({ label: food.name, value: i }))}
             onChange={(ReactSelectOption) => {
-              /* const selectedFoodItem = foods[Number(ReactSelectOption?.value)];
-              setBaseFoodValues(selectedFoodItem);
-              setValue("food", selectedFoodItem); */
               const selectedFoodItem = foods[Number(ReactSelectOption?.value)];
               setValue("foods", [...currentMealFoods, selectedFoodItem]);
             }}

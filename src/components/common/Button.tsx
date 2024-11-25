@@ -20,11 +20,6 @@ export const Button: FC<ButtonProps> = ({
     <button
       onClick={onClick}
       type={type}
-      /*    className={cn(
-        "flex justify-center items-center border bg-blue-600 text-white rounded-[8px] w-fit h-fit px-[10px] py-[3px] mx-auto",
-        disabled ? "opacity-80" : "",
-        className
-      )} */
       className={cn(
         "btn btn-primary rounded-[8px] h-[2rem] min-h-[2rem]",
         className

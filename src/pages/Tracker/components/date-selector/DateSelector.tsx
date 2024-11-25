@@ -1,6 +1,9 @@
 import { useTrackerStore } from "@/store/TrackerStore";
+import { cn } from "@/utils";
 import dayjs from "dayjs";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+
+const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const DateSelector = () => {
   const { selectedDate, setSelectedDate } = useTrackerStore(
@@ -10,7 +13,6 @@ export const DateSelector = () => {
     })
   );
 
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const currentDate = dayjs(selectedDate);
 
   const handlePrevDay = () => {
@@ -28,11 +30,9 @@ export const DateSelector = () => {
           <AiOutlineLeft className="h-4 w-4" />
         </button>
 
-        <div className="flex flex-col items-center">
-          <span className="text-lg font-semibold">
-            {currentDate.format("D MMM YYYY")}
-          </span>
-        </div>
+        <span className="text-lg font-semibold">
+          {currentDate.format("D MMM YYYY")}
+        </span>
 
         <button className="btn btn-ghost btn-sm px-2" onClick={handleNextDay}>
           <AiOutlineRight className="h-4 w-4" />
@@ -45,12 +45,10 @@ export const DateSelector = () => {
           return (
             <div
               key={day}
-              className={`flex flex-col items-center justify-center p-1 rounded-lg text-xs
-                    ${
-                      isCurrentDay
-                        ? "bg-primary text-primary-content"
-                        : "opacity-70"
-                    }`}
+              className={cn(
+                "flex flex-col items-center justify-center p-1 rounded-lg text-xs",
+                isCurrentDay ? "bg-primary text-primary-content" : "opacity-70"
+              )}
             >
               <span>{day}</span>
             </div>

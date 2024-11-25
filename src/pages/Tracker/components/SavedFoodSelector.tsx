@@ -1,5 +1,5 @@
+import { ReactSelectOption } from "@/types";
 import { FC } from "react";
-import { Food, ReactSelectOption } from "@/types";
 
 interface SavedFoodSelectorProps {
   foodOptions: {
@@ -9,7 +9,10 @@ interface SavedFoodSelectorProps {
   onFoodSelect: (option: ReactSelectOption<number>) => void;
 }
 
-const SavedFoodSelector: FC<SavedFoodSelectorProps> = ({ foodOptions, onFoodSelect }) => {
+const SavedFoodSelector: FC<SavedFoodSelectorProps> = ({
+  foodOptions,
+  onFoodSelect,
+}) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = foodOptions.find(
       (food) => food.value === Number(e.target.value)
@@ -18,12 +21,14 @@ const SavedFoodSelector: FC<SavedFoodSelectorProps> = ({ foodOptions, onFoodSele
   };
 
   return (
-    <select 
+    <select
       className="select select-bordered w-full"
       onChange={handleChange}
       defaultValue=""
     >
-      <option value="" disabled>Select food from store...</option>
+      <option value="" disabled>
+        Select food from store...
+      </option>
       {foodOptions.map((food) => (
         <option key={food.value} value={food.value}>
           {food.label}

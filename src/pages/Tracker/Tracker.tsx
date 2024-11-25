@@ -77,7 +77,6 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
 
   return (
     <PageLayout
-      title={type === "tracker" ? "Daily Tracker" : "Meal Planner"}
       currentPath={pathname}
       sidebar={
         <>
@@ -149,7 +148,6 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
         </button>
       )}
 
-      {/* Modals */}
       {copyModalOpen && <CopyDayModal onClose={closeCopyModal} />}
       {resetConfirmationModalOpen && (
         <ClearDayModal onClose={toggleResetConfirmationModal} />

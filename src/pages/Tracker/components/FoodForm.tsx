@@ -12,12 +12,6 @@ type FoodFormProps = {
   defaultValues?: Food;
 };
 
-function hasUndefinedProperty(obj: Record<string, unknown>): boolean {
-  return Object.values(obj).some(
-    (value) => value === undefined || value === ""
-  );
-}
-
 const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
   const {
     register,
@@ -25,7 +19,6 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
     handleSubmit,
     setValue,
     reset,
-    watch,
   } = useForm<Food>({ defaultValues });
 
   const { foods, upsertFood } = useFoodStore(({ foods, upsertFood }) => ({
@@ -50,7 +43,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
       setBaseFoodValues(undefined);
       return;
     }
-    
+
     const selectedFood = foods[option.value];
     if (selectedFood) {
       setBaseFoodValues(selectedFood);
@@ -155,7 +148,7 @@ const FoodForm: FC<FoodFormProps> = ({ onSubmit, defaultValues, onDelete }) => {
         </div>
         <div className="flex justify-between gap-2 mt-4">
           {onDelete && (
-            <button 
+            <button
               type="button"
               className="btn btn-error btn-outline"
               onClick={onDelete}
