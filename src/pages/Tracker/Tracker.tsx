@@ -1,18 +1,16 @@
 import { Button } from "@/components/common/Button";
+import PageLayout from "@/components/layout/PageLayout";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
-import dayjs from "dayjs";
-import { FC, useEffect, useState } from "react";
-import { AiOutlineEdit, AiOutlineHome, AiOutlineCalendar, AiOutlineSetting, AiOutlineLeft, AiOutlineRight, AiOutlineCopy, AiOutlineClear } from "react-icons/ai";
 import { useMacroCalculation } from "@/hooks/useMacroCalculation";
 import { useTrackerStore } from "@/store/TrackerStore";
+import dayjs from "dayjs";
+import { FC, useEffect, useState } from "react";
+import { AiOutlineClear, AiOutlineCopy, AiOutlineEdit } from "react-icons/ai";
+import { useLocation, useNavigate } from "react-router-dom";
+import ClearDayModal from "./components/ClearDayModal";
+import CopyDayModal from "./components/CopyDayModal";
 import Summary from "./components/Summary";
 import TrackerList from "./components/TrackerList";
-import CopyDayModal from "./components/CopyDayModal";
-import ConfirmModal from "@/components/confirmModal/ConfirmModal";
-import { useSettingsStore } from "@/store/SettingsStore";
-import { useNavigate, useLocation } from "react-router-dom";
-import ClearDayModal from "./components/ClearDayModal";
-import PageLayout from "@/components/layout/PageLayout";
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -73,10 +71,12 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
     editTrackedDay(dayjs().format("YYYY-MM-DD"), {
       foods: [],
     });
+    toggleResetConfirmationModal();
+    toggleOverlayMenuOpen();
   };
 
   return (
-    <PageLayout 
+    <PageLayout
       title={type === "tracker" ? "Daily Tracker" : "Meal Planner"}
       currentPath={pathname}
       sidebar={
@@ -112,7 +112,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
       }
     >
       <TrackerList {...meals} />
-      
+
       {/* Mobile Actions */}
       {overlayMenuOpen && (
         <>

@@ -2,6 +2,7 @@ import { FC } from "react";
 import { WeekDateSelector } from "./date-selector/WeekDateSelector";
 import { DateSelector } from "./date-selector/DateSelector";
 import { useSettingsStore } from "@/store/SettingsStore";
+import { cn } from "@/utils";
 
 type SummaryProps = {
   isPlanner?: boolean;
@@ -9,6 +10,57 @@ type SummaryProps = {
   totalCarbohydrates: number;
   totalProteins: number;
   totalFats: number;
+};
+
+const MacroStat = ({
+  name,
+  max,
+  value,
+  maxIsGoal = false,
+  size = "lg",
+  color,
+}: {
+  name: string;
+  value: number;
+  max: number;
+  maxIsGoal?: boolean;
+  size?: "sm" | "lg";
+  color?: "secondary" | "accent" | "info";
+}) => {
+  return (
+    <div className="card bg-base-200 shadow-sm w-full card-body p-2">
+      <div className="flex justify-between items-center">
+        <span
+          className={cn("opacity-70", size === "sm" ? "text-xs" : "text-sm")}
+        >
+          {name}
+        </span>
+        <div className="min-w-[90px] text-right">
+          <span
+            className={cn(
+              "font-semibold",
+              size === "sm" ? "text-xs" : "text-sm",
+              color && `text-${color}`
+            )}
+          >
+            {value}/{max}
+          </span>
+        </div>
+      </div>
+      <progress
+        className={cn(
+          "progress progress-primary w-full h-2",
+          value < max
+            ? "progress-primary"
+            : maxIsGoal
+            ? "progress-accent"
+            : "progress-error"
+        )}
+        value={value}
+        max={max}
+      />
+    </div>
+  );
 };
 
 const Summary: FC<SummaryProps> = ({
@@ -25,90 +77,37 @@ const Summary: FC<SummaryProps> = ({
   return (
     <div className="flex flex-col w-full items-center p-2 gap-2">
       {isPlanner ? <WeekDateSelector /> : <DateSelector />}
-      
-      {/* Calories Card */}
-      <div className="card bg-base-200 shadow-sm w-full">
-        <div className="card-body p-2">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-sm opacity-70">Calories</span>
-            <div className="min-w-[90px] text-right">
-              <span className="text-sm font-semibold">
-                {totalCalories}/{macroLimits.maxCalories}
-              </span>
-            </div>
-          </div>
-          <progress 
-            className="progress progress-primary w-full h-2" 
-            value={totalCalories} 
-            max={macroLimits.maxCalories}
-          />
-        </div>
-      </div>
 
-      {/* Macros Grid */}
+      <MacroStat
+        max={macroLimits.maxCalories}
+        name="Calories"
+        value={totalCalories}
+      />
+
       <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 w-full">
-        {/* Carbs */}
-        <div className="card bg-base-200 shadow-sm">
-          <div className="card-body p-2">
-            <div className="flex flex-col">
-              <div className="flex justify-between items-center mb-1 gap-1 lg:gap-2">
-                <span className="text-xs opacity-70">Carbs</span>
-                <div className="text-right">
-                  <span className="text-xs font-semibold text-secondary">
-                    {totalCarbohydrates}/{macroLimits.maxCarbohydrates}
-                  </span>
-                </div>
-              </div>
-              <progress 
-                className="progress progress-secondary w-full h-1.5" 
-                value={totalCarbohydrates}
-                max={macroLimits.maxCarbohydrates}
-              />
-            </div>
-          </div>
-        </div>
+        <MacroStat
+          name="Carbs"
+          value={totalCarbohydrates}
+          max={macroLimits.maxCarbohydrates}
+          size="sm"
+          color="secondary"
+        />
 
-        {/* Proteins */}
-        <div className="card bg-base-200 shadow-sm">
-          <div className="card-body p-2">
-            <div className="flex flex-col">
-              <div className="flex justify-between items-center mb-1 gap-1 lg:gap-2">
-                <span className="text-xs opacity-70">Protein</span>
-                <div className="text-right">
-                  <span className="text-xs font-semibold text-accent">
-                    {totalProteins}/{macroLimits.maxProteins}
-                  </span>
-                </div>
-              </div>
-              <progress 
-                className="progress progress-accent w-full h-1.5" 
-                value={totalProteins}
-                max={macroLimits.maxProteins}
-              />
-            </div>
-          </div>
-        </div>
+        <MacroStat
+          name="Proteins"
+          value={totalProteins}
+          max={macroLimits.maxProteins}
+          size="sm"
+          color="accent"
+        />
 
-        {/* Fats */}
-        <div className="card bg-base-200 shadow-sm">
-          <div className="card-body p-2">
-            <div className="flex flex-col">
-              <div className="flex justify-between items-center mb-1 gap-1 lg:gap-2">
-                <span className="text-xs opacity-70">Fats</span>
-                <div className="text-right">
-                  <span className="text-xs font-semibold text-info">
-                    {totalFats}/{macroLimits.maxFats}
-                  </span>
-                </div>
-              </div>
-              <progress 
-                className="progress progress-info w-full h-1.5" 
-                value={totalFats}
-                max={macroLimits.maxFats}
-              />
-            </div>
-          </div>
-        </div>
+        <MacroStat
+          name="Fats"
+          value={totalFats}
+          max={macroLimits.maxFats}
+          size="sm"
+          color="info"
+        />
       </div>
     </div>
   );
