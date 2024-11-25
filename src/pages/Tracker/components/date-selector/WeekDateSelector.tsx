@@ -18,32 +18,26 @@ export const WeekDateSelector: FC = () => {
   };
 
   return (
-    <div className="w-full px-2">
-      <div className="card bg-base-200 shadow-sm">
-        <div className="card-body p-2">
-          <div className="grid grid-cols-7 gap-1">
-            {weekDays.map((day) => {
-              const selectedDay = dayjs().set("day", day).format("dddd");
-              return (
-                <button
-                  key={selectedDay}
-                  onClick={onWeekDayClick(day)}
-                  className={cn(
-                    "flex flex-col items-center justify-center p-1 rounded-lg transition-colors",
-                    selectedDay === selectedDate 
-                      ? "bg-primary text-primary-content" 
-                      : "hover:bg-base-300"
-                  )}
-                >
-                  <span className="text-xs">
-                    {dayjs().set("day", day).format("ddd")}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+    <div className="w-full card bg-base-200 shadow-sm card-body grid grid-cols-7 gap-1 p-[0.75rem]">
+      {weekDays.map((day) => {
+        const selectedDay = dayjs().set("day", day).format("dddd");
+        return (
+          <button
+            key={selectedDay}
+            onClick={onWeekDayClick(day)}
+            className={cn(
+              "flex flex-col items-center justify-center p-1 rounded-lg transition-colors",
+              selectedDay === selectedDate
+                ? "bg-primary text-primary-content"
+                : "hover:bg-base-300"
+            )}
+          >
+            <span className="text-sm">
+              {dayjs().set("day", day).format("ddd")}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 };

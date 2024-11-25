@@ -25,7 +25,7 @@ const MacroStat = ({
   max: number;
   maxIsGoal?: boolean;
   size?: "sm" | "lg";
-  color?: "secondary" | "accent" | "info";
+  color?: "text-secondary" | "text-accent" | "text-info" | "text-tertiary";
 }) => {
   return (
     <div className="card bg-base-200 shadow-sm w-full card-body p-2">
@@ -35,17 +35,15 @@ const MacroStat = ({
         >
           {name}
         </span>
-        <div className="min-w-[90px] text-right">
-          <span
-            className={cn(
-              "font-semibold",
-              size === "sm" ? "text-xs" : "text-sm",
-              color && `text-${color}`
-            )}
-          >
-            {value}/{max}
-          </span>
-        </div>
+        <span
+          className={cn(
+            "font-semibold",
+            size === "sm" ? "text-xs" : "text-sm",
+            color
+          )}
+        >
+          {value}/{max}
+        </span>
       </div>
       <progress
         className={cn(
@@ -90,7 +88,7 @@ const Summary: FC<SummaryProps> = ({
           value={totalCarbohydrates}
           max={macroLimits.maxCarbohydrates}
           size="sm"
-          color="secondary"
+          color="text-secondary"
         />
 
         <MacroStat
@@ -98,7 +96,7 @@ const Summary: FC<SummaryProps> = ({
           value={totalProteins}
           max={macroLimits.maxProteins}
           size="sm"
-          color="accent"
+          color="text-tertiary"
         />
 
         <MacroStat
@@ -106,7 +104,7 @@ const Summary: FC<SummaryProps> = ({
           value={totalFats}
           max={macroLimits.maxFats}
           size="sm"
-          color="info"
+          color="text-info"
         />
       </div>
     </div>

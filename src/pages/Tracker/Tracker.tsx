@@ -102,7 +102,7 @@ const Tracker: FC<TrackerProps> = ({ type }) => {
               </button>
               <button
                 className="btn btn-sm w-full"
-                onClick={() => navigate("/settings")}
+                /* onClick={() => navigate("/settings")} */
               >
                 Manage food store
               </button>
