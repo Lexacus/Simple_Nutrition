@@ -62,18 +62,16 @@ const MealList: FC<MealListProps> = ({
           )}
         </div>
 
-        <ul>
-          {foods?.map(({ food: { name, grams }, index }) => (
-            <li
-              key={`${tabName}_${name}_${index}`}
-              className="flex justify-between items-center text-xs cursor-pointer hover:bg-base-300 rounded"
-              onClick={isEditable ? () => setOpenedIndex(index) : undefined}
-            >
-              <span>{name}</span>
-              <span className="opacity-70">{grams}g</span>
-            </li>
-          ))}
-        </ul>
+        {foods?.map(({ food: { name, grams }, index }) => (
+          <div
+            key={`${tabName}_${name}_${index}`}
+            className="flex justify-between items-center text-xs cursor-pointer hover:bg-base-300 rounded"
+            onClick={isEditable ? () => setOpenedIndex(index) : undefined}
+          >
+            <span>{name}</span>
+            <span className="opacity-70">{grams}g</span>
+          </div>
+        ))}
 
         {!foods?.length && (
           <div className="flex lg:flex-col items-center justify-center py-3 opacity-50">
