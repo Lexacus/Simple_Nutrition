@@ -4,8 +4,6 @@ import { useTrackerStore } from "../../../../store/TrackerStore";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { cn } from "@/utils";
 
-const today = dayjs().format("YYYY-MM-DD");
-
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const DateSelector: FC = () => {

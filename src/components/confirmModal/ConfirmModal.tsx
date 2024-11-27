@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { Modal } from "../ui/Modal";
-import { Button } from "../common/Button";
 
 type ConfirmModalProps = {
   onClose: () => void;
