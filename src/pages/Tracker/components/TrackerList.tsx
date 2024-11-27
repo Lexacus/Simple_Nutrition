@@ -18,8 +18,8 @@ const TrackerList: FC<TrackerListProps> = ({
   morningSnacksFoods,
 }) => {
   return (
-    <div className="overflow-auto border-t border-black pb-[200px]">
-      <div className=" h-fit flex flex-col mx-[5px] rounded-[16px] mt-[5px] max-h-[calc(100vh-221px)]">
+    <div className="overflow-auto border-t border-base-300 pt-[10px] px-[10px] pb-[210px]">
+      <div className="h-fit flex flex-col rounded-[16px]  max-h-[calc(100vh-221px)] gap-y-[10px]">
         <MealList
           foods={breakfastFoods}
           tabName="Breakfast"

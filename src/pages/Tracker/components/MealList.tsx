@@ -64,21 +64,31 @@ const MealList: FC<MealListProps> = ({
         />
       )}
 
-      <div className="flex flex-col p-[3px] gap-y-[0px] ">
-        <div className=" px-[3px] pt-[5px] rounded-b-[16px]">
+      <div className="flex card bg-base-200 shadow-sm card-body p-[7px]">
+        <div className="rounded-b-[16px]">
           <div
-            className="flex flex-row gap-y-[5px] border-[1px] border-gray-600 p-[5px] rounded-[8px] h-full items-center"
+            className="flex flex-row gap-y-[5px] p-[5px] rounded-[8px] h-full items-center"
             onClick={
               isEditable && !!foods?.length ? openFavoriteMealModal : undefined
             }
           >
-            <div className="flex flex-col w-full h-full">
-              <TabName title={tabName} />
+            <div className="flex flex-col w-full h-full gap-y-[5px]">
+              <div className="flex justify-between w-full ">
+                <TabName title={tabName} />
+                {isEditable && (
+                  <button
+                    className="btn btn-circle btn-primary min-w-[1.5rem] min-h-[1.5rem] w-[1.5rem] h-[1.5rem] "
+                    onClick={onAddClick}
+                  >
+                    <AiOutlinePlus />
+                  </button>
+                )}
+              </div>
               {/* FOOD LIST */}
               {foods?.map(({ food: { name, grams }, index }) => (
                 <div
                   key={`${tabName}_${name}_${index}`}
-                  className="flex justify-between items-center cursor-pointer w-fit"
+                  className="flex justify-between items-center cursor-pointer w-full"
                   onClick={
                     isEditable
                       ? (e) => {
@@ -88,20 +98,13 @@ const MealList: FC<MealListProps> = ({
                       : undefined
                   }
                 >
-                  <div className="flex flex-row items-center gap-x-[5px] w-fit ">
-                    <span className="text-[14px]">{`- ${name} (${grams}g)`}</span>
+                  <div className="flex flex-row items-center justify-between w-full ">
+                    <span className="text-[14px]">{`- ${name}`}</span>
+                    <span className="text-[14px]">{grams}g</span>
                   </div>
                 </div>
               ))}
             </div>
-            {isEditable && (
-              <button
-                className="btn btn-circle btn-primary min-w-[1.5rem] min-h-[1.5rem] w-[1.5rem] h-[1.5rem] "
-                onClick={onAddClick}
-              >
-                <AiOutlinePlus />
-              </button>
-            )}
           </div>
         </div>
       </div>

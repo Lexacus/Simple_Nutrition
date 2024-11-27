@@ -17,21 +17,37 @@ const MacroStat = ({
   max,
   value,
   maxIsGoal = false,
+  size = "lg",
+  color,
 }: {
   name: string;
   value: number;
   max: number;
   maxIsGoal?: boolean;
+  size?: "sm" | "lg";
+  color?: "text-error" | "text-info" | "text-warning";
 }) => {
   return (
-    <div className="flex flex-col w-full items-center">
-      <div className=" flex justify-between w-full px-[5px]">
-        <span className="text-[14px]">{name}</span>
-        <span className="text-[14px]">{`${value.toFixed(1)} / ${max}`}</span>
+    <div className="card bg-base-200 shadow-sm w-full card-body p-2">
+      <div className="flex justify-between items-center">
+        <span
+          className={cn("opacity-70", size === "sm" ? "text-xs" : "text-sm")}
+        >
+          {name}
+        </span>
+        <span
+          className={cn(
+            "font-semibold",
+            size === "sm" ? "text-xs" : "text-sm",
+            color
+          )}
+        >
+          {value}/{max}
+        </span>
       </div>
       <progress
         className={cn(
-          "progress w-full",
+          "progress progress-primary w-full h-2",
           value < max
             ? "progress-primary"
             : maxIsGoal
@@ -57,26 +73,39 @@ const Summary: FC<SummaryProps> = ({
   }));
 
   return (
-    <div className="flex flex-col w-full items-center p-[5px] gap-y-[10px]">
+    <div className="flex flex-col w-full items-center p-2 gap-y-[10px]">
       {isPlanner ? <WeekDateSelector /> : <DateSelector />}
-      <div className=" flex flex-col w-full gap-y-[5px] rounded-[16px] p-[10px]">
+      <div className=" flex flex-col w-full gap-y-[10px] rounded-[16px]">
         <MacroStat
           max={macroLimits.maxCalories}
           name="Calories"
           value={totalCalories}
         />
-        <MacroStat
-          max={macroLimits.maxCarbohydrates}
-          name="Carbs"
-          value={totalCarbohydrates}
-        />
-        <MacroStat
-          max={macroLimits.maxProteins}
-          name="Proteins"
-          value={totalProteins}
-          maxIsGoal
-        />
-        <MacroStat max={macroLimits.maxFats} name="Fats" value={totalFats} />
+        <div className="grid grid-cols-3 gap-2 w-full">
+          <MacroStat
+            name="Carbs"
+            value={totalCarbohydrates}
+            max={macroLimits.maxCarbohydrates}
+            size="sm"
+            color="text-info"
+          />
+
+          <MacroStat
+            name="Proteins"
+            value={totalProteins}
+            max={macroLimits.maxProteins}
+            size="sm"
+            color="text-warning"
+          />
+
+          <MacroStat
+            name="Fats"
+            value={totalFats}
+            max={macroLimits.maxFats}
+            size="sm"
+            color="text-error"
+          />
+        </div>
       </div>
     </div>
   );

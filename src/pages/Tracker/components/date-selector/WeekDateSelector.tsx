@@ -18,21 +18,23 @@ export const WeekDateSelector: FC = () => {
   };
 
   return (
-    <div className="flex flex-row w-full justify-between px-[5%] py-[20px] min-h-[90px]">
+    <div className="w-full card bg-base-200 shadow-sm card-body grid grid-cols-7 gap-1 p-[0.75rem]">
       {weekDays.map((day) => {
         const selectedDay = dayjs().set("day", day).format("dddd");
         return (
           <button
             key={selectedDay}
-            className={cn(
-              "btn  min-w-[50px] min-h-[50px] p-0",
-              selectedDay === selectedDate && "btn-primary"
-            )}
             onClick={onWeekDayClick(day)}
+            className={cn(
+              "flex flex-col items-center justify-center p-1 rounded-lg transition-colors",
+              selectedDay === selectedDate
+                ? "bg-primary text-primary-content"
+                : "hover:bg-base-300"
+            )}
           >
-            <span
-              className={cn(selectedDay === selectedDate ? "text-white" : "")}
-            >{`${dayjs().set("day", day).format("ddd")}`}</span>
+            <span className="text-sm">
+              {dayjs().set("day", day).format("ddd")}
+            </span>
           </button>
         );
       })}
