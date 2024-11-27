@@ -73,7 +73,7 @@ const MealList: FC<MealListProps> = ({
             }
           >
             <div className="flex flex-col w-full h-full gap-y-[5px]">
-              <div className="flex justify-between w-full ">
+              <div className="flex justify-between w-full items-center">
                 <TabName title={tabName} />
                 {isEditable && (
                   <button
