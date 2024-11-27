@@ -64,10 +64,10 @@ const MealList: FC<MealListProps> = ({
         />
       )}
 
-      <div className="flex card bg-base-200 shadow-sm card-body p-[7px]">
+      <div className="flex card bg-base-200 shadow-sm card-body p-[10px]">
         <div className="rounded-b-[16px]">
           <div
-            className="flex flex-row gap-y-[5px] p-[5px] rounded-[8px] h-full items-center"
+            className="flex flex-row gap-y-[5px] rounded-[8px] h-full items-center"
             onClick={
               isEditable && !!foods?.length ? openFavoriteMealModal : undefined
             }
@@ -77,7 +77,7 @@ const MealList: FC<MealListProps> = ({
                 <TabName title={tabName} />
                 {isEditable && (
                   <button
-                    className="btn btn-circle btn-primary min-w-[1.5rem] min-h-[1.5rem] w-[1.5rem] h-[1.5rem] "
+                    className="btn btn-circle btn-primary min-w-[1.25rem] min-h-[1.25rem] w-[1.25rem] h-[1.25rem] "
                     onClick={onAddClick}
                   >
                     <AiOutlinePlus />
@@ -100,7 +100,7 @@ const MealList: FC<MealListProps> = ({
                 >
                   <div className="flex flex-row items-center justify-between w-full ">
                     <span className="text-[14px]">{`- ${name}`}</span>
-                    <span className="text-[14px]">{grams}g</span>
+                    <span className="text-[14px] font-semibold">{grams}g</span>
                   </div>
                 </div>
               ))}
