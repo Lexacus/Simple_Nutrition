@@ -42,7 +42,7 @@ const MacroStat = ({
             color
           )}
         >
-          {value}/{max}
+          {Math.round(value)}/{max}
         </span>
       </div>
       <progress
